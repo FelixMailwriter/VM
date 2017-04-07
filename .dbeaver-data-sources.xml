@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data-sources>
+	<data-source id="sqlite_jdbc-15980170a08-1e88dc0d8dc73797" provider="generic" driver="sqlite_jdbc" name="SQLite - vendDB" create-date="1483912839694" login-date="1483912843194" save-password="true" show-system-objects="true" show-util-objects="true" read-only="false">
+		<connection server="" database="/home/arama/workspace/VendingMachine/BDL/vendDB" url="jdbc:sqlite:/home/arama/workspace/VendingMachine/BDL/vendDB" user="" type="dev"/>
+	</data-source>
+</data-sources>

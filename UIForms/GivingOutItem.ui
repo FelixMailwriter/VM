@@ -47,20 +47,6 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="btn_EngSensSim">
-       <property name="text">
-        <string>Симуляция датчика оборота мотора</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_OutSensor">
-       <property name="text">
-        <string>Симуляция датчика выдачи</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
   </layout>

@@ -50,8 +50,6 @@ class Vending(QObject):
         self.receiveCashWindow.receiveCashWindow.close()
         self.givingOutItem=GivingOutItem()
         self.connect(self.rb, QtCore.SIGNAL("OutingEnd"), self.givingOutHandler)
-        self.connect(self.givingOutItem, QtCore.SIGNAL("EngSendClick"), self.engSensClick)
-        self.connect(self.givingOutItem, QtCore.SIGNAL("OutSensotClick"), self.outSensClick)
         self.givingOutItem.givingOutWindow.show()        
         self.rb.giveOutItem(itemId)
 
@@ -99,22 +97,9 @@ class Vending(QObject):
         self.receiveCashWindow.receiveCashWindow.close()
         self.emit(QtCore.SIGNAL('Restart'))
                 
-    #========== TEST =================
 
-    def engSensClick(self):
-        activMag=self.rb.gpioSocket.activeMagazin
-        if activMag is None: return
-        eng=activMag.magEng
-        eng.sensorPin.setSignal(1)
-    
-    def outSensClick(self):
-        self.rb.gpioSocket.getOutSensor.setSignal(1)
-    
-    def simScan(self):
-        self.rb.gpioSocket.programmator.pinScanOK.setSignal(1)
-        
-    def simWrite(self):
-        self.rb.gpioSocket.programmator.pinWriteOK.setSignal(1)
+
+
         
 
     

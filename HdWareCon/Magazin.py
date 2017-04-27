@@ -37,11 +37,10 @@ class Magazin():
         return None
         
     def __str__(self):
-        return 'Магазин№%s EngPwPin= %s  EngSensorPin= %s  EmptySensorPin= %s Item= %s'\
-            %(self.num, self.magEng.engPin, self.magEng.sensorPin, self.emptySensor, self.item)
+        return 'Магазин№%s EngPwPin= %s  EngSensorPin= %s  EmptySensorPin= %d Item= %s'\
+            %(self.num, self.magEng.engPin, self.magEng.sensorPin, self.emptySensor, str(self.item))
      
      
-      
         
         
         

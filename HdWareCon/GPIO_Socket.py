@@ -21,7 +21,8 @@ class GPIO_Socket(QObject):
         self.programmator=self.getProgrammator(programmatorPinSettings)                #Экземпляр программатора
         self.connect(self.programmator, QtCore.SIGNAL("ScanFinished"), self.scanHandler)
         self.connect(self.programmator, QtCore.SIGNAL("WriteFinished"), self.writeHandler)
-        self.magazines=self.getMagazinesList(magazinesPinSettings, magazinItemsMap)    #Коллекция магазинов
+        #Создаем коллекцию магазинов с инфой о пинах и загруженных предметах
+        self.magazines=self.getMagazinesList(magazinesPinSettings, magazinItemsMap)    
         self.getOutSensor= self.getGetOutSensor(PinGetOutSensor)                    #PIN датчика выдачи
         self.activeMagazin=None                                                     # Активный магазин                                                 
         

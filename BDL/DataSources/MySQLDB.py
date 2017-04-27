@@ -123,8 +123,8 @@ class MySQLDB(DB):
         return True  
     
     def getItemsMap(self, magQty=6):
-        query='Select I.idItem, I.itemName, I.ItemPrice, M.idMagazins from Magazins as M, Items as I' +\
-                ' Where M.ItemId=I.idItem'
+        query='Select I.idItem, I.itemName, I.ItemPrice, M.idMagazins, M.ItemQTY from Magazins as M, Items as I' +\
+                ' Where M.ItemId=I.idItem and ItemQTY>0'
         result=self.getDataFromDb(query)
         
         itemMap=self._fillMagEmptyItems(magQty)
@@ -138,18 +138,18 @@ class MySQLDB(DB):
             itemMap[magNumber]=item
 
         return itemMap
-            
+                
     def _fillMagEmptyItems(self, magQty):
         itemMap={}
-        for i in range (0, magQty):
+        for i in range (1, magQty+1):
             itemId=0
             itemName='Пусто'
             itemPrice=0
-            itemIcon=QtGui.QIcon("img//Items//NoItem.jpg")
-            item=Item(itemId, itemName, itemPrice, itemIcon)
+            #itemIcon=QtGui.QIcon("img//Items//NoItem.jpg")
+            item=Item(itemId, itemName, itemPrice)
             itemMap[i]=item
         return itemMap 
-            
+                
     def _getIconById(self, pic):
         qpixmap=QtGui.QPixmap()
         if pic is not None:

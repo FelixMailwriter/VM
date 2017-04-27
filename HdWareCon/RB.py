@@ -19,10 +19,11 @@ class RB(QObject):
         try:
             dbConnector= BDCon.BDCon('SQLDB')#('TestDB')
             self.dbContext=dbConnector.dbContext           #Экземпляр подключенной базы данных  
-
-            programmatorPinSettings, magazinesPinSettings, PinGetOutSensor=self.dbContext.getGPIOPinSettigs()
+            
         except BDCon.DbConnectionException:
             raise InitException(u'Ошибка инициализации Raspberry')
+        
+        programmatorPinSettings, magazinesPinSettings, PinGetOutSensor=self.dbContext.getGPIOPinSettigs()
               
         magazinItemsMap=self.dbContext.getItemsMap()
         self.gpioSocket=GPIO_Socket(programmatorPinSettings=programmatorPinSettings, 
@@ -33,7 +34,7 @@ class RB(QObject):
         self.connect(self.gpioSocket, QtCore.SIGNAL("ScanFinished"), self.scanHandler)
         self.connect(self.gpioSocket, QtCore.SIGNAL("WriteFinished"), self.writeHandler)
         #self.printer=Printer()
-        self.kp=KPProvider()
+####        self.kp=KPProvider()
 
      
     def getExistsItems(self):                           #Опрашивает магазины и возвращает уникальный список предметов

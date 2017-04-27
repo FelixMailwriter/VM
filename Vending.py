@@ -8,7 +8,7 @@ from UI.FinishWindow import FinishWindow
 from UI.ChoosingItem import ChoosingItemWindow
 from UI.ReceiveCash import ReceiveCash
 from UI.GivingOutItem import GivingOutItem
-
+from Errors import Errors
 
 class Vending(QObject):
     '''
@@ -17,22 +17,39 @@ class Vending(QObject):
 
     def __init__(self, payment):
         QObject.__init__(self)
-        self.rb=RB.RB()                                                                     # Экземпляр Raspberry
+        self.DbType='SQLDB'
+            
+        self.rb=RB.RB(self.DbType)                                                     # Экземпляр Raspberry
+                                                                             
         self.connect(self.rb, QtCore.SIGNAL("ScanFinished"), self.scanFinishHandler)
         self.connect(self.rb, QtCore.SIGNAL("WriteFinished"), self.writeFinishHandler)
         self.item=None  
-        self.payment=payment                                                                # Сумма, введенная пользователем
+        self.payment=payment                                               # Сумма, введенная пользователем
     
     def start(self):
         self.scanBrelokWindow=ScanBrelok()
-        self.connect(self.scanBrelokWindow, QtCore.SIGNAL("ScanBrelok"), self.scanBrelok)
+        self.connect(self.scanBrelokWindow, QtCore.SIGNAL("ScanBrelok"), self.rb.scanBrelok)
         self.connect(self.scanBrelokWindow, QtCore.SIGNAL("SimulateScanOK"), self.simScan)
         self.scanBrelokWindow.window.show()
         
-    def scanBrelok(self):
-        self.rb.scanBrelok()                      
+    #def scanBrelok(self):
+    #    self.rb.scanBrelok()                      
 
-    def itemSelected(self, item):
+    def scanFinishHandler(self, result):
+        if result:
+            self.selektItem()
+        else:
+            self.scanBrelokWindow.scanFail()
+
+    def selektItem(self):
+        self.choosingItemWindow = ChoosingItemWindow(self.rb.gpioSocket.magazines.copy(),
+                                                      self.payment)     # окно выбора предмета
+        #self.choosingItemWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.paymentStart)
+        self.scanBrelokWindow.window.close()
+        self.choosingItemWindow.window.show()
+
+    def paymentStart(self, item):
         self.item=item
         self.receiveCashWindow=ReceiveCash(self.payment, item)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentCancelled"), self.paymentCancelled)
@@ -40,10 +57,11 @@ class Vending(QObject):
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("ReceiveMoneyTimeout"), self.restart)
         self.receiveCashWindow.receiveCashWindow.show()
         
+  
     def paymentCancelled(self, payment):
         self.payment=payment
         self.choosingItemWindow = ChoosingItemWindow(self.rb.gpioSocket.magazines.copy(), self.payment)
-        self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.itemSelected)
+        self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.paymentStart)
         self.choosingItemWindow.window.show()             
 
     def giveOutItem(self, itemId):
@@ -63,11 +81,7 @@ class Vending(QObject):
         else:
             self.givingOutItem.fail()
           
-    def scanFinishHandler(self, result):
-        if result:
-            self.selektItem()
-        else:
-            self.scanBrelokWindow.scanFail()                        
+                        
 
     def writeBrelok(self):
         self.rb.writeBrelok()
@@ -81,13 +95,7 @@ class Vending(QObject):
         else:
             self.writeBrelokWindow.writeFail() 
     
-    def selektItem(self):
-        self.choosingItemWindow = ChoosingItemWindow(self.rb.gpioSocket.magazines.copy(),
-                                                      self.payment)     # окно выбора предмета
-        #self.choosingItemWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.itemSelected)
-        self.scanBrelokWindow.window.close()
-        self.choosingItemWindow.window.show()
+
         
     def endApp(self):
         self.emit(QtCore.SIGNAL('End working'))
@@ -98,7 +106,22 @@ class Vending(QObject):
         self.emit(QtCore.SIGNAL('Restart'))
                 
 
+    #========== TEST =================
 
+    def engSensClick(self):
+        activMag=self.rb.gpioSocket.activeMagazin
+        if activMag is None: return
+        eng=activMag.magEng
+        eng.sensorPin.setSignal(1)
+    
+    def outSensClick(self):
+        self.rb.gpioSocket.getOutSensor.setSignal(1)
+    
+    def simScan(self):
+        self.rb.gpioSocket.programmator.pinScanOK.setSignal(1)
+        
+    def simWrite(self):
+        self.rb.gpioSocket.programmator.pinWriteOK.setSignal(1)
 
         
 

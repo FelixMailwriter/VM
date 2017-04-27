@@ -30,11 +30,12 @@ class GPIO_Socket(QObject):
     def getMagazinesList(self, magazinesPinSettings, magazinItemsMap):
         #создаем экземпляр магазина и заносим его в список
         magList={}
-        for i in range(1,7):
-            magazin=(Magazin(i, magazinesPinSettings[(i,"EngPw")], magazinesPinSettings[(i,"EngSensor")], 
-                            magazinesPinSettings[(i,"EmptySensor")],magazinItemsMap[i]))
+        for MagNumber in magazinItemsMap:
+            MagItem=magazinItemsMap[1]
+            magazin=(Magazin(MagNumber, magazinesPinSettings[(MagNumber,"EngPw")], magazinesPinSettings[(MagNumber,"EngSensor")], 
+                    magazinesPinSettings[(MagNumber,"EmptySensor")],MagItem))
             print 'Добавлен %s'  %(magazin)
-            magList[i]= magazin
+            magList[MagNumber]= magazin
         return magList
     
     def getGetOutSensor(self, PinGetOutSensor):

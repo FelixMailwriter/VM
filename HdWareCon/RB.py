@@ -6,6 +6,7 @@ from datetime import datetime
 from HdWareCon.GPIO_Socket import GPIO_Socket
 from KP.KPProvider import KPProvider
 import BDL.BDCon as BDCon
+from Errors import Errors
 #from HdWareCon.Printer import Printer
 
 class RB(QObject):
@@ -13,15 +14,18 @@ class RB(QObject):
     Класс описывает сущность платы RasperryPi3
     '''
     
-    def __init__(self):
+    def __init__(self, DbType):
         QObject.__init__(self)
         
         try:
-            dbConnector= BDCon.BDCon('SQLDB')#('TestDB')
+            dbConnector= BDCon.BDCon(DbType)#('TestDB')
             self.dbContext=dbConnector.dbContext           #Экземпляр подключенной базы данных  
             
         except BDCon.DbConnectionException:
-            raise InitException(u'Ошибка инициализации Raspberry')
+            self.message=Errors(u'Ошибка инициализации Raspberry')
+            self.message.window.setWindowTitle(u'Ошибка')
+            self.message.window.show()
+            return
         
         programmatorPinSettings, magazinesPinSettings, PinGetOutSensor=self.dbContext.getGPIOPinSettigs()
               
@@ -70,10 +74,6 @@ class RB(QObject):
         itemPrice=item.price
         #self.printer.printCheck(Data=dateNow, ItemName=itemName, Price=itemPrice)
         
-class InitException(Exception):
-    def __init__(self,value):
-        self.value=value
-    def __str__(self):
-        return __repr__(self.value)   
+   
     
     

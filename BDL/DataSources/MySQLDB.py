@@ -127,8 +127,8 @@ class MySQLDB(DB):
                 ' Where M.ItemId=I.idItem and ItemQTY>0'
         result=self.getDataFromDb(query)
         
-        itemMap=self._fillMagEmptyItems(magQty)
-
+        #itemMap=self._fillMagEmptyItems(magQty)
+        itemMap={}
         for row in result:
             itemId=row[0]
             itemName=row[1]
@@ -138,7 +138,7 @@ class MySQLDB(DB):
             itemMap[magNumber]=item
 
         return itemMap
-                
+    '''            
     def _fillMagEmptyItems(self, magQty):
         itemMap={}
         for i in range (1, magQty+1):
@@ -149,7 +149,7 @@ class MySQLDB(DB):
             item=Item(itemId, itemName, itemPrice)
             itemMap[i]=item
         return itemMap 
-                
+    '''            
     def _getIconById(self, pic):
         qpixmap=QtGui.QPixmap()
         if pic is not None:
@@ -163,3 +163,5 @@ class MySQLDB(DB):
         self.message=Errors(message)
         self.message.window.setWindowTitle(header)
         self.message.window.show()   
+        
+        

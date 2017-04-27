@@ -6,7 +6,7 @@ from datetime import datetime
 from HdWareCon.GPIO_Socket import GPIO_Socket
 from KP.KPProvider import KPProvider
 import BDL.BDCon as BDCon
-from HdWareCon.Printer import Printer
+#from HdWareCon.Printer import Printer
 
 class RB(QObject):
     '''
@@ -15,12 +15,15 @@ class RB(QObject):
     
     def __init__(self):
         QObject.__init__(self)
+        
         try:
-            dbConnector= BDCon.BDCon('TestDB')
-            programmatorPinSettings, magazinesPinSettings, PinGetOutSensor=dbConnector.getGPIOPinSettigs()
+            dbConnector= BDCon.BDCon('SQLDB')#('TestDB')
+            self.dbContext=dbConnector.dbContext           #Экземпляр подключенной базы данных  
+
+            programmatorPinSettings, magazinesPinSettings, PinGetOutSensor=self.dbContext.getGPIOPinSettigs()
         except BDCon.DbConnectionException:
             raise InitException(u'Ошибка инициализации Raspberry')
-        self.dbContext=dbConnector.dbContext           #Экземпляр подключенной базы данных        
+              
         magazinItemsMap=self.dbContext.getItemsMap()
         self.gpioSocket=GPIO_Socket(programmatorPinSettings=programmatorPinSettings, 
                                     magazinesPinSettings=magazinesPinSettings, 
@@ -29,7 +32,7 @@ class RB(QObject):
         self.connect(self.gpioSocket, QtCore.SIGNAL("OutingEnd"), self.itemOutHandler)
         self.connect(self.gpioSocket, QtCore.SIGNAL("ScanFinished"), self.scanHandler)
         self.connect(self.gpioSocket, QtCore.SIGNAL("WriteFinished"), self.writeHandler)
-        self.printer=Printer()
+        #self.printer=Printer()
         self.kp=KPProvider()
 
      
@@ -64,7 +67,7 @@ class RB(QObject):
         dateNow=datetime.strftime(now, "%Y.%m.%d %H:%M:%S")
         itemName=item.name
         itemPrice=item.price
-        self.printer.printCheck(Data=dateNow, ItemName=itemName, Price=itemPrice)
+        #self.printer.printCheck(Data=dateNow, ItemName=itemName, Price=itemPrice)
         
 class InitException(Exception):
     def __init__(self,value):

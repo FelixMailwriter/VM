@@ -64,9 +64,7 @@ class Vending(QObject):
             self.writeBrelokWindow.window.show() 
         else:
             self.givingOutItem.fail()
-
-
-            
+          
     def scanFinishHandler(self, result):
         if result:
             self.selektItem()

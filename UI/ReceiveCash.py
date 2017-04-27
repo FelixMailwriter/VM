@@ -71,7 +71,7 @@ class ReceiveCash(QObject):
         if overpay>0:
             rec=dict(Text='Alte venituri', Price=overpay, TaxCode='A')
             check.append(rec)            
-        prn=Printer(check, "/dev/ttyUSB0")
+        prn=Printer.printCheck(check)
         prn.run()
         
     def _exitPayment(self):

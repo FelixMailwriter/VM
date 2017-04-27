@@ -6,6 +6,31 @@ class DB(object):
     '''
 
     #__metaclass__ = ABCMeta
+    
+    @abstractmethod
+    def getGPIOPinSettigs(self):
+        raise NotImplementedError
+    
     @abstractmethod
     def getItemsMap(self):
         raise NotImplementedError
+    
+    @abstractmethod
+    def getGPIOHdWSettigs(self):
+        raise NotImplementedError
+    
+    @abstractmethod
+    def getDataFromDb(self, query):
+        raise NotImplementedError
+    
+    @abstractmethod
+    def insertDataToDB(self, query):
+        raise NotImplementedError
+    
+    @abstractmethod
+    def deleteDataFromTable(self, query):
+        raise NotImplementedError
+    
+
+    
+    

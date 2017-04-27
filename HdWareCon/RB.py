@@ -21,8 +21,8 @@ class RB(QObject):
             dbConnector= BDCon.BDCon(DbType)#('TestDB')
             self.dbContext=dbConnector.dbContext           #Экземпляр подключенной базы данных  
             
-        except BDCon.DbConnectionException:
-            self.message=Errors(u'Ошибка инициализации Raspberry')
+        except:
+            self.message=Errors(u'Ошибка подключения к базе данных')
             self.message.window.setWindowTitle(u'Ошибка')
             self.message.window.show()
             return

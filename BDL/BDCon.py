@@ -18,14 +18,6 @@ class BDCon():
             raise DbConnectionException(u'Тип подключения не существует')
         
      
-            
-        
-class DbConnectionException(Exception):
-    
-    def __init__(self, value):
-        self.value=value
-        
-    def __str___(self):
-        return __repr__(self.value)
+
     
     

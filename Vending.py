@@ -42,8 +42,7 @@ class Vending(QObject):
             self.scanBrelokWindow.scanFail()
 
     def selektItem(self):
-        self.choosingItemWindow = ChoosingItemWindow(self.rb.gpioSocket.magazines.copy(),
-                                                      self.payment)     # окно выбора предмета
+        self.choosingItemWindow = ChoosingItemWindow(self.payment, self.DbType)     # окно выбора предмета
         #self.choosingItemWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.paymentStart)
         self.scanBrelokWindow.window.close()

@@ -138,25 +138,23 @@ class MySQLDB(DB):
             itemMap[magNumber]=item
 
         return itemMap
-    '''            
-    def _fillMagEmptyItems(self, magQty):
-        itemMap={}
-        for i in range (1, magQty+1):
-            itemId=0
-            itemName='Пусто'
-            itemPrice=0
-            #itemIcon=QtGui.QIcon("img//Items//NoItem.jpg")
-            item=Item(itemId, itemName, itemPrice)
-            itemMap[i]=item
-        return itemMap 
-    '''            
-    def _getIconById(self, pic):
+           
+    def getIconById(self, pic):
         qpixmap=QtGui.QPixmap()
         if pic is not None:
             picBytes = base64.b64decode(pic)
             qpixmap.loadFromData(picBytes)
         return qpixmap                      
 
+    def getSelledtItems(self):
+        query='Select M.ItemId, I.ItemName, I.ItemPrice, sum(M.ItemQTY) as summa from Magazins as M'+\
+                ' left join Items as I'+\
+                ' on M.itemId=I.IdItem'+\
+                ' where I.hidden=False'+\
+                ' group by M.ItemId'+\
+                ' having summa>0'
+        itemsList=self._getDataFromDb(query)
+        return itemsList
     
     def _showError(self, header, message): 
 

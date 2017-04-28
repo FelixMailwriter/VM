@@ -8,6 +8,7 @@ from UI.FinishWindow import FinishWindow
 from UI.ChoosingItem import ChoosingItemWindow
 from UI.ReceiveCash import ReceiveCash
 from UI.GivingOutItem import GivingOutItem
+import BDL.BDCon as BDCon
 from Errors import Errors
 
 class Vending(QObject):
@@ -18,13 +19,25 @@ class Vending(QObject):
     def __init__(self, payment):
         QObject.__init__(self)
         self.DbType='SQLDB'
+        self.dbProvider=self._getDbProvider(self.DbType)                #Подключение к выбранной БД
             
-        self.rb=RB.RB(self.DbType)                                                     # Экземпляр Raspberry
+        self.rb=RB.RB(self.dbProvider)                                  # Экземпляр Raspberry
                                                                              
         self.connect(self.rb, QtCore.SIGNAL("ScanFinished"), self.scanFinishHandler)
         self.connect(self.rb, QtCore.SIGNAL("WriteFinished"), self.writeFinishHandler)
         self.item=None  
         self.payment=payment                                               # Сумма, введенная пользователем
+
+    def _getDbProvider(self, dbType):
+        try:
+            dbConnector= BDCon.BDCon(dbType)#('TestDB')
+            dbProvider=dbConnector.dbContext           #Экземпляр подключенной базы данных  
+            return dbProvider
+        except:
+            self.message=Errors(u'Ошибка подключения к базе данных')
+            self.message.window.setWindowTitle(u'Ошибка')
+            self.message.window.show()
+            return
     
     def start(self):
         self.scanBrelokWindow=ScanBrelok()
@@ -32,9 +45,6 @@ class Vending(QObject):
         self.connect(self.scanBrelokWindow, QtCore.SIGNAL("SimulateScanOK"), self.simScan)
         self.scanBrelokWindow.window.show()
         
-    #def scanBrelok(self):
-    #    self.rb.scanBrelok()                      
-
     def scanFinishHandler(self, result):
         if result:
             self.selektItem()
@@ -42,14 +52,14 @@ class Vending(QObject):
             self.scanBrelokWindow.scanFail()
 
     def selektItem(self):
-        self.choosingItemWindow = ChoosingItemWindow(self.payment, self.DbType)     # окно выбора предмета
+        self.choosingItemWindow = ChoosingItemWindow(self.payment, self.dbProvider)     # окно выбора предмета
         #self.choosingItemWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.paymentStart)
         self.scanBrelokWindow.window.close()
         self.choosingItemWindow.window.show()
 
     def paymentStart(self, item):
-        self.item=item
+        self.itemId=item
         self.receiveCashWindow=ReceiveCash(self.payment, item)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentCancelled"), self.paymentCancelled)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("GiveOutItem"), self.giveOutItem)
@@ -63,25 +73,25 @@ class Vending(QObject):
         self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.paymentStart)
         self.choosingItemWindow.window.show()             
 
-    def giveOutItem(self, itemId):
+    def giveOutItem(self, item):
         self.receiveCashWindow.receiveCashWindow.close()
         self.givingOutItem=GivingOutItem()
         self.connect(self.rb, QtCore.SIGNAL("OutingEnd"), self.givingOutHandler)
         self.givingOutItem.givingOutWindow.show()        
-        self.rb.giveOutItem(itemId)
+        self.rb.giveOutItem(item)
 
-    def givingOutHandler(self, result):
+    def givingOutHandler(self, result, magazin, item):
         if result:
             self.givingOutItem.givingOutWindow.close()
+            #Вставить процедуру записи лога в БД
             self.writeBrelokWindow=WriteBrelok()
             self.connect(self.writeBrelokWindow, QtCore.SIGNAL("WriteBrelok"), self.writeBrelok)
             self.connect(self.writeBrelokWindow, QtCore.SIGNAL("SimulateWriteOK"), self.simWrite)
             self.writeBrelokWindow.window.show() 
         else:
+            #Вставить процедуру записи лога в БД
             self.givingOutItem.fail()
           
-                        
-
     def writeBrelok(self):
         self.rb.writeBrelok()
             
@@ -94,8 +104,6 @@ class Vending(QObject):
         else:
             self.writeBrelokWindow.writeFail() 
     
-
-        
     def endApp(self):
         self.emit(QtCore.SIGNAL('End working'))
         print 'Программа закончила работу'    

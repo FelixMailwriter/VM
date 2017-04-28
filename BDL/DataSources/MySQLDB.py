@@ -7,7 +7,7 @@ import base64
 from ConfigParser import ConfigParser
 from Errors import Errors
 from DB import DB
-from Common.Item import Item
+
 
 class MySQLDB(DB):
 
@@ -76,13 +76,16 @@ class MySQLDB(DB):
             self._showError(u'Ошибка', u'Ошибка файла конфигурации БД. Отсутствует секция.')
         return config
     
-    def getDataFromDb(self, query):
+    def getDataFromDb(self, query, type='all'):
         conn = cur = None
         try:
             conn=self.getConnection()
             cur=conn.cursor()
             cur.execute(query)
-            result = cur.fetchall()            
+            if type=='all':
+                result = cur.fetchall()
+            if type=='one':
+                result=cur.fetchone()            
             return result
         except:
             self._showError(u'Ошибка', u'Ошибка подключения к базе данных')
@@ -122,39 +125,37 @@ class MySQLDB(DB):
             if conn is not None: conn.close()
         return True  
     
-    def getItemsMap(self, magQty=6):
-        query='Select I.idItem, I.itemName, I.ItemPrice, M.idMagazins, M.ItemQTY from Magazins as M, Items as I' +\
-                ' Where M.ItemId=I.idItem and ItemQTY>0'
+    def getIdItemsinMagazinsMap(self, magQty=6):
+        query='Select idMagazins, ItemId from Magazins Where ItemQTY>0'
         result=self.getDataFromDb(query)
         
         #itemMap=self._fillMagEmptyItems(magQty)
         itemMap={}
         for row in result:
-            itemId=row[0]
-            itemName=row[1]
-            itemPrice=row[2]/100.
-            magNumber=row[3]
-            item=Item(itemId, itemName, itemPrice)
-            itemMap[magNumber]=item
-
+            magId=row[0]
+            itemId=row[1]
+            itemMap[magId]=itemId
         return itemMap
-           
-    def getIconById(self, pic):
-        qpixmap=QtGui.QPixmap()
-        if pic is not None:
-            picBytes = base64.b64decode(pic)
-            qpixmap.loadFromData(picBytes)
-        return qpixmap                      
 
-    def getSelledtItems(self):
-        query='Select M.ItemId, I.ItemName, I.ItemPrice, sum(M.ItemQTY) as summa from Magazins as M'+\
+    def getItemsForSale(self):
+        query='Select M.ItemId, I.ItemName, I.ItemPrice, I.ItemIcon, sum(M.ItemQTY) as summa from Magazins as M'+\
                 ' left join Items as I'+\
                 ' on M.itemId=I.IdItem'+\
                 ' where I.hidden=False'+\
                 ' group by M.ItemId'+\
                 ' having summa>0'
-        itemsList=self._getDataFromDb(query)
+        itemsList=self.getDataFromDb(query)
         return itemsList
+    
+    def getItemPictureById(self, itemId):
+        query='Select ItemIcon from Items Where idItem=%d' %(itemId)
+        result=self.getDataFromDb(query, 'one')
+        pic=result[0]
+        qpixmap=QtGui.QPixmap()
+        if pic is not None:
+            picBytes = base64.b64decode(pic)
+            qpixmap.loadFromData(picBytes)
+        return qpixmap
     
     def _showError(self, header, message): 
 

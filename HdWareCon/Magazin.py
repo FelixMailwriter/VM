@@ -29,8 +29,8 @@ class Magazin():
             return Pin.getSignal(self.emptySensor)
         else: return defaultVal
         
-    def giveOutItem(self, itemId):
-        if itemId==self.item.id:
+    def giveOutItem(self, item):
+        if item==self.item:
             print 'Магазин %s Начало выдачи предмета %s' %(self.num, self.item)
             self.magEng.motorRotate()
             return self

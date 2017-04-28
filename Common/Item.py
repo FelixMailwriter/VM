@@ -1,15 +1,23 @@
 #-*- coding:utf-8 -*-
-from PIL import Image
+from PyQt4 import QtGui
+import base64
 class Item:
     '''
     Класс описывает продаваемые предметы
     '''
 
-    def __init__(self, item_id, name, price):
+    def __init__(self, item_id, name, price, pic):
         self.id=item_id
         self.name=name
         self.price=price
-      
+        self.icon=self._getIcon(pic)
+        
+    def _getIcon(self, pic):
+        qpixmap=QtGui.QPixmap()
+        if pic is not None:
+            picBytes = base64.b64decode(pic)
+            qpixmap.loadFromData(picBytes)
+        return qpixmap     
    
     def __str__(self):
         s="Id=%s, Name=%s" %(self.id,  self.name)#, self.imgPath)

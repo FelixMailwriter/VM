@@ -47,21 +47,13 @@ class GPIO_Socket(QObject):
         programmator=Programmator(programmatorPinSettings)
         return programmator             #
 
-
-    def getExistsItems(self):
-        items=set()
-        for i in self.magazines:
-            item=self.magazines[i].item
-            if item.id>0:
-                items.add(item)
-        return items
-    
-    def giveOutItem(self, itemId):
-        print "GPIO_Socket: Начало выдачи предмета"
+    def giveOutItem(self, item):
+        print "GPIO_Socket: Начало выдачи предмета %s" %(item)
+        self.item=item
         if self.activeMagazin is not None: return  
         for i in self.magazines:
             magazin=self.magazines[i]
-            self.activeMagazin=magazin.giveOutItem(itemId) 
+            self.activeMagazin=magazin.giveOutItem(item) 
             if self.activeMagazin is not None:  
                 self.giveOutSensorListener=SensorListener(self.getOutSensor, "ItemOut", 2000, 6000, 5)
                 self.connect(self.giveOutSensorListener, QtCore.SIGNAL("ItemOut"), self.itemOutHandler)
@@ -75,7 +67,7 @@ class GPIO_Socket(QObject):
         else:
             print 'GPIO_Socket: предмет не выдан'
         self.giveOutSensorListener.wait(100)
-        self.emit(QtCore.SIGNAL("OutingEnd"), result)
+        self.emit(QtCore.SIGNAL("OutingEnd"), result, self.activeMagazin, self.item)
         
         
     def scanBrelok(self):

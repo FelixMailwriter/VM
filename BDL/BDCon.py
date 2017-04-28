@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from DataSources import MySQLDB, TestDb
-from enum import __repr__
+from Errors import Errors
 
 class BDCon():
     '''
@@ -15,7 +15,9 @@ class BDCon():
         elif path=='SQLDB':
             self.dbContext=MySQLDB.MySQLDB()
         else:
-            raise DbConnectionException(u'Тип подключения не существует')
+            self.message=Errors(u'Нет предметов к продаже')
+            self.message.window.setWindowTitle(u'Сообщение')
+            self.message.window.show()
         
      
 

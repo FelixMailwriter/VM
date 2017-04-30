@@ -12,7 +12,6 @@ class ReceiveCash(QObject):
     '''
     def __init__(self, payment, item):
         QObject.__init__(self)
-        #self.kp=KPProvider()
         self.kpManager=KPManager(self)
         self.payment=payment
         self.item=item
@@ -31,7 +30,6 @@ class ReceiveCash(QObject):
                
     
     def paintForm(self):
-        #self.receiveCashWindow.labelItem.setPixmap(QtGui.QPixmap(self.item.img))
         self.receiveCashWindow.labelItem.setPixmap(self.item.icon)
         self.receiveCashWindow.labelPrice.setText("%s" %(self.item.price))
         if self.payment==0:
@@ -46,7 +44,6 @@ class ReceiveCash(QObject):
             
     def increasePayment(self, summa):
         self.payment+=summa
-        #Вставить процедуру записи лога в БД
         self.receiveCashWindow.lbl_summa.setText("%s" %(self.payment))
         if (self.payment>=self.item.price):
             self.receiveCashWindow.btnContinue.setEnabled(True)

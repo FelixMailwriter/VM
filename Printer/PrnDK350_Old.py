@@ -1,40 +1,21 @@
 # -*- coding:utf-8 -*-
 from PyQt4 import QtCore
 import serial
-from ConfigParser import ConfigParser
 from enum import __repr__
-from PyQt4.Qt import QObject
-import time
 
 class Printer(QtCore.QThread):
-    def __init__(self, items, checkType='NotFisk'):
+    def __init__(self, items, devPath):
         QtCore.QThread.__init__(self)
-        self.prn_config=self._getSettings()
-        self.devPath=self.prn_config['path']    #Путь к принтеру
-        self.items=items                        #Содержимое чека (предметы или строки текста)
-        self.prn=None                           #ссылка на порт принтера
-        self.command=None                       #команда принтеру
-        self.SEQ=0x20                           #Порядковый номер команды
-        self.checkType=checkType
+        self.devPath=devPath                #Путь к принтеру
+        self.items=items                    #Ссодержимое чека (предметы или строки текста)
+        self.prn=None                       #ссылка на порт принтера
+        self.command=None                   #команда принтеру
+        self.SEQ=0x20                       #Порядковый номер команды
 
     def run(self):
         self.prn=self._getConnection(self.devPath)
-        self._printCheck()
-        
-    def _getSettings(self):
-        filename='config.ini'
-        section='printer'
-        parser=ConfigParser()
-        parser.read(filename)
-        prn_config={}
-        if parser.has_section(section):
-            items=parser.items(section)
-            for item in items:
-                prn_config[item[0]]=item[1]
-        else:
-            self._showError(u'Ошибка', u'Ошибка файла конфигурации. Отсутствует секция принтера.')
-        return prn_config
-
+        self.printCheck()
+   
     def _getConnection(self, devPath):
         conn = serial.Serial()
         conn.port = devPath
@@ -42,89 +23,92 @@ class Printer(QtCore.QThread):
             raise PrinterHardwareException('Device not found') 
                 
         conn.baudrate = 115200
-        conn.bytesize = serial.EIGHTBITS    #number of bits per bytes
-        conn.parity = serial.PARITY_NONE    #set parity check: no parity
+        conn.bytesize = serial.EIGHTBITS #number of bits per bytes
+        conn.parity = serial.PARITY_NONE #set parity check: no parity
         conn.stopbits = serial.STOPBITS_ONE #number of stop bits
-        conn.timeout = None                 #block read
-        conn.xonxoff = False                #disable software flow control
-        conn.rtscts = True                  #disable hardware (RTS/CTS) flow control
-        conn.dsrdtr = True                  #disable hardware (DSR/DTR) flow control
+        conn.timeout = None          #block read
+        conn.xonxoff = False     #disable software flow control
+        conn.rtscts = True     #disable hardware (RTS/CTS) flow control
+        conn.dsrdtr = True       #disable hardware (DSR/DTR) flow control
         return conn
-    
-    def _printCheck(self):
-        #Открываем порт
+
+    def printCheck(self):
+    #Открываем порт
         self.prn.open()
-        if self.checkType=='Fisk':
-            self._printFiskCheck()
-        elif self.checkType=='NotFisk':
-            self._printNotFiskCheck()
-    
-    def _printFiskCheck(self):
-            #Открываем фискальный чек
-            self._sendCommand(0x30,'1,00000,1')            
-            #Печать продаваемых товаров   
-            for item in self.items:
-                if item['Price']==None:
-                    #Если печатать свободный текст предмета
-                    self._sendCommand(0x36,item['Text'])
-                else:
-                    #Если печатаем описание предмета (имя и цена)
-                    fiskItemParameters=self._getfiskItemParameters(item['Text'], item['TaxCode'], item['Price'])
-                    self._sendCommand(0x34,fiskItemParameters)
-            #Записываем итоговую сумму
-            self._sendCommand(0x35, '')
-            #Закрываем фискальный чек
-            self._sendCommand(0x38, '')
-
-    
-    def _printNotFiskCheck(self):
-        #Открываем не фискальный чек
-        self._sendCommand(0x26,'') 
-        #Печать содержимого нефискального чека   
+    #Открытие фискального чека
+        self._openFiskCheck()
+                
+    #Печать продаваемых товаров   
         for item in self.items:
-            self._sendCommand(0x2A,item['Text'])
-        #Закрываем не фискальный чек
-        self._sendCommand(0x27, '')                
-            
-    def _getfiskItemParameters(self, text, taxCode, price):
-        #Формирование строки параметров для фискального чека (Название, кодНДС, Цена)
-        params=r'{}{}{}{}'.format(text, '\t',taxCode, price)  
-        return params
+            if item['Price']==None:                                         #Если печатать свободный текст предмета
+                self._printText(item['Text'])
+            else:
+                self._printItem(item['Text'], item['TaxCode'], item['Price'])#Если печатаем описание предмета (имя и цена)        
     
-    def _sendCommand(self, commandCode, commandParams):
-        command=self._makeCommand(commandCode, commandParams)
-        self.prn.write(command)
-        #self._getAnswer()
+    #Печать суммы чека
+        self._writeTotal()
+    
+    #Закрытие фискального чека
+        self._closeFiskCheck()
+        
+    #Закрываем порт
+        self.prn.close()
+        
+    def _openFiskCheck(self):
 
+        #Открываем фискальный чек
+        self._makeCommand(0x30,'1,00000,1')
+        self._sendCommand(self.command)
+                
+    def _printText(self, text):
+        #Печать свободного текста
+        self._makeCommand(0x36, text)
+        self._sendCommand(self.command)
+    
+    def _printItem(self, text, taxCode, price):
+        #Печать информации о продаваемом предмете (Название, кодНДС, Цена)
+        params=r'{}{}{}{}'.format(text, '\t',taxCode, price)    #Формирование строки параметров
+        self._makeCommand(0x34, params)
+        self._sendCommand(self.command)
+        
+    def _writeTotal(self):
+        #Записываем итоговую сумму
+        self._makeCommand(0x35, '')
+        self._sendCommand(self.command)
+
+    def _closeFiskCheck(self):
+        #Закрываем фискальный чек
+        self._makeCommand(0x38, '')
+        self._sendCommand(self.command)
+    
     def _makeCommand(self, commandCode, commandParams):
         self.SEQ+=1                                     #Увеличиваем счетчик команд на 1
         params=self._getParamsBytes(commandParams)      #Получем байтовый массив строки параметров
         paramsLength=len(params)                        #Подсчитываем длину массива строки параметров
         packadgeLength=10+paramsLength                  #Подсчитываем длину пакета (команда + параметры)
-        command=bytearray(packadgeLength)          
+        self.command=bytearray(packadgeLength)          
         commandLength=4+paramsLength                    #Подсчитываем длину команды
         #Записываем в пакет байты длины строки, номера команды и кода команды
-        command[0]=0x01
-        command[1]=commandLength+0x20
-        command[2]=self.SEQ
-        command[3]=commandCode
+        self.command[0]=0x01
+        self.command[1]=commandLength+0x20
+        self.command[2]=self.SEQ
+        self.command[3]=commandCode
         #Записываем байты строки параметров команды
         pos=4
         for b in params:
-            command[pos]=b
+            self.command[pos]=b
             pos+=1
         #записываем байт признака конца команды
-        command[pos]=0x05
+        self.command[pos]=0x05
         #получаем контрольную сумму
-        bcc=self._getBCC(command, paramsLength)
+        bcc=self._getBCC(paramsLength)
         #дописываем байты контрольной суммы
         pos+=1
         for i in range(0,4):
-            command[pos]=bcc[i]
+            self.command[pos]=bcc[i]
             pos+=1
         #дописываем байт призака конца пакета
-        command[packadgeLength-1]=0x03
-        return command
+        self.command[packadgeLength-1]=0x03
         
 
     def _getParamsBytes(self, commandParams):
@@ -148,11 +132,11 @@ class Printer(QtCore.QThread):
                 bytesParam.append(asciiCode)        #Если просто симовл  записываем его ascii-код
         return bytesParam
 
-    def _getBCC(self, command, paramsLength):
+    def _getBCC(self, paramsLength):
         bccsum=0
         #получаем сумму байт строки команды + параметров 
         for i in range(1, (paramsLength+5)):
-            bccsum+=command[i]
+            bccsum+=self.command[i]
         hexSum=hex(bccsum)
         #разделяем значения по одной цифре и прибавляем к ней 0x30
         bcc=bytearray(4)
@@ -164,6 +148,10 @@ class Printer(QtCore.QThread):
             count-=1
         return bcc
                 
+    def _sendCommand(self, command):
+        self.prn.write(command)
+        #self._getAnswer()
+        
     def _getAnswer(self):
         #получение данных от принтера
         print 'wait for answer...'
@@ -185,7 +173,9 @@ class Printer(QtCore.QThread):
         print 'Reseived data:'
         for i in range(0, len(data)):
             print data[i].encode('hex') 
-        print '---------------'        
+        print '---------------'   
+        
+           
             
     def _checkAnswer(self, answer):
         pass

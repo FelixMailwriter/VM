@@ -91,7 +91,7 @@ class Vending(QObject):
             self.connect(self.writeBrelokWindow, QtCore.SIGNAL("SimulateWriteOK"), self.simWrite)
             self.writeBrelokWindow.window.show() 
         else:
-            #Вставить процедуру записи лога в БД
+            #Запись в лог о провале продажи
             self.givingOutItem.fail()
           
     def writeBrelok(self):

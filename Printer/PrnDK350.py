@@ -3,8 +3,7 @@ from PyQt4 import QtCore
 import serial
 from ConfigParser import ConfigParser
 from enum import __repr__
-from PyQt4.Qt import QObject
-import time
+
 
 class Printer(QtCore.QThread):
     def __init__(self, items, checkType='NotFisk'):
@@ -122,7 +121,7 @@ class Printer(QtCore.QThread):
         for i in range(0,4):
             command[pos]=bcc[i]
             pos+=1
-        #дописываем байт призака конца пакета
+        #дописываем байт признака конца пакета
         command[packadgeLength-1]=0x03
         return command
         

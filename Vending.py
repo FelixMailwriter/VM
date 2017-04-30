@@ -77,10 +77,12 @@ class Vending(QObject):
         self.receiveCashWindow.receiveCashWindow.close()
         self.givingOutItem=GivingOutItem()
         self.connect(self.rb, QtCore.SIGNAL("OutingEnd"), self.givingOutHandler)
+        self.connect(self.givingOutItem, QtCore.SIGNAL("EngSendClick"), self.engSensClick)
+        self.connect(self.givingOutItem, QtCore.SIGNAL("OutSensotClick"), self.outSensClick)
         self.givingOutItem.givingOutWindow.show()        
         self.rb.giveOutItem(item)
 
-    def givingOutHandler(self, result, magazin, item):
+    def givingOutHandler(self, result, magazin, itemId):
         if result:
             self.givingOutItem.givingOutWindow.close()
             #Вставить процедуру записи лога в БД

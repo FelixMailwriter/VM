@@ -31,7 +31,7 @@ class GPIO_Socket(QObject):
         #создаем экземпляр магазина и заносим его в список
         magList={}
         for MagNumber in magazinItemsMap:
-            MagItem=magazinItemsMap[1]
+            MagItem=magazinItemsMap[MagNumber]
             magazin=(Magazin(MagNumber, magazinesPinSettings[(MagNumber,"EngPw")], magazinesPinSettings[(MagNumber,"EngSensor")], 
                     magazinesPinSettings[(MagNumber,"EmptySensor")],MagItem))
             print 'Добавлен %s'  %(magazin)
@@ -48,26 +48,27 @@ class GPIO_Socket(QObject):
         return programmator             #
 
     def giveOutItem(self, item):
-        print "GPIO_Socket: Начало выдачи предмета %s" %(item)
-        self.item=item
+        print "GPIO_Socket: Начало выдачи предмета %s" %(str(item))
+        self.outingItemId=item.id
         if self.activeMagazin is not None: return  
         for i in self.magazines:
             magazin=self.magazines[i]
             self.activeMagazin=magazin.giveOutItem(item) 
             if self.activeMagazin is not None:  
-                self.giveOutSensorListener=SensorListener(self.getOutSensor, "ItemOut", 2000, 6000, 5)
-                self.connect(self.giveOutSensorListener, QtCore.SIGNAL("ItemOut"), self.itemOutHandler)
+                self.giveOutSensorListener=SensorListener(self.getOutSensor, "Click", 2000, 6000, 5)
+                self.connect(self.giveOutSensorListener, QtCore.SIGNAL("Click"), self.itemOutHandler)
                 self.giveOutSensorListener.start()
                 break
 
     def itemOutHandler(self, result):
-        self.activeMagazin=None
         if result:
             print 'GPIO_Socket: предмет выдан'
+            #self.activeMagazin.stopOutingItem()
         else:
             print 'GPIO_Socket: предмет не выдан'
         self.giveOutSensorListener.wait(100)
-        self.emit(QtCore.SIGNAL("OutingEnd"), result, self.activeMagazin, self.item)
+        self.activeMagazin=None
+        self.emit(QtCore.SIGNAL("OutingEnd"), result, self.activeMagazin, self.outingItemId)
         
         
     def scanBrelok(self):

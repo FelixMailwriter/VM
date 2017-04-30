@@ -12,14 +12,13 @@ class GivingOutItem(QObject):
         path=os.path.abspath("UIForms//GivingOutItem.ui")
         self.givingOutWindow = uic.loadUi(path)
         self.givingOutWindow.btn_continue.setEnabled(False)
-        self.connect(self.givingOutWindow.btn_EngSensSim, QtCore.SIGNAL("clicked()"), self.engSensClick) #test remove
-        self.connect(self.givingOutWindow.btn_OutSensor, QtCore.SIGNAL("clicked()"), self.outSensClick)  #test remove
+        #self.connect(self.givingOutWindow.btn_EngSensSim, QtCore.SIGNAL("clicked()"), self.engSensClick) #test remove
+        self.connect(self.givingOutWindow.btn_EngSensSim, QtCore.SIGNAL("clicked()"), self.outSensClick)  #test remove
         self.givingOutWindow.lbl_msg.setText(u"Ожидайте выдачи...")
     
     
     def fail(self):
         self.givingOutWindow.lbl_msg.setText(u"Ошибка выдачи. Обратитесь в техподдержку.")
-        #self.timerId=self.startTimer(5000)
         QtCore.QTimer.singleShot(5000, self.givingOutWindow, QtCore.SLOT("close()"))
         
         
@@ -29,4 +28,4 @@ class GivingOutItem(QObject):
         self.emit(QtCore.SIGNAL("EngSendClick"))
     
     def outSensClick(self):
-        self.emit(QtCore.SIGNAL("OutSensotClick"))
+        self.emit(QtCore.SIGNAL("OutSensorClick"))

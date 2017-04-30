@@ -20,7 +20,7 @@ class Item:
         return qpixmap     
    
     def __str__(self):
-        s="Id=%s, Name=%s" %(self.id,  self.name)#, self.imgPath)
+        s="Id=%s, Name=%s" %(str(self.id),  self.name)#, self.imgPath)
         return s
     
     def __eq__(self, other):

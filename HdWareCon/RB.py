@@ -3,7 +3,7 @@ from PyQt4.Qt import QObject
 from PyQt4 import QtCore
 from HdWareCon.GPIO_Socket import GPIO_Socket
 from KP.KPProvider import KPProvider
-#from HdWareCon.Printer import Printer
+#from HdWareCon.FilePrinter import Printer
 
 class RB(QObject):
     '''
@@ -32,15 +32,15 @@ class RB(QObject):
 
      
     def giveOutItem(self, item):                      #Запускает процедуру выдачи предмета по его id
-        print "RB: Начало выдачи предмета %s" %(item)
+        print "RB: Начало выдачи предмета %s" %(str(item))
         self.gpioSocket.giveOutItem(item)
         
-    def itemOutHandler(self, result, magazin, item):
+    def itemOutHandler(self, result, magazin, itemId):
         if result:
             print "RB: предмет выдан"
         else: 
             print "RB: предмет не выдан"
-        self.emit(QtCore.SIGNAL("OutingEnd"), result, magazin, item)
+        self.emit(QtCore.SIGNAL("OutingEnd"), result, magazin, itemId)
     
     def scanBrelok(self):
         self.gpioSocket.scanBrelok()

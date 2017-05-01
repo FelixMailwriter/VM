@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from PyQt4 import QtGui
-import mysql.connector
+import mysql.connector as DbConnector
 from mysql.connector import Error
 import base64
 from ConfigParser import ConfigParser
@@ -55,8 +55,7 @@ class MySQLDB(DB):
         conn=None
         dbconfig=self._getDBConfig(filename='config.ini', section='mysql') 
         try:
-            conn=mysql.connector.connect(**dbconfig)
-                
+            conn=DbConnector.connect(**dbconfig)        
         except Error as e:
             self._showError(u'Ошибка', u'Ошибка подключения к базе данных')
             print (e)
@@ -110,6 +109,8 @@ class MySQLDB(DB):
         finally:
             if cur is not None: cur.close()
             if conn is not None: conn.close() 
+
+
         
     def deleteDataFromTable(self, query):
         conn = cur = None
@@ -161,9 +162,27 @@ class MySQLDB(DB):
     def writeLog(self, eventType, source, event):
         query='Insert into Logs (EventType, Source, EventDate, Event)'+\
                 ' values (\'%s\', \'%s\', \'%s\', \'%s\')' \
-                %(eventType, source, str(datetime.datetime.now()), event)
+                %(eventType, source, str(datetime.now()), event)
+        self.insertDataToDB(query)
+    
+    def sellItem(self, magazin, item):
+        #Уменьшение количества предметов в магазине
+        # Получаем текущее количество предметов в магазине
+        query='Select ItemQty from Magazins where idMagazins=%d' %(magazin.num)
+        result=self.getDataFromDb(query, 'one') 
+        if len(result)==0 :
+            self._showError(u'Ошибка', u'Ошибка выборки из базы данных')
+            return
+        qty=int(result[0])-1
+        #Обновляем данные в магазине
+        query='Update Magazins SET ItemQty=%d where idMagazins=%d' %(qty, magazin.num)
         self.insertDataToDB(query)
         
+        #Запись в журнал продаж
+        query='Insert into Sales (saleDate, saledItemId, price)'+\
+                ' VALUES (\'%s\', %d, %d)' %(datetime.now(), item.id, item.price)
+        self.insertDataToDB(query)
+               
     def _showError(self, header, message): 
 
         self.message=Errors(message)

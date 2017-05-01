@@ -7,6 +7,7 @@ import base64
 from ConfigParser import ConfigParser
 from Errors import Errors
 from DB import DB
+from datetime import datetime
 
 
 class MySQLDB(DB):
@@ -157,6 +158,12 @@ class MySQLDB(DB):
             qpixmap.loadFromData(picBytes)
         return qpixmap
     
+    def writeLog(self, eventType, source, event):
+        query='Insert into Logs (EventType, Source, EventDate, Event)'+\
+                ' values (\'%s\', \'%s\', \'%s\', \'%s\')' \
+                %(eventType, source, str(datetime.datetime.now()), event)
+        self.insertDataToDB(query)
+        
     def _showError(self, header, message): 
 
         self.message=Errors(message)

@@ -82,16 +82,22 @@ class Vending(QObject):
         self.givingOutItem.givingOutWindow.show()        
         self.rb.giveOutItem(item)
 
-    def givingOutHandler(self, result, magazin, itemId):
+    def givingOutHandler(self, result, magazin, item):
         if result:
+            #Запись в БД факта продажи
+            self.dbProvider.sellItem(magazin, item)
+  
             self.givingOutItem.givingOutWindow.close()
-            #Вставить процедуру записи лога в БД
             self.writeBrelokWindow=WriteBrelok()
             self.connect(self.writeBrelokWindow, QtCore.SIGNAL("WriteBrelok"), self.writeBrelok)
             self.connect(self.writeBrelokWindow, QtCore.SIGNAL("SimulateWriteOK"), self.simWrite)
             self.writeBrelokWindow.window.show() 
         else:
             #Запись в лог о провале продажи
+            eventType='Error'
+            source='Vending'
+            event='Item %s have not been given' %(str(item.name)) 
+            self.dbProvider.writeLog(eventType, source, event)
             self.givingOutItem.fail()
           
     def writeBrelok(self):

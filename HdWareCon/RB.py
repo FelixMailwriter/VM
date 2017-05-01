@@ -35,12 +35,12 @@ class RB(QObject):
         print "RB: Начало выдачи предмета %s" %(str(item))
         self.gpioSocket.giveOutItem(item)
         
-    def itemOutHandler(self, result, magazin, itemId):
+    def itemOutHandler(self, result, magazin, item):
         if result:
             print "RB: предмет выдан"
         else: 
             print "RB: предмет не выдан"
-        self.emit(QtCore.SIGNAL("OutingEnd"), result, magazin, itemId)
+        self.emit(QtCore.SIGNAL("OutingEnd"), result, magazin, item)
     
     def scanBrelok(self):
         self.gpioSocket.scanBrelok()

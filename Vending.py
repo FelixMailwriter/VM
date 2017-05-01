@@ -85,7 +85,7 @@ class Vending(QObject):
     def givingOutHandler(self, result, magazin, itemId):
         if result:
             #Запись в журнал продаж
-            
+             
             self.givingOutItem.givingOutWindow.close()
             self.writeBrelokWindow=WriteBrelok()
             self.connect(self.writeBrelokWindow, QtCore.SIGNAL("WriteBrelok"), self.writeBrelok)

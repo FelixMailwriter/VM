@@ -34,9 +34,9 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="btn_EngSensSim">
+      <widget class="QPushButton" name="btn_OutSensSim">
        <property name="text">
-        <string>PushButton</string>
+        <string>Симуляция датчика выдачи</string>
        </property>
       </widget>
      </item>

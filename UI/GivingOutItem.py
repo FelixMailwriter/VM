@@ -13,7 +13,7 @@ class GivingOutItem(QObject):
         self.givingOutWindow = uic.loadUi(path)
         self.givingOutWindow.btn_continue.setEnabled(False)
         #self.connect(self.givingOutWindow.btn_EngSensSim, QtCore.SIGNAL("clicked()"), self.engSensClick) #test remove
-        self.connect(self.givingOutWindow.btn_EngSensSim, QtCore.SIGNAL("clicked()"), self.outSensClick)  #test remove
+        self.connect(self.givingOutWindow.btn_OutSensSim, QtCore.SIGNAL("clicked()"), self.outSensClick)  #test remove
         self.givingOutWindow.lbl_msg.setText(u"Ожидайте выдачи...")
     
     

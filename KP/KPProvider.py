@@ -259,20 +259,23 @@ class KPProvider(QObject):
             return False        
                
     def _getConnection(self):
-        for i in range(0,10):
-            try:
-                conn = serial.Serial()
-                conn.baudrate = 9600
-                conn.port = "/dev/ttyACM%d" % i
-                conn.stopbits=2
-                conn.dsrdtr=1
-                conn.startbits=1
-                conn.parity='N'
-                conn.open()
-                conn.close()
-                return conn
-            except serial.serialutil.SerialException :
-                pass
+        for tryConnect in range (1, 11):
+            print 'Попытка инициализации купюроприемника: %d' %(tryConnect)
+            for i in range(0,10):
+                try:
+                    conn = serial.Serial()
+                    conn.baudrate = 9600
+                    conn.port = "/dev/ttyACM%d" % i
+                    conn.stopbits=2
+                    conn.dsrdtr=1
+                    conn.startbits=1
+                    conn.parity='N'
+                    conn.open()
+                    conn.close()
+                    return conn
+                except serial.serialutil.SerialException :
+                    pass
+            time.sleep(2)
         raise PortNotFoundException(u'Порт купюроприемника не найден') 
     
     def _getDataFromPort(self, length=6):

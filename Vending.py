@@ -78,7 +78,7 @@ class Vending(QObject):
         self.givingOutItem=GivingOutItem()
         self.connect(self.rb, QtCore.SIGNAL("OutingEnd"), self.givingOutHandler)
         self.connect(self.givingOutItem, QtCore.SIGNAL("EngSendClick"), self.engSensClick)
-        self.connect(self.givingOutItem, QtCore.SIGNAL("OutSensotClick"), self.outSensClick)
+        self.connect(self.givingOutItem, QtCore.SIGNAL("OutSensorClick"), self.outSensClick)
         self.givingOutItem.givingOutWindow.show()        
         self.rb.giveOutItem(item)
 

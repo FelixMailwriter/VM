@@ -8,6 +8,7 @@ from UI.FinishWindow import FinishWindow
 from UI.ChoosingItem import ChoosingItemWindow
 from UI.ReceiveCash import ReceiveCash
 from UI.GivingOutItem import GivingOutItem
+from Common.Logs import LogEvent
 import BDL.BDCon as BDCon
 from Errors import Errors
 
@@ -94,10 +95,8 @@ class Vending(QObject):
             self.writeBrelokWindow.window.show() 
         else:
             #Запись в лог о провале продажи
-            eventType='Error'
-            source='Vending'
-            event='Item %s have not been given' %(str(item.name)) 
-            self.dbProvider.writeLog(eventType, source, event)
+            logEvent=LogEvent('Critical', 'Vending', 'Item %s have not been given' %(str(item.name)))
+            self.dbProvider.writeLog(logEvent)
             self.givingOutItem.fail()
           
     def writeBrelok(self):

@@ -159,11 +159,15 @@ class MySQLDB(DB):
             qpixmap.loadFromData(picBytes)
         return qpixmap
     
-    def writeLog(self, eventType, source, event):
-        query='Insert into Logs (EventType, Source, EventDate, Event)'+\
+    def writeLog(self, logMessages):#eventType, source, event):
+        for logMessage in logMessages:
+            priority=logMessage.priority
+            source=logMessage.sourse
+            event=logMessage.message
+            query='Insert into Log (EventType, Source, EventDate, Event)'+\
                 ' values (\'%s\', \'%s\', \'%s\', \'%s\')' \
-                %(eventType, source, str(datetime.now()), event)
-        self.insertDataToDB(query)
+                %(priority, source, str(datetime.now()), event)
+            self.insertDataToDB(query) 
     
     def sellItem(self, magazin, item):
         #Уменьшение количества предметов в магазине

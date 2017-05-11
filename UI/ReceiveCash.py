@@ -44,6 +44,7 @@ class ReceiveCash(QObject):
             
     def increasePayment(self, summa):
         self.payment+=summa
+        self.emit(QtCore.SIGNAL('PaymentChange'), self.payment)
         self.receiveCashWindow.lbl_summa.setText("%s" %(self.payment))
         if (self.payment>=self.item.price):
             self.receiveCashWindow.btnContinue.setEnabled(True)

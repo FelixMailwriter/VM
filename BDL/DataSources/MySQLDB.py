@@ -169,7 +169,7 @@ class MySQLDB(DB):
                 %(priority, source, str(datetime.now()), event)
             self.insertDataToDB(query) 
     
-    def sellItem(self, magazin, item):
+    def sellItem(self, magazin, item, payment):
         #Уменьшение количества предметов в магазине
         # Получаем текущее количество предметов в магазине
         query='Select ItemQty from Magazins where idMagazins=%d' %(magazin.num)
@@ -183,8 +183,8 @@ class MySQLDB(DB):
         self.insertDataToDB(query)
         
         #Запись в журнал продаж
-        query='Insert into Sales (saleDate, saledItemId, price)'+\
-                ' VALUES (\'%s\', %d, %d)' %(datetime.now(), item.id, item.price)
+        query='Insert into Sales (saleDate, saledItemId, price, payment)'+\
+                ' VALUES (\'%s\', %d, %d, %d)' %(datetime.now(), item.id, item.price, payment)
         self.insertDataToDB(query)
                
     def _showError(self, header, message): 

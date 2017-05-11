@@ -65,9 +65,12 @@ class Vending(QObject):
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentCancelled"), self.paymentCancelled)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("GiveOutItem"), self.giveOutItem)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("ReceiveMoneyTimeout"), self.restart)
+        self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentChange"), self._changePayment)
         self.receiveCashWindow.receiveCashWindow.show()
         
-  
+    def _changePayment(self, payment):
+        self.payment=payment 
+    
     def paymentCancelled(self, payment):
         self.payment=payment
         self.choosingItemWindow = ChoosingItemWindow(self.rb.gpioSocket.magazines.copy(), self.payment)
@@ -86,7 +89,7 @@ class Vending(QObject):
     def givingOutHandler(self, result, magazin, item):
         if result:
             #Запись в БД факта продажи
-            self.dbProvider.sellItem(magazin, item)
+            self.dbProvider.sellItem(magazin, item, self.payment)
   
             self.givingOutItem.givingOutWindow.close()
             self.writeBrelokWindow=WriteBrelok()

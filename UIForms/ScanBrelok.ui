@@ -17,7 +17,10 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QComboBox" name="cmbx_lang"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="lbl_pressBtnScan1">
        <property name="font">
         <font>
          <pointsize>20</pointsize>
@@ -37,7 +40,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="label_2">
+      <widget class="QLabel" name="lbl_pressBtnScan2">
        <property name="enabled">
         <bool>true</bool>
        </property>

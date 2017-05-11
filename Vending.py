@@ -11,6 +11,7 @@ from UI.GivingOutItem import GivingOutItem
 from Common.Logs import LogEvent
 import BDL.BDCon as BDCon
 from Errors import Errors
+import gettext
 
 class Vending(QObject):
     '''
@@ -35,8 +36,8 @@ class Vending(QObject):
             dbProvider=dbConnector.dbContext           #Экземпляр подключенной базы данных  
             return dbProvider
         except:
-            self.message=Errors(u'Ошибка подключения к базе данных')
-            self.message.window.setWindowTitle(u'Ошибка')
+            self.message=Errors(_(u'Database connection error'))
+            self.message.window.setWindowTitle(_(u'Error'))
             self.message.window.show()
             return
     

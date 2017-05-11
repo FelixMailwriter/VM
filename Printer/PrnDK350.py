@@ -3,7 +3,7 @@ from PyQt4 import QtCore
 import serial
 from ConfigParser import ConfigParser
 from enum import __repr__
-
+import gettext
 
 class Printer(QtCore.QThread):
     def __init__(self, items, checkType='NotFisk'):
@@ -31,7 +31,7 @@ class Printer(QtCore.QThread):
             for item in items:
                 prn_config[item[0]]=item[1]
         else:
-            self._showError(u'Ошибка', u'Ошибка файла конфигурации. Отсутствует секция принтера.')
+            self._showError(_(u'Error'), _(u'Configuration file error. No printer\'s section.'))
         return prn_config
 
     def _getConnection(self, devPath):

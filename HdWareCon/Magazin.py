@@ -3,8 +3,6 @@
 from HdWareCon.MagEng import MagEng
 from HdWareCon.Pin import Pin
 
-#from Common.Item import Item
-
 class Magazin():
     '''
     Класс описывает сущность магазина предметов. 

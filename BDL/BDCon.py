@@ -2,6 +2,7 @@
 
 from DataSources import MySQLDB, TestDb
 from Errors import Errors
+import gettext
 
 class BDCon():
     '''
@@ -15,8 +16,8 @@ class BDCon():
         elif path=='SQLDB':
             self.dbContext=MySQLDB.MySQLDB()
         else:
-            self.message=Errors(u'Нет предметов к продаже')
-            self.message.window.setWindowTitle(u'Сообщение')
+            self.message=Errors(_(u'There are no items to sell'))
+            self.message.window.setWindowTitle(_(u'Message'))
             self.message.window.show()
         
      

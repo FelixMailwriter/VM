@@ -6,6 +6,7 @@ from enum import __repr__
 from KP.crc import CRC
 from PyQt4 import QtCore
 from PyQt4.Qt import QObject
+import gettext
 
 class KPProvider(QObject):
 
@@ -85,7 +86,7 @@ class KPProvider(QObject):
                         print 'Принято {} лей'.format(noteValue)
                         self.emit(QtCore.SIGNAL("Note stacked"), noteValue)
                     else:
-                        raise DeviceErrorException(u"Ошибка распознания купюры")
+                        raise DeviceErrorException(_(u"Error in recognition of note"))
             else: 
                 self.busy=False
                 break
@@ -99,14 +100,14 @@ class KPProvider(QObject):
         Устанавливаем версию протокола
         '''
         if not self._setProtocolVersion():
-            raise DeviceErrorException(u"Ошибка установки версии протокола")
+            raise DeviceErrorException(_(u"Protocol version's setting error"))
             return False
 
         '''
         Запрашиваем настройки каналов купюр - номиналы по каналам
         '''
         if not self._getCurrencyByChannels():
-            raise DeviceErrorException(u"Ошибка запроса номиналов купюр по каналам")
+            raise DeviceErrorException(_(u"Error in request of notes\' channels"))
             return False
 
         '''
@@ -115,21 +116,21 @@ class KPProvider(QObject):
         data=self._poll()
         pollOK=data[3]
         if not pollOK=='f0'.decode('hex'):    
-            raise DeviceErrorException(u"Ошибка чтения номинало купюр")
+            raise DeviceErrorException(_(u"Error in notes\' denomination reading"))
             return False
 
         '''
         Устанавливаем разрешенные каналы приема купюр
         '''
         if not self._setInhibits():
-            raise DeviceErrorException(u"Ошибка установки разрешенных каналов приема купюр")
+            raise DeviceErrorException(_(u"Error in setting channels of notes receiving"))
             return False
         
         '''
         Включаем купюроприемник
         '''
         if not self._enable():
-            raise DeviceErrorException(u"Ошибка процедуры включения")
+            raise DeviceErrorException(_(u"Engage procedure error"))
             return False
         
         return True 
@@ -144,7 +145,7 @@ class KPProvider(QObject):
             trycount+=1
             time.sleep(1)
         if not syncOK:
-            raise DeviceErrorException(u"Синхронизация с устройством не удалась")
+            raise DeviceErrorException(_(u"Device synchronization failed"))
             return False       
     
     def _poll(self):
@@ -276,7 +277,7 @@ class KPProvider(QObject):
                 except serial.serialutil.SerialException :
                     pass
             time.sleep(2)
-        raise PortNotFoundException(u'Порт купюроприемника не найден') 
+        raise PortNotFoundException(_(u'Note receiver\'s port is not found')) 
     
     def _getDataFromPort(self, length=6):
         print 'wait for answer...'
@@ -290,7 +291,7 @@ class KPProvider(QObject):
                 self.showRecevedData(data)
                 return data
             time.sleep(1)
-        raise DeviceErrorException(u'Devise not responding')
+        raise DeviceErrorException(_(u'Devise not responding'))
         #return None   
             
     def _sync(self):

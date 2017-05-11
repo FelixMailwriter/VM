@@ -20,7 +20,7 @@ class ScanBrelok(QObject):
         self.window.lbl_scan.hide()
         self.connect(self.window.btn_scan, QtCore.SIGNAL("clicked()"), self.scanHandler)
         self.connect(self.window.btn_ScanOK, QtCore.SIGNAL("clicked()"), self.scanOKHandler) #Test
-        self.window.cmbx_lang.currentIndexChanged.connect(self._setLabels)
+        self.window.cmbx_lang.currentIndexChanged.connect(self._changeLocale)
         self._setLabels()
     
     def _setLang(self):
@@ -41,6 +41,14 @@ class ScanBrelok(QObject):
         self.window.lbl_fail.setText(_(u'Scanning failed'))
         self.window.btn_scan.setText(_(u'Scan'))
 
+    def _changeLocale(self):
+        lang=self.window.cmbx_lang.currentText()
+        if lang==u'Русский':
+           gettext.install('ru', './locale', unicode=True) 
+        elif lang==u'English':
+            gettext.install('en', './locale', unicode=True)
+        self._setLabels()
+            
         
                                
     def scanHandler(self):

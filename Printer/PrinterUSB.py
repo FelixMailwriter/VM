@@ -162,14 +162,14 @@ class Printer(QtCore.QThread):
         self._getPrintDevice()
         self.printDevOut, self.printDevIn=self._connectDev()
         if self.printDevOut==None or self.printDevIn==None:
-            raise PrinterHardwareException('Printer endpoint setup error')
+            raise PrinterHardwareException(u'Printer endpoint setup error')
         
     def _getPrintDevice(self):   #получаем ссылку на устройство печати
     # ищем устройство по коду производителя и коду устройства
         self.dev = usb.core.find(idVendor=0x067b, idProduct=0x2303)
     # если устройство не найдено - 
         if self.dev is None:
-            raise PrinterHardwareException('Device not found') 
+            raise PrinterHardwareException(u'Device not found') 
             
         #Если устройство найдено, оключаем системный драйвер
         if self.dev.is_kernel_driver_active(0):

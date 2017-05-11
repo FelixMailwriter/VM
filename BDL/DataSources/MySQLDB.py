@@ -8,7 +8,7 @@ from ConfigParser import ConfigParser
 from Errors import Errors
 from DB import DB
 from datetime import datetime
-
+import gettext
 
 class MySQLDB(DB):
 
@@ -57,7 +57,7 @@ class MySQLDB(DB):
         try:
             conn=DbConnector.connect(**dbconfig)        
         except Error as e:
-            self._showError(u'Ошибка', u'Ошибка подключения к базе данных')
+            self._showError(_(u'Error'), _(u'Database connection failed'))
             print (e)
             
         return conn
@@ -73,7 +73,7 @@ class MySQLDB(DB):
             for item in items:
                 config[item[0]]=item[1]
         else:
-            self._showError(u'Ошибка', u'Ошибка файла конфигурации БД. Отсутствует секция.')
+            self._showError(_(u'Error'), _(u'There is errors in the configuration file. No section.'))
         return config
     
     def getDataFromDb(self, query, type='all'):
@@ -88,7 +88,7 @@ class MySQLDB(DB):
                 result=cur.fetchone()            
             return result
         except:
-            self._showError(u'Ошибка', u'Ошибка подключения к базе данных')
+            self._showError(_(u'Error'), _(u'Database connection failed'))
             
         finally:
             if cur is not None: cur.close()
@@ -104,7 +104,7 @@ class MySQLDB(DB):
             return True
             
         except:
-            self._showError(u'Ошибка', u'Ошибка подключения к базе данных')
+            self._showError(_(u'Error'), _(u'Database connection failed'))
             return False
         finally:
             if cur is not None: cur.close()
@@ -120,7 +120,7 @@ class MySQLDB(DB):
             cur.execute(query)
             conn.commit()
         except:
-            self._showError(u'Ошибка', u'Ошибка подключения к базе данных')
+            self._showError(_(u'Error'), _(u'Database connection failed'))
             return False
         finally:
             if cur is not None: cur.close()
@@ -175,7 +175,7 @@ class MySQLDB(DB):
         query='Select ItemQty from Magazins where idMagazins=%d' %(magazin.num)
         result=self.getDataFromDb(query, 'one') 
         if len(result)==0 :
-            self._showError(u'Ошибка', u'Ошибка выборки из базы данных')
+            self._showError(_(u'Error'), _(u'Database error'))
             return
         qty=int(result[0])-1
         #Обновляем данные в магазине

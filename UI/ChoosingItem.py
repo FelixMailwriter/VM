@@ -4,7 +4,7 @@ from PyQt4 import QtCore, QtGui, uic
 from PyQt4.QtGui import QIcon
 from Common.Item import Item
 from Errors import Errors
-
+import gettext
 
 class ChoosingItemWindow(QObject):
     '''
@@ -28,8 +28,8 @@ class ChoosingItemWindow(QObject):
       
     def getItemButtonDict(self):
         if len(self.itemsForSale)==0:
-            self.message=Errors(u'Нет предметов к продаже')
-            self.message.window.setWindowTitle(u'Сообщение')
+            self.message=Errors(_(u'There are no items to sell'))
+            self.message.window.setWindowTitle(_(u'Message'))
             self.message.window.show()
             return            
         ibdict={}

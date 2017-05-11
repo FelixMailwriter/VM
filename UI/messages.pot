@@ -1,0 +1,37 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2017-05-11 14:12+EEST\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: ScanBrelok.py:38
+msgid "Press the button \"Scan\""
+msgstr ""
+
+#: ScanBrelok.py:39
+msgid "and enclose your key to the scanner"
+msgstr ""
+
+#: ScanBrelok.py:40
+msgid "Scanning..."
+msgstr ""
+
+#: ScanBrelok.py:41
+msgid "Scanning failed"
+msgstr ""
+
+#: ScanBrelok.py:42
+msgid "Scan"
+msgstr ""
+

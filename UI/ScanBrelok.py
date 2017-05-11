@@ -2,14 +2,16 @@
 import os
 from PyQt4.Qt import QObject, QStringList
 from PyQt4 import QtCore, uic
-
+import gettext
+gettext.install('ru', './locale', unicode=True)
 class ScanBrelok(QObject):
     '''
     Класс описывает окно сканирования брелка клиента
     '''
 
-
+    
     def __init__(self):
+        
         path=os.path.abspath("UIForms//ScanBrelok.ui")
         QObject.__init__(self)
         self.window = uic.loadUi(path)
@@ -33,11 +35,11 @@ class ScanBrelok(QObject):
         self.window.cmbx_lang.setCurrentIndex(index) 
     
     def _setLabels(self):
-        self.window.lbl_pressBtnScan1.setText(tr(u'Press the button \"Scan\"'))
-        self.window.lbl_pressBtnScan2.setText(u'and enclose your key to the scanner')
-        self.window.lbl_scan.setText(u'Scanning...')
-        self.window.lbl_fail.setText(u'Scanning failed')
-        self.window.btn_scan.setText(u'Scan')
+        self.window.lbl_pressBtnScan1.setText(_(u'Press the button \"Scan\"'))
+        self.window.lbl_pressBtnScan2.setText(_(u'and enclose your key to the scanner'))
+        self.window.lbl_scan.setText(_(u'Scanning...'))
+        self.window.lbl_fail.setText(_(u'Scanning failed'))
+        self.window.btn_scan.setText(_(u'Scan'))
 
         
                                

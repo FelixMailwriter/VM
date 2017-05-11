@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 import os
-from PyQt4.Qt import QObject, QStringList
+from PyQt4.Qt import QObject, QStringList, QImage, QPixmap, QIcon
 from PyQt4 import QtCore, uic
 import gettext
 gettext.install('ru', './locale', unicode=True)
@@ -28,11 +28,27 @@ class ScanBrelok(QObject):
         LangList=QStringList()
         LangList.append(u'English')
         LangList.append(u'Русский')
-        LangList.append(u'Украiньська')
+        LangList.append(u'Moldovenesc')
         self.window.cmbx_lang.addItems(LangList)
         name=str(u'English')
         index=self.window.cmbx_lang.findText(name)
-        self.window.cmbx_lang.setCurrentIndex(index) 
+        self.window.cmbx_lang.setCurrentIndex(index)
+        self._setLangIcons() 
+        
+    def _setLangIcons(self):
+        itemcount=self.window.cmbx_lang.count()
+        for i in range(0, itemcount+1):
+            if self.window.cmbx_lang.itemText(i)==u'English':
+                path='./Resources/FlagsIcons/USA.png'
+            elif self.window.cmbx_lang.itemText(i)==u'Русский':
+                path='./Resources/FlagsIcons/Russia.png'
+            elif self.window.cmbx_lang.itemText(i)==u'Moldovenesc':
+                path='./Resources/FlagsIcons/Moldova.png'
+            img=QPixmap()
+            img.load(path)
+            icon=QIcon(img)
+            self.window.cmbx_lang.setItemIcon(i,icon) 
+                
     
     def _setLabels(self):
         self.window.lbl_pressBtnScan1.setText(_(u'Press the button \"Scan\"'))

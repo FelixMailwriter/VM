@@ -21,7 +21,7 @@ class ScanBrelok(QObject):
         self.connect(self.window.btn_scan, QtCore.SIGNAL("clicked()"), self.scanHandler)
         self.connect(self.window.btn_ScanOK, QtCore.SIGNAL("clicked()"), self.scanOKHandler) #Test
         self.window.cmbx_lang.currentIndexChanged.connect(self._changeLocale)
-        self._setLabels()
+        self._changeLocale()
     
     def _setLang(self):
         #cmbx=QComboBox()
@@ -53,23 +53,23 @@ class ScanBrelok(QObject):
                                
     def scanHandler(self):
         self.window.btn_scan.setEnabled(False)
-        self.window.label.hide()
-        self.window.label_2.hide()
+        self.window.lbl_pressBtnScan1.hide()
+        self.window.lbl_pressBtnScan2.hide()
         self.window.lbl_scan.show()
         self.window.lbl_fail.hide()
         self.emit(QtCore.SIGNAL("ScanBrelok"))
          
     
     def scanFail(self):
-        self.window.label.show()
-        self.window.label_2.show()
+        self.window.lbl_pressBtnScan1.show()
+        self.window.lbl_pressBtnScan2.show()
         self.window.lbl_scan.hide()
         self.window.lbl_fail.show()
         QtCore.QTimer.singleShot(2000, self.refresh)
 
     def refresh(self):
-        self.window.label.show()
-        self.window.label_2.show()
+        self.window.lbl_pressBtnScan1.show()
+        self.window.lbl_pressBtnScan2.show()
         self.window.lbl_scan.hide()
         self.window.lbl_fail.hide()
         self.window.btn_scan.setEnabled(True)    

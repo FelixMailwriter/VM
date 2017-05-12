@@ -60,7 +60,7 @@ class ScanBrelok(QObject):
     def _changeLocale(self):
         lang=self.window.cmbx_lang.currentText()
         if lang==u'Русский':
-           gettext.install('ru', './locale', unicode=True) 
+            gettext.install('ru', './locale', unicode=True) 
         elif lang==u'English':
             gettext.install('en', './locale', unicode=True)
         self._setLabels()

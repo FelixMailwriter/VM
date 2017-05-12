@@ -34,8 +34,9 @@ class KPProvider(QObject):
             command=bytearray(1)
             command[0]=0x09
             comm=self._generateCommand(0x01, command)
-            self.conn.write(comm)
-            self._reverseSeq 
+            if self.conn.isOpen():
+                self.conn.write(comm)
+                self._reverseSeq 
                
     def receiveNote(self):
         '''

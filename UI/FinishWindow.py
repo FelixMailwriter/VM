@@ -2,6 +2,7 @@
 import os
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore, uic
+import gettext
 
 class FinishWindow(QObject):
 
@@ -14,9 +15,14 @@ class FinishWindow(QObject):
         QObject.__init__(self)
         path=os.path.abspath("UIForms//FinishWindow.ui")
         self.window = uic.loadUi(path)
+        self._setLabels()
         QtCore.QTimer.singleShot(5000, self.finish)
         
     def finish(self):
         self.window.close()
         self.emit(QtCore.SIGNAL("FinishProc"))
+        
+    def _setLabels(self):
+        self.window.label.setText(_(u"The key was written successfully"))
+        self.window.label_2.setText(_(u"Thanks for purchase"))
         

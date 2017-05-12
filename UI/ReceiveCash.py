@@ -1,10 +1,11 @@
 # -*- coding:utf-8 -*-
 import os
 from PyQt4.Qt import QObject
-from PyQt4 import QtCore, QtGui, uic
+from PyQt4 import QtCore, uic
 #from KP.KPProvider import KPProvider
 from KP.KPManager import KPManager
-from Printer.PrnDK350 import Printer 
+from Printer.PrnDK350 import Printer
+import gettext 
 
 class ReceiveCash(QObject):
     '''
@@ -24,20 +25,24 @@ class ReceiveCash(QObject):
         self.connect(self.receiveCashWindow.btnContinue, QtCore.SIGNAL("clicked()"), self.continueOperation)
         self.connect(self.kpManager, QtCore.SIGNAL("Note stacked"), self.increasePayment)
         self.connect(self.kpManager, QtCore.SIGNAL('ReceiveMoneyTimeout'), self._exitPayment)
-        self.paintForm()
+        self._setLabels()
         if (self.payment>=self.item.price):
             self.receiveCashWindow.btnContinue.setEnabled(True)
                
-    
-    def paintForm(self):
+    def _setLabels(self):
+        self.receiveCashWindow.lbl1.setText(_(u'Incomming cash'))
+        self.receiveCashWindow.btnPay.setText(_(u'Pay'))
+        self.receiveCashWindow.btnCancel.setText(_(u'Cancel'))
+        self.receiveCashWindow.btnContinue.setText(_(u'Next'))
+        
         self.receiveCashWindow.labelItem.setPixmap(self.item.icon)
         self.receiveCashWindow.labelPrice.setText("%s" %(self.item.price))
         if self.payment==0:
             paymentText=""
         else:
             paymentText="%s" %(self.payment)
-        self.receiveCashWindow.lbl_summa.setText(paymentText)
- 
+        self.receiveCashWindow.lbl_summa.setText(paymentText)       
+        
     def enableKP(self):
         self.receiveCashWindow.btnPay.setEnabled(False)
         self.kpManager.start()

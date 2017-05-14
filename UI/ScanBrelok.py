@@ -3,7 +3,8 @@ import os
 from PyQt4.Qt import QObject, QStringList, QImage, QPixmap, QIcon
 from PyQt4 import QtCore, uic
 import gettext
-gettext.install('ru', './locale', unicode=True)
+#gettext.install('ru', './locale', unicode=True)
+#gettext.install('ro', './locale', unicode=True)
 class ScanBrelok(QObject):
     '''
     Класс описывает окно сканирования брелка клиента
@@ -28,7 +29,7 @@ class ScanBrelok(QObject):
         LangList=QStringList()
         LangList.append(u'English')
         LangList.append(u'Русский')
-        LangList.append(u'Moldovenesc')
+        LangList.append(u'Română')
         self.window.cmbx_lang.addItems(LangList)
         name=str(u'English')
         index=self.window.cmbx_lang.findText(name)
@@ -42,7 +43,7 @@ class ScanBrelok(QObject):
                 path='./Resources/FlagsIcons/USA.png'
             elif self.window.cmbx_lang.itemText(i)==u'Русский':
                 path='./Resources/FlagsIcons/Russia.png'
-            elif self.window.cmbx_lang.itemText(i)==u'Moldovenesc':
+            elif self.window.cmbx_lang.itemText(i)==u'Română':
                 path='./Resources/FlagsIcons/Moldova.png'
             img=QPixmap()
             img.load(path)
@@ -63,7 +64,9 @@ class ScanBrelok(QObject):
             gettext.install('ru', './locale', unicode=True) 
         elif lang==u'English':
             gettext.install('en', './locale', unicode=True)
-        self._setLabels()
+        elif lang==u'Română':
+            gettext.install('ro', './locale', unicode=True)
+        self._setLabels()        
             
         
                                

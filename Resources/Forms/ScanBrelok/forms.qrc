@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>fon.png</file>
+    <file>FormBackGround.jpg</file>
+  </qresource>
+</RCC>

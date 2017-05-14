@@ -14,65 +14,35 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-image: url(./Resources/Forms/ScanBrelok/FormBackGround.jpg);
-</string>
+   <string notr="true">background-image: url(:/ScanBrelok/FormBackGround.jpg);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_3">
-       <item>
-        <spacer name="horizontalSpacer_5">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
-        <widget class="QComboBox" name="cmbx_lang">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">selection-color: rgb(255, 0, 0);
-background: transparent;
-background-color:  rgba(0, 85, 255,100);
-border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 5px;
-font: 20pt &quot;Noto Sans CJK KR&quot;; 
-color: rgb(240, 221, 13);</string>
-         </property>
-         <property name="iconSize">
-          <size>
-           <width>32</width>
-           <height>32</height>
-          </size>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer name="horizontalSpacer_6">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>40</width>
-           <height>20</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
+      <widget class="QComboBox" name="cmbx_lang">
+       <property name="palette">
+        <palette>
+         <active/>
+         <inactive/>
+         <disabled/>
+        </palette>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>28</pointsize>
+         <weight>75</weight>
+         <italic>true</italic>
+         <bold>true</bold>
+        </font>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>32</width>
+         <height>32</height>
+        </size>
+       </property>
+      </widget>
      </item>
      <item>
       <spacer name="verticalSpacer">
@@ -123,7 +93,7 @@ color: rgb(240, 221, 13);</string>
           <bool>false</bool>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-image: url(:/newPrefix/fon.png);
+          <string notr="true">background-image: url(:/newPrefix/ScanBrelok/fon.png);
 color: rgb(255, 255, 255);
 font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
          </property>
@@ -199,7 +169,7 @@ font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-image: url(:/newPrefix/fon.png);
+        <string notr="true">background-image: url(:/newPrefix/ScanBrelok/fon.png);
 color: rgb(255, 255, 255);
 font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
        </property>
@@ -327,7 +297,7 @@ font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-image: url(:/newPrefix/fon.png);
+        <string notr="true">background-image: url(:/newPrefix/ScanBrelok/fon.png); 
 color: rgb(255, 0, 0);
 font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
        </property>
@@ -458,7 +428,7 @@ font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
         </font>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-image: url(:/newPrefix/fon.png);
+        <string notr="true">background-image: url(:/newPrefix/ScanBrelok/fon.png);
 color: rgb(255, 0, 0);
 font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
        </property>
@@ -610,9 +580,10 @@ font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
           <bool>false</bool>
          </property>
          <property name="styleSheet">
-          <string notr="true">background-image: url(:/newPrefix/fon.png);
+          <string notr="true">background-image: url(:/newPrefix/ScanBrelok/fon.png); 
 color: rgb(240, 221, 13);
 border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 10px
+
 </string>
          </property>
          <property name="text">
@@ -656,7 +627,7 @@ border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 10px
   </layout>
  </widget>
  <resources>
-  <include location="../Resources/Forms/ScanBrelok/forms.qrc"/>
+  <include location="../Resources/Forms/FormElement.qrc"/>
  </resources>
  <connections/>
 </ui>

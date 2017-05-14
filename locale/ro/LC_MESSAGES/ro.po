@@ -1,0 +1,167 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2017-05-14 16:07+0300\n"
+"PO-Revision-Date: 2017-05-15 00:30+0300\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: pygettext.py 1.5\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Language: ro\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: VM/BDL/BDCon.py:19 VM/UI/ChoosingItem.py:31
+msgid "There are no items to sell"
+msgstr "Nu există elemente de vânzare"
+
+#: VM/BDL/BDCon.py:20 VM/UI/ChoosingItem.py:32
+msgid "Message"
+msgstr "Mesaj"
+
+#: VM/BDL/DataSources/MySQLDB.py:60 VM/BDL/DataSources/MySQLDB.py:76
+#: VM/BDL/DataSources/MySQLDB.py:91 VM/BDL/DataSources/MySQLDB.py:107
+#: VM/BDL/DataSources/MySQLDB.py:123 VM/BDL/DataSources/MySQLDB.py:178
+#: VM/Printer/PrnDK350.py:34 VM/Vending.py:40
+msgid "Error"
+msgstr "Eroare"
+
+#: VM/BDL/DataSources/MySQLDB.py:60 VM/BDL/DataSources/MySQLDB.py:91
+#: VM/BDL/DataSources/MySQLDB.py:107 VM/BDL/DataSources/MySQLDB.py:123
+msgid "Database connection failed"
+msgstr "Eroare la conectarea cu baza de date"
+
+#: VM/BDL/DataSources/MySQLDB.py:76
+msgid "There is errors in the configuration file. No section."
+msgstr "Eroare de configurare. Nu există secțiunea"
+
+#: VM/BDL/DataSources/MySQLDB.py:178
+msgid "Database error"
+msgstr "Eroare bazei de date"
+
+#: VM/Errors.py:15
+msgid "Close"
+msgstr "Închide"
+
+#: VM/KP/KPProvider.py:89
+msgid "Error in recognition of note"
+msgstr "Eroare in recunoașterea bancnotei"
+
+#: VM/KP/KPProvider.py:103
+msgid "Protocol version's setting error"
+msgstr "Eroare de instalare a versiunei protocolului"
+
+#: VM/KP/KPProvider.py:110
+msgid "Error in request of notes' channels"
+msgstr "Eroare de cerere a canalului bancnotei"
+
+#: VM/KP/KPProvider.py:119
+msgid "Error in notes' denomination reading"
+msgstr "Eroare de citire a valoarei bancnotei"
+
+#: VM/KP/KPProvider.py:126
+msgid "Error in setting channels of notes receiving"
+msgstr "Eroare de instalare a receptorului bancnotelor"
+
+#: VM/KP/KPProvider.py:133
+msgid "Engage procedure error"
+msgstr "Eroare in procedura de lansare"
+
+#: VM/KP/KPProvider.py:148
+msgid "Device synchronization failed"
+msgstr "Eroare in sincronizare dispozitivului"
+
+#: VM/KP/KPProvider.py:280
+msgid "Note receiver's port is not found"
+msgstr "Portul a receptorului bancnotelor nu a fost găsit"
+
+#: VM/KP/KPProvider.py:294
+msgid "Devise not responding"
+msgstr "Dispozitivul nu răspunde"
+
+#: VM/Printer/PrnDK350.py:34
+msgid "Configuration file error. No printer's section."
+msgstr "Eroare fișierului de configurare. Nu există o secțiune a imprimantei."
+
+#: VM/UI/FinishWindow.py:26
+msgid "The key was written successfully"
+msgstr "Cheia este înregistrată cu succes"
+
+#: VM/UI/FinishWindow.py:27
+msgid "Thanks for purchase"
+msgstr "Vă mulțumim pentru procurare"
+
+#: VM/UI/GivingOutItem.py:18
+msgid "Wait for delivery..."
+msgstr "Asteptati emiterea"
+
+#: VM/UI/GivingOutItem.py:22
+msgid "Delivery error. Call techsupport, please."
+msgstr "Eroare în emitere. Vă rugăm să contactați suportul tehnic."
+
+#: VM/UI/ReceiveCash.py:33
+msgid "Incomming cash"
+msgstr "Suma întrodusă"
+
+#: VM/UI/ReceiveCash.py:34
+msgid "Pay"
+msgstr "Plătiți"
+
+#: VM/UI/ReceiveCash.py:35
+msgid "Cancel"
+msgstr "Anulare"
+
+#: VM/UI/ReceiveCash.py:36 VM/UI/WriteBrelok.py:29
+msgid "Next"
+msgstr "Mai departe"
+
+#: VM/UI/ScanBrelok.py:54
+msgid "Press the button \"Scan\""
+msgstr "Apăsați butonul 'Scanați'"
+
+#: VM/UI/ScanBrelok.py:55
+msgid "and enclose your key to the scanner"
+msgstr "și apropiați cheia D-vstră de scaner"
+
+#: VM/UI/ScanBrelok.py:56
+msgid "Scanning..."
+msgstr "Scanare"
+
+#: VM/UI/ScanBrelok.py:57
+msgid "Scanning failed"
+msgstr "Scanare eșuată"
+
+#: VM/UI/ScanBrelok.py:58
+msgid "Scan"
+msgstr "Scanați"
+
+#: VM/UI/WriteBrelok.py:24
+msgid "The key is given away"
+msgstr "Cheia este eliberată"
+
+#: VM/UI/WriteBrelok.py:25
+msgid "Press 'Next'"
+msgstr "Apăsați  'Mai departe'"
+
+#: VM/UI/WriteBrelok.py:26
+msgid "and enclose it to the scanner"
+msgstr "și apropiați cheia de scaner"
+
+#: VM/UI/WriteBrelok.py:27
+msgid "Writing..."
+msgstr "Înregistrare..."
+
+#: VM/UI/WriteBrelok.py:28
+msgid "Writing failed. Try again, please."
+msgstr "Înregistrarea eșuată. Încercați încă o dată"
+
+#: VM/Vending.py:39
+msgid "Database connection error"
+msgstr "Eroare la conectarea cu baza de date"

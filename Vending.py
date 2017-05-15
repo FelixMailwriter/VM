@@ -63,7 +63,7 @@ class Vending(QObject):
 
     def paymentStart(self, item):
         self.itemId=item
-        self.receiveCashWindow=ReceiveCash(self.payment, item)
+        self.receiveCashWindow=ReceiveCash(self.payment, item, self.dbProvider)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentCancelled"), self.paymentCancelled)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("GiveOutItem"), self.giveOutItem)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("ReceiveMoneyTimeout"), self.restart)

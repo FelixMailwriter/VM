@@ -11,11 +11,12 @@ class ReceiveCash(QObject):
     '''
     Оплата предмета и выдача чека.
     '''
-    def __init__(self, payment, item):
+    def __init__(self, payment, item, dbProvider):
         QObject.__init__(self)
         self.kpManager=KPManager(self)
         self.payment=payment
         self.item=item
+        self.dbProvider=dbProvider
         path=os.path.abspath("UIForms//ReceiveCash.ui")       
         self.receiveCashWindow = uic.loadUi(path)
         self.receiveCashWindow.btnContinue.setEnabled(self.item.price<self.payment)
@@ -32,6 +33,7 @@ class ReceiveCash(QObject):
     def _setLabels(self):
         self.receiveCashWindow.lbl1.setText(_(u'Incomming cash'))
         self.receiveCashWindow.btnPay.setText(_(u'Pay'))
+        self.receiveCashWindow.lbl_msgNoPayOut(_(u'Mashine does not give any odd money'))
         self.receiveCashWindow.btnCancel.setText(_(u'Cancel'))
         self.receiveCashWindow.btnContinue.setText(_(u'Next'))
         
@@ -49,6 +51,7 @@ class ReceiveCash(QObject):
             
     def increasePayment(self, summa):
         self.payment+=summa
+        self.dbProvider.writeBanknote(summa)
         self.emit(QtCore.SIGNAL('PaymentChange'), self.payment)
         self.receiveCashWindow.lbl_summa.setText("%s" %(self.payment))
         if (self.payment>=self.item.price):

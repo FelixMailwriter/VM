@@ -186,7 +186,12 @@ class MySQLDB(DB):
         query='Insert into Sales (saleDate, saledItemId, price, payment)'+\
                 ' VALUES (\'%s\', %d, %d, %d)' %(datetime.now(), item.id, item.price, payment)
         self.insertDataToDB(query)
-               
+     
+    def writeBanknote(self, nominal):
+        query='Insert into ReceivedNotes (DateReceiving, NoteValue) values (\'%s\', %d)' %(str(datetime.now(), nominal))
+        result=self.insertDataToDB(query)
+        
+                  
     def _showError(self, header, message): 
 
         self.message=Errors(message)

@@ -22,9 +22,10 @@ class ChoosingItemWindow(QObject):
         self.window = uic.loadUi("UIForms//ChoosingItem.ui")
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         
-        self.ItemButtonDict=self.getItemButtonDict()            # Кнопки и надписи формы и назначенные им предметы
-        self.payment=payment                                    # Сумма, введенная пользователем
+        self.ItemButtonDict=self.getItemButtonDict()                            # Кнопки и надписи формы и назначенные им предметы
+        self.payment=payment                                                    # Сумма, введенная пользователем
         self.returnTimer=QtCore.QTimer.singleShot(30000, self._backToTitlePage) #Таймер возврата на титульную страницу
+        self.returnTimer.start(30000)
         self.fillMainForm() 
       
     def getItemButtonDict(self):
@@ -62,6 +63,7 @@ class ChoosingItemWindow(QObject):
      
         
     def fillMainForm(self):
+        self._setLabels()
         for i in self.ItemButtonDict: 
             button=self.ItemButtonDict[i].button
             label=self.ItemButtonDict[i].label
@@ -76,6 +78,9 @@ class ChoosingItemWindow(QObject):
                 if icon is not None:
                     button.setIcon(QIcon(icon))
                 QtCore.QObject.connect(button, QtCore.SIGNAL("clicked()"), self.ItemButtonDict[i].sellItem)
+   
+    def _setLabels(self):
+        self.window.lbl_selectModel.setText(_(u'Select the model'))
    
     def payItem(self, item):
         self.returnTimer.stop()

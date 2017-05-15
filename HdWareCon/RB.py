@@ -3,6 +3,7 @@ from PyQt4.Qt import QObject
 from PyQt4 import QtCore
 from HdWareCon.GPIO_Socket import GPIO_Socket
 from KP.KPProvider import KPProvider
+import time
 #from HdWareCon.FilePrinter import Printer
 
 class RB(QObject):
@@ -43,6 +44,7 @@ class RB(QObject):
         self.emit(QtCore.SIGNAL("OutingEnd"), result, magazin, item)
     
     def scanBrelok(self):
+        time.sleep(1)
         self.gpioSocket.scanBrelok()
         
     def writeBrelok(self):

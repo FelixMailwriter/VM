@@ -57,6 +57,7 @@ class Vending(QObject):
         self.choosingItemWindow = ChoosingItemWindow(self.payment, self.dbProvider)     # окно выбора предмета
         #self.choosingItemWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.paymentStart)
+        self.connect(self.choosingItemWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
         self.scanBrelokWindow.window.close()
         self.choosingItemWindow.window.show()
 
@@ -115,13 +116,17 @@ class Vending(QObject):
         else:
             self.writeBrelokWindow.writeFail() 
     
+    def _timeOutWindowHandler(self, window):
+        window.close()
+        self.emit(QtCore.SIGNAL('Restart'))
+    
     def endApp(self):
         self.emit(QtCore.SIGNAL('End working'))
         print 'Программа закончила работу'    
         
-    def restart(self):
-        self.receiveCashWindow.receiveCashWindow.close()
-        self.emit(QtCore.SIGNAL('Restart'))
+    #def restart(self):
+     #   self.receiveCashWindow.receiveCashWindow.close()
+     #   self.emit(QtCore.SIGNAL('Restart'))
                 
 
     #========== TEST =================

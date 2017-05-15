@@ -3,8 +3,10 @@ import os
 from PyQt4.Qt import QObject, QStringList, QImage, QPixmap, QIcon
 from PyQt4 import QtCore, uic
 import gettext
+import time
 #gettext.install('ru', './locale', unicode=True)
 #gettext.install('ro', './locale', unicode=True)
+
 class ScanBrelok(QObject):
     '''
     Класс описывает окно сканирования брелка клиента
@@ -65,16 +67,16 @@ class ScanBrelok(QObject):
         elif lang==u'English':
             gettext.install('en', './locale', unicode=True)
         elif lang==u'Română':
-            gettext.install('ro', './locale', unicode=True)
+            gettext.install('ro_MD', './locale', unicode=True)
         self._setLabels()        
             
         
                                
     def scanHandler(self):
+        self.window.lbl_scan.show()
         self.window.btn_scan.setEnabled(False)
         self.window.lbl_pressBtnScan1.hide()
         self.window.lbl_pressBtnScan2.hide()
-        self.window.lbl_scan.show()
         self.window.lbl_fail.hide()
         self.emit(QtCore.SIGNAL("ScanBrelok"))
          
@@ -84,7 +86,7 @@ class ScanBrelok(QObject):
         self.window.lbl_pressBtnScan2.show()
         self.window.lbl_scan.hide()
         self.window.lbl_fail.show()
-        QtCore.QTimer.singleShot(2000, self.refresh)
+        QtCore.QTimer.singleShot(3000, self.refresh)
 
     def refresh(self):
         self.window.lbl_pressBtnScan1.show()

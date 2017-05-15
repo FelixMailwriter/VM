@@ -24,6 +24,7 @@ class ChoosingItemWindow(QObject):
         
         self.ItemButtonDict=self.getItemButtonDict()            # Кнопки и надписи формы и назначенные им предметы
         self.payment=payment                                    # Сумма, введенная пользователем
+        self.returnTimer=QtCore.QTimer.singleShot(30000, self._backToTitlePage) #Таймер возврата на титульную страницу
         self.fillMainForm() 
       
     def getItemButtonDict(self):
@@ -77,10 +78,14 @@ class ChoosingItemWindow(QObject):
                 QtCore.QObject.connect(button, QtCore.SIGNAL("clicked()"), self.ItemButtonDict[i].sellItem)
    
     def payItem(self, item):
+        self.returnTimer.stop()
+        self.returnTimer=QtCore.QTimer.singleShot(30000, self._backToTitlePage)
         self.emit(QtCore.SIGNAL("ItemSelected"), item)
         self.window.close()
         
-        
+    def _backToTitlePage(self):
+        self.emit(QtCore.SIGNAL("TimeOutPage"), self.window) 
+                   
 class ItemButton(QObject):
     '''
     Класс описывает структуру, связывающую кнопку предмета на главной форме и предмет, закрепленный за ней
@@ -98,7 +103,7 @@ class ItemButton(QObject):
             itemPrice=buttonContext[2]/100.
             itemIcon=buttonContext[3]
             self.item=Item(itemId, itemName, itemPrice, itemIcon)
-            self.label.setText(str(itemPrice))
+            self.label.setText(str(int(itemPrice)))
         else:
             itemId=0
             self.item=None

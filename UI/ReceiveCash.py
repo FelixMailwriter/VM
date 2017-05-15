@@ -36,11 +36,11 @@ class ReceiveCash(QObject):
         self.receiveCashWindow.btnContinue.setText(_(u'Next'))
         
         self.receiveCashWindow.labelItem.setPixmap(self.item.icon)
-        self.receiveCashWindow.labelPrice.setText("%s" %(self.item.price))
+        self.receiveCashWindow.labelPrice.setText("%s" %(int(self.item.price)))
         if self.payment==0:
-            paymentText=""
+            paymentText="0"
         else:
-            paymentText="%s" %(self.payment)
+            paymentText="%s" %(int(self.payment))
         self.receiveCashWindow.lbl_summa.setText(paymentText)       
         
     def enableKP(self):
@@ -79,7 +79,7 @@ class ReceiveCash(QObject):
         prn.run()
         
     def _exitPayment(self):
-        self.emit(QtCore.SIGNAL('ReceiveMoneyTimeout'))
+        self.emit(QtCore.SIGNAL('TimeOutPage'), self.receiveCashWindow)
         
     
     

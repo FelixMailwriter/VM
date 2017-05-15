@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore, QtGui, uic
+from PyQt4.QtCore import QTimer
 from PyQt4.QtGui import QIcon
 from Common.Item import Item
 from Errors import Errors
@@ -24,8 +25,9 @@ class ChoosingItemWindow(QObject):
         
         self.ItemButtonDict=self.getItemButtonDict()                            # Кнопки и надписи формы и назначенные им предметы
         self.payment=payment                                                    # Сумма, введенная пользователем
-        self.returnTimer=QtCore.QTimer.singleShot(30000, self._backToTitlePage) #Таймер возврата на титульную страницу
-        self.returnTimer.start(30000)
+        self.timer=QTimer()#30000, self._backToTitlePage)                     #Таймер возврата на титульную страницу
+        self.timer.timeout.connect(self._backToTitlePage)
+        self.timer.start(30000)
         self.fillMainForm() 
       
     def getItemButtonDict(self):
@@ -83,8 +85,7 @@ class ChoosingItemWindow(QObject):
         self.window.lbl_selectModel.setText(_(u'Select the model'))
    
     def payItem(self, item):
-        self.returnTimer.stop()
-        self.returnTimer=QtCore.QTimer.singleShot(30000, self._backToTitlePage)
+        self.timer.start(30000)
         self.emit(QtCore.SIGNAL("ItemSelected"), item)
         self.window.close()
         

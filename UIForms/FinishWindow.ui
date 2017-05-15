@@ -6,12 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>694</width>
-    <height>490</height>
+    <width>1024</width>
+    <height>768</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-image: url(./Resources/Forms/ScanBrelok/FormBackGround.jpg);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -20,10 +23,17 @@
       <widget class="QLabel" name="label">
        <property name="font">
         <font>
-         <pointsize>20</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
+         <family>Noto Sans CJK KR</family>
+         <pointsize>28</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
         </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-image: url(:/newPrefix/fon.png);
+color: rgb(255, 255, 255);
+font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
        </property>
        <property name="text">
         <string>Брелок записан успешно</string>
@@ -37,10 +47,17 @@
       <widget class="QLabel" name="label_2">
        <property name="font">
         <font>
-         <pointsize>20</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
+         <family>Noto Sans CJK KR</family>
+         <pointsize>28</pointsize>
+         <weight>50</weight>
+         <italic>false</italic>
+         <bold>false</bold>
         </font>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-image: url(:/newPrefix/fon.png);
+color: rgb(255, 255, 255);
+font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
        </property>
        <property name="text">
         <string>Благодарим за покупку</string>

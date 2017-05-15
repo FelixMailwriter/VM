@@ -2,6 +2,7 @@
 import os
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore, uic
+from PyQt4.QtGui import QPixmap
 import gettext
 
 class WriteBrelok(QObject):
@@ -19,6 +20,10 @@ class WriteBrelok(QObject):
         self.window.lbl_fail.hide()
         self.connect(self.window.btn_write, QtCore.SIGNAL("clicked()"), self.writeHandler)
         self.connect(self.window.btn_simWriteOk, QtCore.SIGNAL("clicked()"), self.writeOKHandler) #Test
+        label=QPixmap('../Resources/Forms/ScanBrelok/Success.png')
+        self.window.lbl_success.setPixmap(label)
+        label=QPixmap('../Resources/Forms/ScanBrelok/Failure.png')
+        self.window.lbl_fail_2.setPixmap(label)        
         
     def _setLabels(self):
         self.window.lbl_msg.setText(_(u'The key is given away'))
@@ -27,9 +32,18 @@ class WriteBrelok(QObject):
         self.window.lbl_write.setText(_(u'Writing...'))
         self.window.lbl_fail.setText(_(u'Writing failed. Try again, please.'))
         self.window.btn_write.setText(_(u'Next'))
+        self.window.lbl_success.show()
+        self.window.lbl_fail_2.hide()        
+        self.window.label.show()
+        self.window.label_2.show()
+        self.window.lbl_write.hide()
+        self.window.lbl_fail.hide()
+        self.window.btn_write.setEnabled(True)
         
     def writeHandler(self):
         self.window.btn_write.setEnabled(False)
+        self.window.lbl_success.show()
+        self.window.lbl_fail_2.hide()
         self.window.label.hide()
         self.window.label_2.hide()
         self.window.lbl_write.show()
@@ -37,18 +51,13 @@ class WriteBrelok(QObject):
         self.emit(QtCore.SIGNAL("WriteBrelok"))
 
     def writeFail(self):
+        self.window.lbl_success.hide()
+        self.window.lbl_fail_2.show()       
         self.window.label.show()
         self.window.label_2.show()
         self.window.lbl_write.hide()
         self.window.lbl_fail.show()
-        QtCore.QTimer.singleShot(2000, self.refresh)
-
-    def refresh(self):
-        self.window.label.show()
-        self.window.label_2.show()
-        self.window.lbl_write.hide()
-        self.window.lbl_fail.hide()
-        self.window.btn_write.setEnabled(True)
+        QtCore.QTimer.singleShot(2000, self._setLabels)
 
 #=====TEST=====
     

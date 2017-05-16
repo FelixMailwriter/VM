@@ -817,27 +817,27 @@ border: 2px solid #e34761; border-color: rgb(255, 0, 0); border-radius: 10px</st
             <colorrole role="WindowText">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>0</red>
+               <red>170</red>
                <green>170</green>
-               <blue>0</blue>
+               <blue>170</blue>
               </color>
              </brush>
             </colorrole>
             <colorrole role="Text">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>0</red>
+               <red>170</red>
                <green>170</green>
-               <blue>0</blue>
+               <blue>170</blue>
               </color>
              </brush>
             </colorrole>
             <colorrole role="ButtonText">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>0</red>
+               <red>170</red>
                <green>170</green>
-               <blue>0</blue>
+               <blue>170</blue>
               </color>
              </brush>
             </colorrole>
@@ -846,27 +846,27 @@ border: 2px solid #e34761; border-color: rgb(255, 0, 0); border-radius: 10px</st
             <colorrole role="WindowText">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>0</red>
+               <red>170</red>
                <green>170</green>
-               <blue>0</blue>
+               <blue>170</blue>
               </color>
              </brush>
             </colorrole>
             <colorrole role="Text">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>0</red>
+               <red>170</red>
                <green>170</green>
-               <blue>0</blue>
+               <blue>170</blue>
               </color>
              </brush>
             </colorrole>
             <colorrole role="ButtonText">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>0</red>
+               <red>170</red>
                <green>170</green>
-               <blue>0</blue>
+               <blue>170</blue>
               </color>
              </brush>
             </colorrole>
@@ -882,7 +882,6 @@ border: 2px solid #e34761; border-color: rgb(255, 0, 0); border-radius: 10px</st
          </property>
          <property name="styleSheet">
           <string notr="true">background-image: url(:/newPrefix/fon.png);
-color: rgb(0, 170, 0);
 border: 2px solid #e34761; border-color: rgb(0, 170, 0); border-radius: 10px</string>
          </property>
          <property name="text">

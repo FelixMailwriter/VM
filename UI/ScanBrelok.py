@@ -18,6 +18,7 @@ class ScanBrelok(QObject):
         path=os.path.abspath("UIForms//ScanBrelok.ui")
         QObject.__init__(self)
         self.window = uic.loadUi(path)
+        self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self._setLang()
         self.window.lbl_fail.hide()
         self.window.lbl_scan.hide()

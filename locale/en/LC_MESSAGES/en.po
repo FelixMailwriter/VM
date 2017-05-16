@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2017-05-12 12:53+0300\n"
-"PO-Revision-Date: 2017-05-12 12:53+0300\n"
+"POT-Creation-Date: 2017-05-16 13:38+0300\n"
+"PO-Revision-Date: 2017-05-16 14:43+0300\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "Language: en\n"
 
-#: VM/BDL/BDCon.py:19 VM/UI/ChoosingItem.py:31
+#: VM/BDL/BDCon.py:19 VM/UI/ChoosingItem.py:35
 msgid "There are no items to sell"
 msgstr "There are no items to sell"
 
-#: VM/BDL/BDCon.py:20 VM/UI/ChoosingItem.py:32
+#: VM/BDL/BDCon.py:20 VM/UI/ChoosingItem.py:36
 msgid "Message"
 msgstr "Message"
 
@@ -49,45 +49,49 @@ msgstr "Database error"
 msgid "Close"
 msgstr "Close"
 
-#: VM/KP/KPProvider.py:89
+#: VM/KP/KPProvider.py:90
 msgid "Error in recognition of note"
 msgstr "Error in recognition of note"
 
-#: VM/KP/KPProvider.py:103
+#: VM/KP/KPProvider.py:104
 msgid "Protocol version's setting error"
 msgstr "Protocol version's setting error"
 
-#: VM/KP/KPProvider.py:110
+#: VM/KP/KPProvider.py:111
 msgid "Error in request of notes' channels"
 msgstr "Error in request of notes' channels"
 
-#: VM/KP/KPProvider.py:119
+#: VM/KP/KPProvider.py:120
 msgid "Error in notes' denomination reading"
 msgstr "Error in notes' denomination reading"
 
-#: VM/KP/KPProvider.py:126
+#: VM/KP/KPProvider.py:127
 msgid "Error in setting channels of notes receiving"
 msgstr "Error in setting channels of notes receiving"
 
-#: VM/KP/KPProvider.py:133
+#: VM/KP/KPProvider.py:134
 msgid "Engage procedure error"
 msgstr "Engage procedure error"
 
-#: VM/KP/KPProvider.py:148
+#: VM/KP/KPProvider.py:149
 msgid "Device synchronization failed"
 msgstr "Device synchronization failed"
 
-#: VM/KP/KPProvider.py:280
+#: VM/KP/KPProvider.py:281
 msgid "Note receiver's port is not found"
 msgstr "Note receiver's port is not found"
 
-#: VM/KP/KPProvider.py:294
+#: VM/KP/KPProvider.py:295
 msgid "Devise not responding"
 msgstr "Devise not responding"
 
 #: VM/Printer/PrnDK350.py:34
 msgid "Configuration file error. No printer's section."
 msgstr "Configuration file error. No printer's section."
+
+#: VM/UI/ChoosingItem.py:85
+msgid "Select the model"
+msgstr "Select the model"
 
 #: VM/UI/FinishWindow.py:26
 msgid "The key was written successfully"
@@ -97,67 +101,71 @@ msgstr "The key was written successfully"
 msgid "Thanks for purchase"
 msgstr "Thanks for purchase"
 
-#: VM/UI/GivingOutItem.py:18
+#: VM/UI/GivingOutItem.py:19
 msgid "Wait for delivery..."
 msgstr "Wait for delivery..."
 
-#: VM/UI/GivingOutItem.py:22
+#: VM/UI/GivingOutItem.py:25
 msgid "Delivery error. Call techsupport, please."
 msgstr "Delivery error. Call techsupport, please."
 
-#: VM/UI/ReceiveCash.py:33
+#: VM/UI/ReceiveCash.py:34
 msgid "Incomming cash"
 msgstr "Incomming cash"
 
-#: VM/UI/ReceiveCash.py:34
+#: VM/UI/ReceiveCash.py:35
 msgid "Pay"
 msgstr "Pay"
 
-#: VM/UI/ReceiveCash.py:35
+#: VM/UI/ReceiveCash.py:36
+msgid "Mashine does not give any odd money"
+msgstr "Attention! Mashine does not give any odd money."
+
+#: VM/UI/ReceiveCash.py:37
 msgid "Cancel"
 msgstr "Cancel"
 
-#: VM/UI/ReceiveCash.py:36 VM/UI/WriteBrelok.py:29
+#: VM/UI/ReceiveCash.py:38 VM/UI/WriteBrelok.py:34
 msgid "Next"
 msgstr "Next"
 
-#: VM/UI/ScanBrelok.py:54
+#: VM/UI/ScanBrelok.py:57
 msgid "Press the button \"Scan\""
 msgstr "Press the button \"Scan\""
 
-#: VM/UI/ScanBrelok.py:55
+#: VM/UI/ScanBrelok.py:58
 msgid "and enclose your key to the scanner"
 msgstr "and enclose your key to the scanner"
 
-#: VM/UI/ScanBrelok.py:56
+#: VM/UI/ScanBrelok.py:59
 msgid "Scanning..."
 msgstr "Scanning..."
 
-#: VM/UI/ScanBrelok.py:57
+#: VM/UI/ScanBrelok.py:60
 msgid "Scanning failed"
 msgstr "Scanning failed"
 
-#: VM/UI/ScanBrelok.py:58
+#: VM/UI/ScanBrelok.py:61
 msgid "Scan"
 msgstr "Scan"
 
-#: VM/UI/WriteBrelok.py:24
+#: VM/UI/WriteBrelok.py:29
 msgid "The key is given away"
 msgstr "The key is given away"
 
-#: VM/UI/WriteBrelok.py:25
+#: VM/UI/WriteBrelok.py:30
 msgid "Press 'Next'"
 msgstr "Press 'Next'"
 
-#: VM/UI/WriteBrelok.py:26
+#: VM/UI/WriteBrelok.py:31
 msgid "and enclose it to the scanner"
 msgstr "and enclose it to the scanner"
 
-#: VM/UI/WriteBrelok.py:27
+#: VM/UI/WriteBrelok.py:32
 msgid "Writing..."
 msgstr "Writing..."
 
-#: VM/UI/WriteBrelok.py:28
+#: VM/UI/WriteBrelok.py:33
 msgid "Writing failed. Try again, please."
 msgstr "Writing failed. Try again, please."
 

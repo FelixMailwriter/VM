@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2017-05-15 00:53+0300\n"
-"PO-Revision-Date: 2017-05-15 00:54+0300\n"
+"POT-Creation-Date: 2017-05-16 13:39+0300\n"
+"PO-Revision-Date: 2017-05-16 13:43+0300\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 "Language: ro_MD\n"
 
-#: VM/BDL/BDCon.py:19 VM/UI/ChoosingItem.py:31
+#: VM/BDL/BDCon.py:19 VM/UI/ChoosingItem.py:35
 msgid "There are no items to sell"
 msgstr "Nu există elemente de vânzare"
 
-#: VM/BDL/BDCon.py:20 VM/UI/ChoosingItem.py:32
+#: VM/BDL/BDCon.py:20 VM/UI/ChoosingItem.py:36
 msgid "Message"
 msgstr "Mesaj"
 
@@ -49,45 +49,49 @@ msgstr "Eroare bazei de date"
 msgid "Close"
 msgstr "Închide"
 
-#: VM/KP/KPProvider.py:89
+#: VM/KP/KPProvider.py:90
 msgid "Error in recognition of note"
 msgstr "Eroare in recunoașterea bancnotei"
 
-#: VM/KP/KPProvider.py:103
+#: VM/KP/KPProvider.py:104
 msgid "Protocol version's setting error"
 msgstr "Eroare de instalare a versiunei protocolului"
 
-#: VM/KP/KPProvider.py:110
+#: VM/KP/KPProvider.py:111
 msgid "Error in request of notes' channels"
 msgstr "Eroare de cerere a canalului bancnotei"
 
-#: VM/KP/KPProvider.py:119
+#: VM/KP/KPProvider.py:120
 msgid "Error in notes' denomination reading"
 msgstr "Eroare de citire a valoarei bancnotei"
 
-#: VM/KP/KPProvider.py:126
+#: VM/KP/KPProvider.py:127
 msgid "Error in setting channels of notes receiving"
 msgstr "Eroare de instalare a receptorului bancnotelor"
 
-#: VM/KP/KPProvider.py:133
+#: VM/KP/KPProvider.py:134
 msgid "Engage procedure error"
 msgstr "Eroare in procedura de lansare"
 
-#: VM/KP/KPProvider.py:148
+#: VM/KP/KPProvider.py:149
 msgid "Device synchronization failed"
 msgstr "Eroare in sincronizare dispozitivului"
 
-#: VM/KP/KPProvider.py:280
+#: VM/KP/KPProvider.py:281
 msgid "Note receiver's port is not found"
 msgstr "Portul a receptorului bancnotelor nu a fost găsit"
 
-#: VM/KP/KPProvider.py:294
+#: VM/KP/KPProvider.py:295
 msgid "Devise not responding"
 msgstr "Dispozitivul nu răspunde"
 
 #: VM/Printer/PrnDK350.py:34
 msgid "Configuration file error. No printer's section."
 msgstr "Eroare fișierului de configurare. Nu există o secțiune a imprimantei."
+
+#: VM/UI/ChoosingItem.py:85
+msgid "Select the model"
+msgstr "Alegeti modelul"
 
 #: VM/UI/FinishWindow.py:26
 msgid "The key was written successfully"
@@ -97,67 +101,71 @@ msgstr "Cheia este înregistrată cu succes"
 msgid "Thanks for purchase"
 msgstr "Vă mulțumim pentru procurare"
 
-#: VM/UI/GivingOutItem.py:18
+#: VM/UI/GivingOutItem.py:19
 msgid "Wait for delivery..."
 msgstr "Asteptati emiterea"
 
-#: VM/UI/GivingOutItem.py:22
+#: VM/UI/GivingOutItem.py:25
 msgid "Delivery error. Call techsupport, please."
 msgstr "Eroare în emitere. Vă rugăm să contactați suportul tehnic."
 
-#: VM/UI/ReceiveCash.py:33
+#: VM/UI/ReceiveCash.py:34
 msgid "Incomming cash"
 msgstr "Suma întrodusă"
 
-#: VM/UI/ReceiveCash.py:34
+#: VM/UI/ReceiveCash.py:35
 msgid "Pay"
 msgstr "Plătiți"
 
-#: VM/UI/ReceiveCash.py:35
+#: VM/UI/ReceiveCash.py:36
+msgid "Mashine does not give any odd money"
+msgstr "Apparatul restul nu elibereaza"
+
+#: VM/UI/ReceiveCash.py:37
 msgid "Cancel"
 msgstr "Anulare"
 
-#: VM/UI/ReceiveCash.py:36 VM/UI/WriteBrelok.py:29
+#: VM/UI/ReceiveCash.py:38 VM/UI/WriteBrelok.py:34
 msgid "Next"
 msgstr "Mai departe"
 
-#: VM/UI/ScanBrelok.py:54
+#: VM/UI/ScanBrelok.py:57
 msgid "Press the button \"Scan\""
 msgstr "Apăsați butonul 'Scanați'"
 
-#: VM/UI/ScanBrelok.py:55
+#: VM/UI/ScanBrelok.py:58
 msgid "and enclose your key to the scanner"
 msgstr "și apropiați cheia D-vstră de scaner"
 
-#: VM/UI/ScanBrelok.py:56
+#: VM/UI/ScanBrelok.py:59
 msgid "Scanning..."
 msgstr "Scanare"
 
-#: VM/UI/ScanBrelok.py:57
+#: VM/UI/ScanBrelok.py:60
 msgid "Scanning failed"
 msgstr "Scanare eșuată"
 
-#: VM/UI/ScanBrelok.py:58
+#: VM/UI/ScanBrelok.py:61
 msgid "Scan"
 msgstr "Scanați"
 
-#: VM/UI/WriteBrelok.py:24
+#: VM/UI/WriteBrelok.py:29
 msgid "The key is given away"
 msgstr "Cheia este eliberată"
 
-#: VM/UI/WriteBrelok.py:25
+#: VM/UI/WriteBrelok.py:30
 msgid "Press 'Next'"
 msgstr "Apăsați  'Mai departe'"
 
-#: VM/UI/WriteBrelok.py:26
+#: VM/UI/WriteBrelok.py:31
 msgid "and enclose it to the scanner"
 msgstr "și apropiați cheia de scaner"
 
-#: VM/UI/WriteBrelok.py:27
+#: VM/UI/WriteBrelok.py:32
 msgid "Writing..."
 msgstr "Înregistrare..."
 
-#: VM/UI/WriteBrelok.py:28
+#: VM/UI/WriteBrelok.py:33
 msgid "Writing failed. Try again, please."
 msgstr "Înregistrarea eșuată. Încercați încă o dată"
 

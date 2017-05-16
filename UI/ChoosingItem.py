@@ -25,7 +25,7 @@ class ChoosingItemWindow(QObject):
         
         self.ItemButtonDict=self.getItemButtonDict()                            # Кнопки и надписи формы и назначенные им предметы
         self.payment=payment                                                    # Сумма, введенная пользователем
-        self.timer=QTimer()#30000, self._backToTitlePage)                     #Таймер возврата на титульную страницу
+        self.timer=QTimer()                                                     #Таймер возврата на титульную страницу
         self.timer.timeout.connect(self._backToTitlePage)
         self.timer.start(30000)
         self.fillMainForm() 
@@ -85,7 +85,7 @@ class ChoosingItemWindow(QObject):
         self.window.lbl_selectModel.setText(_(u'Select the model'))
    
     def payItem(self, item):
-        self.timer.start(30000)
+        self.timer.stop()
         self.emit(QtCore.SIGNAL("ItemSelected"), item)
         self.window.close()
         

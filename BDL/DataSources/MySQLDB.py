@@ -188,7 +188,7 @@ class MySQLDB(DB):
         self.insertDataToDB(query)
      
     def writeBanknote(self, nominal):
-        query='Insert into ReceivedNotes (DateReceiving, NoteValue) values (\'%s\', %d)' %(str(datetime.now(), nominal))
+        query='Insert into ReceivedNotes (DateReceiving, NoteValue) values (\'%s\', %d)' %(str(datetime.now()), nominal)
         result=self.insertDataToDB(query)
         
                   

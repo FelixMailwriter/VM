@@ -33,7 +33,7 @@ class Vending(QObject):
     def _getDbProvider(self, dbType):
         try:
             dbConnector= BDCon.BDCon(dbType)#('TestDB')
-            dbProvider=dbConnector.dbContext           #Экземпляр подключенной базы данных  
+            dbProvider=dbConnector.dbContext                                #Экземпляр подключенной базы данных  
             return dbProvider
         except:
             self.message=Errors(_(u'Database connection error'))
@@ -66,7 +66,7 @@ class Vending(QObject):
         self.receiveCashWindow=ReceiveCash(self.payment, item, self.dbProvider)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentCancelled"), self.paymentCancelled)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("GiveOutItem"), self.giveOutItem)
-        self.connect(self.receiveCashWindow, QtCore.SIGNAL("ReceiveMoneyTimeout"), self.restart)
+        #self.connect(self.receiveCashWindow, QtCore.SIGNAL("ReceiveMoneyTimeout"), self.restart)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentChange"), self._changePayment)
         self.receiveCashWindow.receiveCashWindow.show()
         
@@ -83,8 +83,12 @@ class Vending(QObject):
         self.receiveCashWindow.receiveCashWindow.close()
         self.givingOutItem=GivingOutItem()
         self.connect(self.rb, QtCore.SIGNAL("OutingEnd"), self.givingOutHandler)
+        
+        #Убрать после тестов
         self.connect(self.givingOutItem, QtCore.SIGNAL("EngSendClick"), self.engSensClick)
         self.connect(self.givingOutItem, QtCore.SIGNAL("OutSensorClick"), self.outSensClick)
+        ###-------------------
+        self.connect(self.givingOutItem, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
         self.givingOutItem.givingOutWindow.show()        
         self.rb.giveOutItem(item)
 
@@ -100,8 +104,10 @@ class Vending(QObject):
             self.writeBrelokWindow.window.show() 
         else:
             #Запись в лог о провале продажи
+            logMessages=[]
             logEvent=LogEvent('Critical', 'Vending', 'Item %s have not been given' %(str(item.name)))
-            self.dbProvider.writeLog(logEvent)
+            logMessages.append(logEvent)
+            self.dbProvider.writeLog(logMessages)
             self.givingOutItem.fail()
           
     def writeBrelok(self):

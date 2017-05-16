@@ -15,14 +15,15 @@ class WriteBrelok(QObject):
         QObject.__init__(self)
         path=os.path.abspath("UIForms//WriteBrelok.ui")
         self.window = uic.loadUi(path)
+        self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self._setLabels()
         self.window.lbl_write.hide()
         self.window.lbl_fail.hide()
         self.connect(self.window.btn_write, QtCore.SIGNAL("clicked()"), self.writeHandler)
         self.connect(self.window.btn_simWriteOk, QtCore.SIGNAL("clicked()"), self.writeOKHandler) #Test
-        label=QPixmap('../Resources/Forms/ScanBrelok/Success.png')
+        label=QPixmap('./Resources/Forms/ScanBrelok/Success.png')
         self.window.lbl_success.setPixmap(label)
-        label=QPixmap('../Resources/Forms/ScanBrelok/Failure.png')
+        label=QPixmap('./Resources/Forms/ScanBrelok/Failure.png')
         self.window.lbl_fail_2.setPixmap(label)        
         
     def _setLabels(self):
@@ -57,7 +58,7 @@ class WriteBrelok(QObject):
         self.window.label_2.show()
         self.window.lbl_write.hide()
         self.window.lbl_fail.show()
-        QtCore.QTimer.singleShot(2000, self._setLabels)
+        QtCore.QTimer.singleShot(4000, self._setLabels)
 
 #=====TEST=====
     

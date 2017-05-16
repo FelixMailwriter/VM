@@ -5,8 +5,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2017-05-16 13:27+0300\n"
-"PO-Revision-Date: 2017-05-16 14:42+0300\n"
+"POT-Creation-Date: 2017-05-16 13:39+0300\n"
+"PO-Revision-Date: 2017-05-16 13:44+0300\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14,161 +14,161 @@ msgstr ""
 "Generated-By: pygettext.py 1.5\n"
 "X-Generator: Poedit 1.8.7.1\n"
 "Last-Translator: \n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"Language: ru\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"Language: ro_RO\n"
 
 #: VM/BDL/BDCon.py:19 VM/UI/ChoosingItem.py:35
 msgid "There are no items to sell"
-msgstr "Нет предметов к продаже"
+msgstr "Nu există elemente de vânzare"
 
 #: VM/BDL/BDCon.py:20 VM/UI/ChoosingItem.py:36
 msgid "Message"
-msgstr "Сообщение"
+msgstr "Mesaj"
 
 #: VM/BDL/DataSources/MySQLDB.py:60 VM/BDL/DataSources/MySQLDB.py:76
 #: VM/BDL/DataSources/MySQLDB.py:91 VM/BDL/DataSources/MySQLDB.py:107
 #: VM/BDL/DataSources/MySQLDB.py:123 VM/BDL/DataSources/MySQLDB.py:178
 #: VM/Printer/PrnDK350.py:34 VM/Vending.py:40
 msgid "Error"
-msgstr "Ошибка"
+msgstr "Eroare"
 
 #: VM/BDL/DataSources/MySQLDB.py:60 VM/BDL/DataSources/MySQLDB.py:91
 #: VM/BDL/DataSources/MySQLDB.py:107 VM/BDL/DataSources/MySQLDB.py:123
 msgid "Database connection failed"
-msgstr "Ошибка соединения с базой данных"
+msgstr "Eroare la conectarea cu baza de date"
 
 #: VM/BDL/DataSources/MySQLDB.py:76
 msgid "There is errors in the configuration file. No section."
-msgstr "Ошибка в файле конфигурации. Отсутствует секция."
+msgstr "Eroare de configurare. Nu există secțiunea"
 
 #: VM/BDL/DataSources/MySQLDB.py:178
 msgid "Database error"
-msgstr "Ошибка базы данных."
+msgstr "Eroare bazei de date"
 
 #: VM/Errors.py:15
 msgid "Close"
-msgstr "Закрыть"
+msgstr "Închide"
 
 #: VM/KP/KPProvider.py:90
 msgid "Error in recognition of note"
-msgstr "Банкнота не опознана"
+msgstr "Eroare in recunoașterea bancnotei"
 
 #: VM/KP/KPProvider.py:104
 msgid "Protocol version's setting error"
-msgstr "Ошибка установки версии протокола"
+msgstr "Eroare de instalare a versiunei protocolului"
 
 #: VM/KP/KPProvider.py:111
 msgid "Error in request of notes' channels"
-msgstr "Ошибка запроса канала банкноты"
+msgstr "Eroare de cerere a canalului bancnotei"
 
 #: VM/KP/KPProvider.py:120
 msgid "Error in notes' denomination reading"
-msgstr "Ошибка чтения номинала банкноты"
+msgstr "Eroare de citire a valoarei bancnotei"
 
 #: VM/KP/KPProvider.py:127
 msgid "Error in setting channels of notes receiving"
-msgstr "Ошибка установки канала приема банкноты"
+msgstr "Eroare de instalare a receptorului bancnotelor"
 
 #: VM/KP/KPProvider.py:134
 msgid "Engage procedure error"
-msgstr "Ошибка процедуры запуска"
+msgstr "Eroare in procedura de lansare"
 
 #: VM/KP/KPProvider.py:149
 msgid "Device synchronization failed"
-msgstr "Ошибка синхронизации устройства"
+msgstr "Eroare in sincronizare dispozitivului"
 
 #: VM/KP/KPProvider.py:281
 msgid "Note receiver's port is not found"
-msgstr "Порт купюроприемника не найден"
+msgstr "Portul a receptorului bancnotelor nu a fost găsit"
 
 #: VM/KP/KPProvider.py:295
 msgid "Devise not responding"
-msgstr "Устройство не отвечает"
+msgstr "Dispozitivul nu răspunde"
 
 #: VM/Printer/PrnDK350.py:34
 msgid "Configuration file error. No printer's section."
-msgstr "Ошибка файла конфигурации. Отсутствует секция принтера."
+msgstr "Eroare fișierului de configurare. Nu există o secțiune a imprimantei."
 
 #: VM/UI/ChoosingItem.py:85
 msgid "Select the model"
-msgstr "Выберите модель"
+msgstr "Alegeti modelul"
 
 #: VM/UI/FinishWindow.py:26
 msgid "The key was written successfully"
-msgstr "Ключ записан успешно"
+msgstr "Cheia este înregistrată cu succes"
 
 #: VM/UI/FinishWindow.py:27
 msgid "Thanks for purchase"
-msgstr "Благодарим за покупку"
+msgstr "Vă mulțumim pentru procurare"
 
 #: VM/UI/GivingOutItem.py:19
 msgid "Wait for delivery..."
-msgstr "Ожидайте выдачи..."
+msgstr "Asteptati emiterea"
 
 #: VM/UI/GivingOutItem.py:25
 msgid "Delivery error. Call techsupport, please."
-msgstr "Ошибка выдачи. Обратитесь в техподдержку."
+msgstr "Eroare în emitere. Vă rugăm să contactați suportul tehnic."
 
 #: VM/UI/ReceiveCash.py:34
 msgid "Incomming cash"
-msgstr "Внесенная сумма"
+msgstr "Suma întrodusă"
 
 #: VM/UI/ReceiveCash.py:35
 msgid "Pay"
-msgstr "Оплатить"
+msgstr "Plătiți"
 
 #: VM/UI/ReceiveCash.py:36
 msgid "Mashine does not give any odd money"
-msgstr "Внимание! Аппарат сдачи не дает."
+msgstr "Apparatul restul nu elibereaza"
 
 #: VM/UI/ReceiveCash.py:37
 msgid "Cancel"
-msgstr "Отмена"
+msgstr "Anulare"
 
 #: VM/UI/ReceiveCash.py:38 VM/UI/WriteBrelok.py:34
 msgid "Next"
-msgstr "Далее"
+msgstr "Mai departe"
 
 #: VM/UI/ScanBrelok.py:57
 msgid "Press the button \"Scan\""
-msgstr "Нажмите кнопку \"Сканировать\""
+msgstr "Apăsați butonul 'Scanați'"
 
 #: VM/UI/ScanBrelok.py:58
 msgid "and enclose your key to the scanner"
-msgstr "и поднесите ключ к сканнеру"
+msgstr "și apropiați cheia D-vstră de scaner"
 
 #: VM/UI/ScanBrelok.py:59
 msgid "Scanning..."
-msgstr "Сканирование..."
+msgstr "Scanare"
 
 #: VM/UI/ScanBrelok.py:60
 msgid "Scanning failed"
-msgstr "Ошибка сканирования"
+msgstr "Scanare eșuată"
 
 #: VM/UI/ScanBrelok.py:61
 msgid "Scan"
-msgstr "Сканировать"
+msgstr "Scanați"
 
 #: VM/UI/WriteBrelok.py:29
 msgid "The key is given away"
-msgstr "Ключ выдан"
+msgstr "Cheia este eliberată"
 
 #: VM/UI/WriteBrelok.py:30
 msgid "Press 'Next'"
-msgstr "Нажмите \"Далее\""
+msgstr "Apăsați  'Mai departe'"
 
 #: VM/UI/WriteBrelok.py:31
 msgid "and enclose it to the scanner"
-msgstr "и поднесите ключ к сканнеру"
+msgstr "și apropiați cheia de scaner"
 
 #: VM/UI/WriteBrelok.py:32
 msgid "Writing..."
-msgstr "Запись..."
+msgstr "Înregistrare..."
 
 #: VM/UI/WriteBrelok.py:33
 msgid "Writing failed. Try again, please."
-msgstr "Запись неудачна. Попробуйте еще раз."
+msgstr "Înregistrarea eșuată. Încercați încă o dată"
 
 #: VM/Vending.py:39
 msgid "Database connection error"
-msgstr "Ошибка соединения с базой данных"
+msgstr "Eroare la conectarea cu baza de date"

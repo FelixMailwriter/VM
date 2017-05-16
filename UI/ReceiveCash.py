@@ -17,8 +17,9 @@ class ReceiveCash(QObject):
         self.payment=payment
         self.item=item
         self.dbProvider=dbProvider
-        path=os.path.abspath("UIForms//ReceiveCash.ui")       
+        path=os.path.abspath("UIForms//ReceiveCash.ui")      
         self.receiveCashWindow = uic.loadUi(path)
+        self.receiveCashWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.receiveCashWindow.btnContinue.setEnabled(self.item.price<self.payment)
         self.receiveCashWindow.lbl_summa.setText("%s" %(self.payment))
         self.connect(self.receiveCashWindow.btnPay, QtCore.SIGNAL("clicked()"), self.enableKP)
@@ -33,7 +34,7 @@ class ReceiveCash(QObject):
     def _setLabels(self):
         self.receiveCashWindow.lbl1.setText(_(u'Incomming cash'))
         self.receiveCashWindow.btnPay.setText(_(u'Pay'))
-        self.receiveCashWindow.lbl_msgNoPayOut(_(u'Mashine does not give any odd money'))
+        self.receiveCashWindow.lbl_msgNoPayOut.setText(_(u'Mashine does not give any odd money'))
         self.receiveCashWindow.btnCancel.setText(_(u'Cancel'))
         self.receiveCashWindow.btnContinue.setText(_(u'Next'))
         
@@ -67,8 +68,8 @@ class ReceiveCash(QObject):
         self.emit(QtCore.SIGNAL("KPStop"))                            #Останов купюроприемника
         
     def continueOperation(self):
-        self.emit(QtCore.SIGNAL("GiveOutItem"), self.item)
         self._printCheck()
+        self.emit(QtCore.SIGNAL("GiveOutItem"), self.item)
         
     def _printCheck(self):
         check=[]

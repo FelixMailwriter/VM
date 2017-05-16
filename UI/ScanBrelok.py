@@ -1,9 +1,11 @@
 # -*- coding:utf-8 -*-
 import os
-from PyQt4.Qt import QObject, QStringList, QImage, QPixmap, QIcon
+from PyQt4.Qt import QObject, QStringList, QPixmap, QIcon
 from PyQt4 import QtCore, uic
+from PyQt4.QtCore import QTimer
 import gettext
-import time
+from UI.CheckPass import CheckPass
+
 #gettext.install('ru', './locale', unicode=True)
 #gettext.install('ro', './locale', unicode=True)
 
@@ -11,12 +13,10 @@ class ScanBrelok(QObject):
     '''
     Класс описывает окно сканирования брелка клиента
     '''
-
     
     def __init__(self):
-        
-        path=os.path.abspath("UIForms//ScanBrelok.ui")
         QObject.__init__(self)
+        path=os.path.abspath("UIForms//ScanBrelok.ui")
         self.window = uic.loadUi(path)
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self._setLang()
@@ -24,7 +24,10 @@ class ScanBrelok(QObject):
         self.window.lbl_scan.hide()
         self.connect(self.window.btn_scan, QtCore.SIGNAL("clicked()"), self.scanHandler)
         self.connect(self.window.btn_ScanOK, QtCore.SIGNAL("clicked()"), self.scanOKHandler) #Test
+        self.window.btn_exit.clicked.connect(self._closeApp)
         self.window.cmbx_lang.currentIndexChanged.connect(self._changeLocale)
+        self.timer=None
+        self.clickCounter=0
         self._changeLocale()
     
     def _setLang(self):
@@ -70,9 +73,7 @@ class ScanBrelok(QObject):
         elif lang==u'Română':
             gettext.install('ro_MD', './locale', unicode=True)
         self._setLabels()        
-            
-        
-                               
+                                       
     def scanHandler(self):
         self.window.lbl_scan.show()
         self.window.btn_scan.setEnabled(False)
@@ -94,8 +95,26 @@ class ScanBrelok(QObject):
         self.window.lbl_pressBtnScan2.show()
         self.window.lbl_scan.hide()
         self.window.lbl_fail.hide()
-        self.window.btn_scan.setEnabled(True)    
+        self.window.btn_scan.setEnabled(True) 
+        
+    def _closeApp(self):
+        if self.timer is None:
+            self.timer=QTimer()
+            self.timer.timeout.connect(self._resetCounter)
+            self.timer.start(7000)
+        self.clickCounter+=1
+        if self.clickCounter>5:
+            self._enterPass()
+           
+    def _resetCounter(self):
+        self.clickCounter=0
+        self.timer=None
+        
+    def _enterPass(self):   
+       self.windowPass=CheckPass()
+       self.windowPass.window.show()
         
     #======TEST======
     def scanOKHandler(self):
-        self.emit(QtCore.SIGNAL("SimulateScanOK"))    
+        self.emit(QtCore.SIGNAL("SimulateScanOK"))  
+          

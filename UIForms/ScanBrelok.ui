@@ -91,6 +91,17 @@ color: rgb(240, 221, 13);</string>
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="btn_exit">
+       <property name="styleSheet">
+        <string notr="true">background-image: url(:/newPrefix/fon.png);
+background: transparent</string>
+       </property>
+       <property name="text">
+        <string/>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <item>
         <spacer name="horizontalSpacer_3">
@@ -208,6 +219,9 @@ font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
        </property>
        <property name="alignment">
         <set>Qt::AlignCenter</set>
+       </property>
+       <property name="openExternalLinks">
+        <bool>false</bool>
        </property>
       </widget>
      </item>

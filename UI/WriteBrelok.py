@@ -3,6 +3,7 @@ import os
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore, uic
 from PyQt4.QtGui import QPixmap
+from PyQt4.QtCore import QTimer
 import gettext
 
 class WriteBrelok(QObject):
@@ -24,7 +25,10 @@ class WriteBrelok(QObject):
         label=QPixmap('./Resources/Forms/ScanBrelok/Success.png')
         self.window.lbl_success.setPixmap(label)
         label=QPixmap('./Resources/Forms/ScanBrelok/Failure.png')
-        self.window.lbl_fail_2.setPixmap(label)        
+        self.window.lbl_fail_2.setPixmap(label) 
+        self.timer=QTimer()
+        self.timer.timeout.connect(self._backToTitlePage)
+        self.timer.start(30000)       
         
     def _setLabels(self):
         self.window.lbl_msg.setText(_(u'The key is given away'))
@@ -42,6 +46,7 @@ class WriteBrelok(QObject):
         self.window.btn_write.setEnabled(True)
         
     def writeHandler(self):
+        self.timer.stop()
         self.window.btn_write.setEnabled(False)
         self.window.lbl_success.show()
         self.window.lbl_fail_2.hide()
@@ -60,6 +65,9 @@ class WriteBrelok(QObject):
         self.window.lbl_fail.show()
         QtCore.QTimer.singleShot(4000, self._setLabels)
 
+    def _backToTitlePage(self):
+        self.timer.stop()
+        self.emit(QtCore.SIGNAL("TimeOutPage"), self.window)
 #=====TEST=====
     
     def writeOKHandler(self):

@@ -66,7 +66,7 @@ class Vending(QObject):
         self.receiveCashWindow=ReceiveCash(self.payment, item, self.dbProvider)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentCancelled"), self.paymentCancelled)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("GiveOutItem"), self.giveOutItem)
-        #self.connect(self.receiveCashWindow, QtCore.SIGNAL("ReceiveMoneyTimeout"), self.restart)
+        self.connect(self.receiveCashWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentChange"), self._changePayment)
         self.receiveCashWindow.receiveCashWindow.show()
         

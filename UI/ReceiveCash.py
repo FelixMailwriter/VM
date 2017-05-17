@@ -83,6 +83,8 @@ class ReceiveCash(QObject):
         prn.run()
         
     def _exitPayment(self):
+        self.item.name='Error in payment for '+self.item.name
+        self._printCheck()
         self.emit(QtCore.SIGNAL('TimeOutPage'), self.receiveCashWindow)
         
     

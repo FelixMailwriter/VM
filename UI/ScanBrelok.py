@@ -6,7 +6,7 @@ from PyQt4.QtCore import QTimer
 import gettext
 from UI.CheckPass import CheckPass
 
-#gettext.install('ru', './locale', unicode=True)
+gettext.install('en', './locale', unicode=True)
 #gettext.install('ro', './locale', unicode=True)
 
 class ScanBrelok(QObject):

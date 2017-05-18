@@ -6,7 +6,7 @@ from enum import __repr__
 from KP.crc import CRC
 from PyQt4 import QtCore
 from PyQt4.Qt import QObject
-import gettext
+import gettext 
 
 class KPProvider(QObject):
 
@@ -23,7 +23,8 @@ class KPProvider(QObject):
         self.busy=False
         self.timer = None
         self.trycount=1
-        
+
+                
     def disable(self):
         print 'send disable'
         self.beActive=False

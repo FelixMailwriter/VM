@@ -15,6 +15,7 @@ class ScanBrelok(QObject):
     
     def __init__(self):
         QObject.__init__(self)
+        
         path=os.path.abspath("UIForms//ScanBrelok.ui")
         self.window = uic.loadUi(path)
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
@@ -30,19 +31,19 @@ class ScanBrelok(QObject):
         
         self._setLang()
         
-    def lang_init(self, loc='', enc=''):
-        if loc=='' or enc=='':
+    def lang_init(self, loc=''):
+        if loc=='':
             _locale, _encoding = locale.getdefaultlocale()  # Default system values
         else:
             _locale=loc
-            _encoding=enc
             
         path = os.path.abspath(sys.argv[0])
         d=gettext.textdomain()
+        gettext.install(d, unicode=True, codeset='utf-8')
         path = os.path.join(os.path.dirname(path),'locale')
         lang = gettext.translation(d, path, [_locale])
 
-        return lang.gettext
+        return lang.ugettext
         
     def _setLang(self):
         LangList=QStringList()
@@ -81,14 +82,11 @@ class ScanBrelok(QObject):
         global _
         lang=self.window.cmbx_lang.currentText()
         if lang==u'Русский':
-            #global _
-            _ = self.lang_init('ru_RU', enc='UTF-8')
+            _ = self.lang_init('ru_RU')
         elif lang==u'English':
-            #global _
-            _ = self.lang_init('en_US', enc='UTF-8')
+            _ = self.lang_init('en_US')
         elif lang==u'Română':
-            #global _
-            _ = self.lang_init('ro_RO', enc='UTF-8')
+            _ = self.lang_init('ro_RO')
         self._setLabels()        
                                        
     def scanHandler(self):
@@ -128,8 +126,8 @@ class ScanBrelok(QObject):
         self.timer=None
         
     def _enterPass(self):   
-       self.windowPass=CheckPass()
-       self.windowPass.window.show()
+        self.windowPass=CheckPass()
+        self.windowPass.window.show()
         
     #======TEST======
     def scanOKHandler(self):

@@ -11,7 +11,6 @@ from UI.GivingOutItem import GivingOutItem
 from Common.Logs import LogEvent
 import BDL.BDCon as BDCon
 from Errors import Errors
-import gettext
 
 class Vending(QObject):
     '''

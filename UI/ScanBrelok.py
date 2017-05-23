@@ -1,25 +1,29 @@
 # -*- coding:utf-8 -*-
 import os
+import sys
+import locale
 from PyQt4.Qt import QObject, QStringList, QPixmap, QIcon
 from PyQt4 import QtCore, uic
 from PyQt4.QtCore import QTimer
 import gettext
 from UI.CheckPass import CheckPass
+from dns.rdatatype import LOC
 
-gettext.install('en', './locale', unicode=True)
-#gettext.install('ro', './locale', unicode=True)
+#gettext.install('en', './locale', unicode=True)
+#gettext.install('ru', './locale', unicode=True)
 
 class ScanBrelok(QObject):
     '''
     Класс описывает окно сканирования брелка клиента
     '''
+   
     
     def __init__(self):
         QObject.__init__(self)
         path=os.path.abspath("UIForms//ScanBrelok.ui")
         self.window = uic.loadUi(path)
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self._setLang()
+        
         self.window.lbl_fail.hide()
         self.window.lbl_scan.hide()
         self.connect(self.window.btn_scan, QtCore.SIGNAL("clicked()"), self.scanHandler)
@@ -28,7 +32,32 @@ class ScanBrelok(QObject):
         self.window.cmbx_lang.currentIndexChanged.connect(self._changeLocale)
         self.timer=None
         self.clickCounter=0
-        self._changeLocale()
+        #self._changeLocale()
+        
+        global _
+        _ = self.lang_init()
+        self._setLang()
+        path=sys.argv[0]
+        print path
+        print os.path.dirname(path)
+        path = os.path.join(os.path.dirname(path),'lang')
+        print path
+        
+    def lang_init(self, loc='', enc=''):
+        if loc=='' or enc=='':
+            _locale, _encoding = locale.getdefaultlocale()  # Default system values
+        else:
+            _locale=loc
+            _encoding=enc
+            
+        path = sys.argv[0]
+        d=gettext.textdomain()
+        path = os.path.join(os.path.dirname(path),'locale')
+     
+        lang = gettext.translation(d, path, [_locale])
+        return lang.gettext
+    
+
     
     def _setLang(self):
         #cmbx=QComboBox()
@@ -58,6 +87,13 @@ class ScanBrelok(QObject):
                 
     
     def _setLabels(self):
+        y=_(u'Press the button \"Scan\"')
+        z=type(y)
+        print y
+        print z
+        print locale.getdefaultlocale()
+        locale.setlocale(locale.LC_ALL, '')
+        print locale.getdefaultlocale()
         self.window.lbl_pressBtnScan1.setText(_(u'Press the button \"Scan\"'))
         self.window.lbl_pressBtnScan2.setText(_(u'and enclose your key to the scanner'))
         self.window.lbl_scan.setText(_(u'Scanning...'))
@@ -67,11 +103,15 @@ class ScanBrelok(QObject):
     def _changeLocale(self):
         lang=self.window.cmbx_lang.currentText()
         if lang==u'Русский':
-            gettext.install('ru', './locale', unicode=True) 
+            #gettext.install('ru', './locale', unicode=True) 
+            global _
+            _ = self.lang_init('ru_RU', enc='UTF-8')
         elif lang==u'English':
-            gettext.install('en', './locale', unicode=True)
-        elif lang==u'Română':
-            gettext.install('ro_MD', './locale', unicode=True)
+            #gettext.install('en', './locale', unicode=True)
+            global _
+            _ = self.lang_init('en_EN', enc='UTF-8')
+        #elif lang==u'Română':
+            #gettext.install('ro_MD', './locale', unicode=True)
         self._setLabels()        
                                        
     def scanHandler(self):

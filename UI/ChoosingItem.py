@@ -35,7 +35,7 @@ class ChoosingItemWindow(QObject):
             self.message=Errors(_(u'There are no items to sell'))
             self.message.window.setWindowTitle(_(u'Message'))
             self.message.window.show()
-            return            
+            return 
         ibdict={}
         itemButton=ItemButton(1, self.itemsForSale, self.window.Button_1, self.window.label_1)
         self.connect(itemButton, QtCore.SIGNAL("SellItem"), self.payItem)       
@@ -66,6 +66,12 @@ class ChoosingItemWindow(QObject):
         
     def fillMainForm(self):
         self._setLabels()
+        if self.ItemButtonDict is None:
+            self.window.hide()
+            self.timer.start(2000)
+            self._backToTitlePage()
+            return
+        self.window.show()
         for i in self.ItemButtonDict: 
             button=self.ItemButtonDict[i].button
             label=self.ItemButtonDict[i].label

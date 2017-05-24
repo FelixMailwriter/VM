@@ -54,11 +54,10 @@ class Vending(QObject):
 
     def selektItem(self):
         self.choosingItemWindow = ChoosingItemWindow(self.payment, self.dbProvider)     # окно выбора предмета
-        #self.choosingItemWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.paymentStart)
         self.connect(self.choosingItemWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
         self.scanBrelokWindow.window.close()
-        self.choosingItemWindow.window.show()
+        #self.choosingItemWindow.window.show()
 
     def paymentStart(self, item):
         self.itemId=item

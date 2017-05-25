@@ -45,19 +45,24 @@ class Programmator(QtCore.QThread):
         if result:             
             self.emit(QtCore.SIGNAL("ScanFinished"), True)
             return
-        if self.scanTrying>0 and not self.scanOKListener.isRunning():
-            print 'Включение программатора на сканирование. Попытка %s' %(-(self.scanTrying-4))
+        if self.scanTrying>0:# and not self.scanOKListener.isRunning():
+            print 'Включение программатора на сканирование. Попытка %s' %(-(self.scanTrying-6))
             self.scanOKListener.start()
             self.pinScan.enable()
-            self.scanOKListener.wait()
-            time.sleep(1)
-            self.pinScan.disable()
+            #self.msleep(500)
         else:
             self.scanTrying=self.QTQ_SCAN_TRYING
             self.emit(QtCore.SIGNAL("ScanFinished"), False)
 
              
     def scanFinishHandler(self, result):
+
+	if self.scanOKListener.isRunning():
+            self.scanOKListener.wait()
+
+        self.pinScan.disable()
+        time.sleep(1)
+
         if result:
             self.scan(result)
         else:
@@ -65,29 +70,32 @@ class Programmator(QtCore.QThread):
             self.scan(result)
   
   
-    def writeFinishHandler(self, result):
-        if result:
-            self.pinWrite.disable()
-            self.write(result)
-        else:
-            self.writeTrying-=1
-            self.write(result)
-            
-        
     def write(self, result=False):
-        if result: 
+        if result:             
             self.emit(QtCore.SIGNAL("WriteFinished"), True)
             return
-        if self.writeTrying>0 and not self.writeOKListener.isRunning():
-            print 'Включение программатора на запись. Попытка %s' %(-(self.writeTrying-4))
+        if self.writeTrying>0:
+            print 'Включение программатора на запись. Попытка %s' %(-(self.writeTrying-6))
             self.writeOKListener.start()
             self.pinWrite.enable()
-            #time.sleep(2)
-            self.pinWrite.disable()
+            #self.msleep(500)
         else:
             self.writeTrying=self.QTY_WRITE_TRYING
             self.emit(QtCore.SIGNAL("WriteFinished"), False)
-    
+
+
+    def writeFinishHandler(self, result):
+	if self.writeOKListener.isRunning():
+            self.writeOKListener.wait()
+
+        self.pinWrite.disable()
+        time.sleep(1)
+
+        if result:
+            self.write(result)
+        else:
+            self.writeTrying-=1            
+            self.write(result)   
     
       
         

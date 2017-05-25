@@ -16,7 +16,6 @@ class Vending(QObject):
     '''
     Класс приложения
     '''
-    global qqq
     
     def __init__(self, payment):
         QObject.__init__(self)
@@ -96,11 +95,10 @@ class Vending(QObject):
         if result:
             #Запись в БД факта продажи
             self.dbProvider.sellItem(magazin, item, self.payment)
-  
-            self.givingOutItem.givingOutWindow.close()
             self.writeBrelokWindow=WriteBrelok()
             self.connect(self.writeBrelokWindow, QtCore.SIGNAL("WriteBrelok"), self.writeBrelok)
             self.connect(self.writeBrelokWindow, QtCore.SIGNAL("SimulateWriteOK"), self.simWrite)
+            self.givingOutItem.givingOutWindow.close()
             self.writeBrelokWindow.window.show() 
         else:
             #Запись в лог о провале продажи
@@ -115,9 +113,9 @@ class Vending(QObject):
             
     def writeFinishHandler(self, result):
         if result:
-            self.writeBrelokWindow.window.close()
             self.finishWindow=FinishWindow()
             self.connect(self.finishWindow, QtCore.SIGNAL("FinishProc"), self.endApp)
+            self.writeBrelokWindow.window.close()
             self.finishWindow.window.show()
         else:
             self.writeBrelokWindow.writeFail() 
@@ -130,11 +128,6 @@ class Vending(QObject):
         self.emit(QtCore.SIGNAL('End working'))
         print 'Программа закончила работу'    
         
-    #def restart(self):
-     #   self.receiveCashWindow.receiveCashWindow.close()
-     #   self.emit(QtCore.SIGNAL('Restart'))
-                
-
     #========== TEST =================
 
     def engSensClick(self):

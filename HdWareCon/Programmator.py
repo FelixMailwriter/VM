@@ -6,15 +6,16 @@ from HdWareCon.SensorListener import SensorListener
 import time
 
 
-class Programmator(QObject):
+class Programmator(QtCore.QThread):
     
     '''
     Класс описывает сущность программатора брелоков
     '''
     
     def __init__(self, socketProgrammator):
-        QObject.__init__(self)
+        QtCore.QThread.__init__(self)
         print 'Инициализация программатора'
+        self.typeOperation=''
         self.pinScan=Pin(socketProgrammator["ProgrammatorScan"], "OUT")
         self.pinScanOK=Pin(socketProgrammator["ProgrammatorScanOK"], "IN")
         self.pinWrite=Pin(socketProgrammator["ProgrammatorWrire"], "OUT")
@@ -33,6 +34,12 @@ class Programmator(QObject):
         print 'Инициализация программатора'
         self.pinScan.disable()
         self.pinWrite.disable()
+        
+    def run(self):
+        if self.typeOperation=='Scan':
+            self.scan(False)
+        if self.typeOperation=='Write':
+            self.write(False)
         
     def scan(self, result=False):
         if result:             

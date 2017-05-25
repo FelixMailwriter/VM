@@ -71,10 +71,12 @@ class GPIO_Socket(QObject):
         self.activeMagazin=None
         
     def scanBrelok(self):
-        self.programmator.scan()
+        self.programmator.typeOperation='Scan'
+        self.programmator.start()
         
     def writeBrelok(self):
-        self.programmator.write()
+        self.programmator.typeOperation='Write'
+        self.programmator.start()
     
     def scanHandler(self, result):
         self.emit(QtCore.SIGNAL("ScanFinished"), result)

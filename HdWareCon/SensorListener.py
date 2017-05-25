@@ -2,6 +2,7 @@
 from PyQt4 import QtCore
 
 class SensorListener(QtCore.QThread):
+    
 
     def __init__(self, sensorPin, eventName, delayStart=0, listenDuration=10000, listenFreq=5):
         QtCore.QThread.__init__(self)

@@ -42,7 +42,8 @@ class Programmator(QObject):
             print 'Включение программатора на сканирование. Попытка %s' %(-(self.scanTrying-4))
             self.scanOKListener.start()
             self.pinScan.enable()
-            time.sleep(2)
+            self.scanOKListener.wait()
+            time.sleep(1)
             self.pinScan.disable()
         else:
             self.scanTrying=self.QTQ_SCAN_TRYING

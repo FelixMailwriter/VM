@@ -7,6 +7,7 @@ from PyQt4 import QtCore, uic
 from PyQt4.QtCore import QTimer
 import gettext
 from UI.CheckPass import CheckPass
+import Common.Settings as Settings
 
 class ScanBrelok(QObject):
     '''
@@ -19,6 +20,8 @@ class ScanBrelok(QObject):
         path=os.path.abspath("UIForms//ScanBrelok.ui")
         self.window = uic.loadUi(path)
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        
+        self.translate=Settings.Translate()
         
         self.window.lbl_fail.hide()
         self.window.lbl_scan.hide()
@@ -80,13 +83,16 @@ class ScanBrelok(QObject):
 
     def _changeLocale(self):
         global _
+        langCode=''
         lang=self.window.cmbx_lang.currentText()
         if lang==u'Русский':
-            _ = self.lang_init('ru_RU')
+            langCode='ru_RU'
         elif lang==u'English':
-            _ = self.lang_init('en_US')
+            langCode='en_US'
         elif lang==u'Română':
-            _ = self.lang_init('ro_RO')
+            langCode='ro_RO'
+        self.translate.setLang(langCode)
+        _=Settings._
         self._setLabels()        
                                        
     def scanHandler(self):

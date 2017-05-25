@@ -4,7 +4,7 @@ from PyQt4.Qt import QObject
 from PyQt4 import QtCore, uic
 from PyQt4.QtGui import QPixmap
 from PyQt4.QtCore import QTimer
-import gettext
+import Common.Settings as Settings
 
 class WriteBrelok(QObject):
     '''
@@ -17,6 +17,10 @@ class WriteBrelok(QObject):
         path=os.path.abspath("UIForms//WriteBrelok.ui")
         self.window = uic.loadUi(path)
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+
+        global _
+        _= Settings._
+        
         self._setLabels()
         self.window.lbl_write.hide()
         self.window.lbl_fail.hide()

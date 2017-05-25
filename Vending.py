@@ -16,9 +16,11 @@ class Vending(QObject):
     '''
     Класс приложения
     '''
-
+    global qqq
+    
     def __init__(self, payment):
         QObject.__init__(self)
+        
         self.DbType='SQLDB'
         self.dbProvider=self._getDbProvider(self.DbType)                #Подключение к выбранной БД
             

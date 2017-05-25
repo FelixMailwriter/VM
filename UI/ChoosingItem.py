@@ -5,7 +5,8 @@ from PyQt4.QtCore import QTimer
 from PyQt4.QtGui import QIcon
 from Common.Item import Item
 from Errors import Errors
-import gettext
+import Common.Settings as Settings
+
 
 class ChoosingItemWindow(QObject):
     '''
@@ -16,6 +17,9 @@ class ChoosingItemWindow(QObject):
         QObject.__init__(self)
 
         self.dbProvider=dbProvider
+        
+        global _
+        _= Settings._
 
         #Получаем сгруппированную таблицу продаваемых предметов (сумма по магазинам по каждому типу предмета) 
         self.itemsForSale=self.dbProvider.getItemsForSale() 

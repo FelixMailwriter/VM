@@ -5,7 +5,7 @@ from PyQt4 import QtCore, uic
 #from KP.KPProvider import KPProvider
 from KP.KPManager import KPManager
 from Printer.PrnDK350 import Printer
-import gettext 
+import Common.Settings as Settings
 
 class ReceiveCash(QObject):
     '''
@@ -19,6 +19,10 @@ class ReceiveCash(QObject):
         self.dbProvider=dbProvider
         path=os.path.abspath("UIForms//ReceiveCash.ui")      
         self.receiveCashWindow = uic.loadUi(path)
+        
+        global _
+        _= Settings._
+        
         self.receiveCashWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.receiveCashWindow.btnContinue.setEnabled(self.item.price<self.payment)
         self.receiveCashWindow.lbl_summa.setText("%s" %(self.payment))
@@ -28,6 +32,7 @@ class ReceiveCash(QObject):
         self.connect(self.kpManager, QtCore.SIGNAL("Note stacked"), self.increasePayment)
         self.connect(self.kpManager, QtCore.SIGNAL('ReceiveMoneyTimeout'), self._exitPayment)
         self._setLabels()
+                         
         if (self.payment>=self.item.price):
             self.receiveCashWindow.btnContinue.setEnabled(True)
                
@@ -87,6 +92,6 @@ class ReceiveCash(QObject):
         self._printCheck()
         self.emit(QtCore.SIGNAL('TimeOutPage'), self.receiveCashWindow)
         
-    
+
     
         

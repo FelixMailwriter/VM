@@ -2,7 +2,7 @@
 import os
 from PyQt4 import uic
 from PyQt4.Qt import QObject
-import gettext
+import Common.Settings as Settings
 
 class Errors(QObject):
 
@@ -10,6 +10,10 @@ class Errors(QObject):
         QObject.__init__(self)
         path=os.path.abspath("UIForms/errorWindow.ui")
         self.window=uic.loadUi(path)
+        
+        global _
+        _= Settings._
+        
         self.window.btn_close.clicked.connect(self.window.close)
         self.window.label.setText(message)
         self.window.btn_close.setText(_(u'Close'))

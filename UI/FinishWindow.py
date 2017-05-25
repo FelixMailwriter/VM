@@ -3,7 +3,7 @@ import os
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore, uic
 from PyQt4.QtGui import QPixmap
-import gettext
+import Common.Settings as Settings
 
 class FinishWindow(QObject):
 
@@ -15,6 +15,10 @@ class FinishWindow(QObject):
         path=os.path.abspath("UIForms//FinishWindow.ui")
         self.window = uic.loadUi(path)
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        
+        global _
+        _= Settings._
+        
         self._setLabels()
         QtCore.QTimer.singleShot(5000, self.finish)
         label=QPixmap('./Resources/Forms/ScanBrelok/Success.png')

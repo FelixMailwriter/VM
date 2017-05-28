@@ -81,8 +81,6 @@ class ChoosingItemWindow(QObject):
         for i in self.ItemButtonDict: 
             button=self.ItemButtonDict[i].button
             label=self.ItemButtonDict[i].label
-            #itemId=self.ItemButtonDict[i].itemId           
-            #if itemId==0:
             if self.ItemButtonDict[i].item is None:
                 button.setIcon(QtGui.QIcon("img//Items//NoItem.jpg"))
                 label.setText=("")
@@ -95,6 +93,7 @@ class ChoosingItemWindow(QObject):
    
     def _setLabels(self):
         self.window.lbl_selectModel.setText(_(u'Select the model'))
+        self.window.btn_Cancel.setText(_(u'Cancel'))
    
     def payItem(self, item):
         self.timer.stop()

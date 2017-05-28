@@ -1306,7 +1306,7 @@ color: rgb(255,255,255);
 border: 2px solid #e34761; border-color: rgb(255,255,255); border-radius: 10px</string>
       </property>
       <property name="text">
-       <string>PushButton</string>
+       <string>Cancel</string>
       </property>
      </widget>
     </item>

@@ -80,6 +80,7 @@ class ReceiveCash(QObject):
         self.emit(QtCore.SIGNAL("KPStop"))                            #Останов купюроприемника
         
     def continueOperation(self):
+        self.timer.stop()
         self._printCheck()
         self.emit(QtCore.SIGNAL("GiveOutItem"), self.item)
         
@@ -107,7 +108,7 @@ class ReceiveCash(QObject):
     def _backToTitlePage(self):
         self.timer.stop()
         self.emit(QtCore.SIGNAL("KPStop"))                            #Останов купюроприемника
-        self._exitPayment()
+        self._printCheck()
         self.emit(QtCore.SIGNAL("TimeOutPage"), self.receiveCashWindow) 
                 
     def _exitPayment(self):

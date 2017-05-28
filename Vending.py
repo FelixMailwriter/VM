@@ -75,8 +75,9 @@ class Vending(QObject):
     
     def paymentCancelled(self, payment):
         self.payment=payment
-        self.choosingItemWindow = ChoosingItemWindow(self.payment, self.dbProvider)#self.rb.gpioSocket.magazines.copy(), )
+        self.choosingItemWindow = ChoosingItemWindow(self.payment, self.dbProvider)
         self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.paymentStart)
+        self.connect(self.choosingItemWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
         self.choosingItemWindow.window.show()             
 
     def giveOutItem(self, item):

@@ -285,7 +285,7 @@ class KPProvider(QObject):
         print 'wait for answer...'
         for i in range (1,4):
             try:
-                l=self.conn.in_waiting
+                l=self.conn.inWaiting()
                 if l>0:
                     data=self.conn.read(l)
                     print 'answer received'

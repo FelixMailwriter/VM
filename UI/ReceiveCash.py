@@ -6,6 +6,7 @@ from PyQt4 import QtCore, uic
 from KP.KPManager import KPManager
 from Printer.PrnDK350 import Printer
 import Common.Settings as Settings
+from PyQt4.QtCore import QTimer
 
 class ReceiveCash(QObject):
     '''
@@ -20,6 +21,10 @@ class ReceiveCash(QObject):
         path=os.path.abspath("UIForms//ReceiveCash.ui")      
         self.receiveCashWindow = uic.loadUi(path)
         
+        self.timer=QTimer()                                                     #Таймер возврата на титульную страницу
+        self.timer.timeout.connect(self._backToTitlePage)
+        self.timer.start(30000)
+        
         global _
         _= Settings._
         
@@ -30,7 +35,7 @@ class ReceiveCash(QObject):
         self.connect(self.receiveCashWindow.btnCancel, QtCore.SIGNAL("clicked()"), self.cancelOperation)
         self.connect(self.receiveCashWindow.btnContinue, QtCore.SIGNAL("clicked()"), self.continueOperation)
         self.connect(self.kpManager, QtCore.SIGNAL("Note stacked"), self.increasePayment)
-        self.connect(self.kpManager, QtCore.SIGNAL('ReceiveMoneyTimeout'), self._exitPayment)
+        #self.connect(self.kpManager, QtCore.SIGNAL('ReceiveMoneyTimeout'), self._exitPayment)
         self._setLabels()
                          
         if (self.payment>=self.item.price):
@@ -56,6 +61,7 @@ class ReceiveCash(QObject):
         self.kpManager.start()
             
     def increasePayment(self, summa):
+        self.timer.start(30000)
         self.payment+=summa
         self.dbProvider.writeBanknote(summa)
         self.emit(QtCore.SIGNAL('PaymentChange'), self.payment)
@@ -69,6 +75,7 @@ class ReceiveCash(QObject):
               
     def cancelOperation(self):
         self.emit(QtCore.SIGNAL("PaymentCancelled"), self.payment)
+        
         self.receiveCashWindow.close()
         self.emit(QtCore.SIGNAL("KPStop"))                            #Останов купюроприемника
         
@@ -78,17 +85,29 @@ class ReceiveCash(QObject):
         
     def _printCheck(self):
         check=[]
-        rec=dict(Text=self.item.name, Price=self.item.price, TaxCode='A')
-        check.append(rec)
         overpay=self.payment-self.item.price
         if overpay>0:
+            rec=dict(Text=self.item.name, Price=self.item.price, TaxCode='A')
+            check.append(rec)
             rec=dict(Text='Alte venituri', Price=overpay, TaxCode='A')
-            check.append(rec)            
+            check.append(rec)
+        else:
+            rec=dict(Text=self.item.name, Price=self.payment, TaxCode='A')
+            check.append(rec)                     
+             
         prn=Printer(check, 'Fisk')
         prn.run()
-        
+
+    def _backToTitlePage(self):
+        self.emit(QtCore.SIGNAL("KPStop"))                            #Останов купюроприемника
+        self._exitPayment()
+        self.emit(QtCore.SIGNAL("TimeOutPage"), self.window) 
+                
     def _exitPayment(self):
+        if self.payment==0:
+            return
         self.item.name='Error in payment for '+self.item.name
+        self.item.price=self.payment
         self._printCheck()
         self.emit(QtCore.SIGNAL('TimeOutPage'), self.receiveCashWindow)
         

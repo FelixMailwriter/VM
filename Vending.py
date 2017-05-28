@@ -67,6 +67,7 @@ class Vending(QObject):
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("GiveOutItem"), self.giveOutItem)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentChange"), self._changePayment)
+        self.connect(self.receiveCashWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
         self.receiveCashWindow.receiveCashWindow.show()
         
     def _changePayment(self, payment):

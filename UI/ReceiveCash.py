@@ -85,11 +85,17 @@ class ReceiveCash(QObject):
         
     def _printCheck(self):
         check=[]
+        if self.payment==0:
+            return
         overpay=self.payment-self.item.price
         if overpay>0:
             rec=dict(Text=self.item.name, Price=self.item.price, TaxCode='A')
             check.append(rec)
             rec=dict(Text='Alte venituri', Price=overpay, TaxCode='A')
+            check.append(rec)
+        elif overpay<0:
+            self.item.name='Error in payment for '+self.item.name
+            rec=dict(Text=self.item.name, Price=self.payment, TaxCode='A')
             check.append(rec)
         else:
             rec=dict(Text=self.item.name, Price=self.payment, TaxCode='A')
@@ -99,9 +105,10 @@ class ReceiveCash(QObject):
         prn.run()
 
     def _backToTitlePage(self):
+        self.timer.stop()
         self.emit(QtCore.SIGNAL("KPStop"))                            #Останов купюроприемника
         self._exitPayment()
-        self.emit(QtCore.SIGNAL("TimeOutPage"), self.window) 
+        self.emit(QtCore.SIGNAL("TimeOutPage"), self.receiveCashWindow) 
                 
     def _exitPayment(self):
         if self.payment==0:
@@ -109,7 +116,7 @@ class ReceiveCash(QObject):
         self.item.name='Error in payment for '+self.item.name
         self.item.price=self.payment
         self._printCheck()
-        self.emit(QtCore.SIGNAL('TimeOutPage'), self.receiveCashWindow)
+        #self.emit(QtCore.SIGNAL('TimeOutPage'), self.receiveCashWindow)
         
 
     

@@ -284,7 +284,11 @@ class KPProvider(QObject):
     def _getDataFromPort(self, length=6):
         print 'wait for answer...'
         for i in range (1,4):
-            l=self.conn.in_waiting
+            try:
+                l=self.conn.in_waiting
+            except serial.SerialException:
+                time.sleep(2)
+                i=1
             if l>0:
                 data=self.conn.read(l)
                 print 'answer received'

@@ -286,17 +286,17 @@ class KPProvider(QObject):
         for i in range (1,4):
             try:
                 l=self.conn.in_waiting
+                if l>0:
+                    data=self.conn.read(l)
+                    print 'answer received'
+                    print 'data length ' 
+                    print len(data)
+                    self.showRecevedData(data)
+                    return data
+                time.sleep(1)                
             except serial.SerialException:
                 time.sleep(2)
                 i=1
-            if l>0:
-                data=self.conn.read(l)
-                print 'answer received'
-                print 'data length ' 
-                print len(data)
-                self.showRecevedData(data)
-                return data
-            time.sleep(1)
         raise DeviceErrorException(_(u'Devise not responding'))
         #return None   
             

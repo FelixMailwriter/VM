@@ -1292,6 +1292,24 @@ font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
       </item>
      </layout>
     </item>
+    <item>
+     <widget class="QPushButton" name="btn_Cancel">
+      <property name="font">
+       <font>
+        <family>Noto Sans CJK KR</family>
+        <pointsize>28</pointsize>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">background-image: url(:/newPrefix/fon.png);
+color: rgb(255,255,255);
+border: 2px solid #e34761; border-color: rgb(255,255,255); border-radius: 10px</string>
+      </property>
+      <property name="text">
+       <string>PushButton</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">

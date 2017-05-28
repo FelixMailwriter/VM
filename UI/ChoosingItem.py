@@ -27,6 +27,8 @@ class ChoosingItemWindow(QObject):
         self.window = uic.loadUi("UIForms//ChoosingItem.ui")
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         
+        self.window.btn_Cancel.clicked.connect(self._backToTitlePage)
+        
         self.ItemButtonDict=self.getItemButtonDict()                            # Кнопки и надписи формы и назначенные им предметы
         self.payment=payment                                                    # Сумма, введенная пользователем
         self.timer=QTimer()                                                     #Таймер возврата на титульную страницу

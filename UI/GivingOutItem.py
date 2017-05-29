@@ -17,6 +17,10 @@ class GivingOutItem(QObject):
         self.givingOutWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         self.givingOutWindow.btn_continue.setEnabled(False)
         
+        self.timer=QTimer()                                                     #Таймер возврата на титульную страницу
+        self.timer.timeout.connect(self._backToTitlePage)
+        self.timer.start(30000)
+        
         global _
         _= Settings._
         

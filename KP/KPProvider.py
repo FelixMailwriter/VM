@@ -294,10 +294,10 @@ class KPProvider(QObject):
                     self.showRecevedData(data)
                     return data
                 time.sleep(1)                
-            except serial.SerialException:
-                time.sleep(2)
-                i=1
-        raise DeviceErrorException(_(u'Devise not responding'))
+            except: # serial.SerialException:
+                #time.sleep(2)
+                #i=1
+                raise DeviceErrorException(_(u'Devise not responding'))
         #return None   
             
     def _sync(self):

@@ -23,7 +23,7 @@ class ReceiveCash(QObject):
         
         self.timer=QTimer()                                                     #Таймер возврата на титульную страницу
         self.timer.timeout.connect(self._backToTitlePage)
-        self.timer.start(30000)
+        self.timer.start(60000)
         
         global _
         _= Settings._
@@ -61,7 +61,7 @@ class ReceiveCash(QObject):
         self.kpManager.start()
             
     def increasePayment(self, summa):
-        self.timer.start(30000)
+        self.timer.start(60000)
         self.payment+=summa
         self.dbProvider.writeBanknote(summa)
         self.emit(QtCore.SIGNAL('PaymentChange'), self.payment)

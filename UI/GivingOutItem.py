@@ -32,6 +32,7 @@ class GivingOutItem(QObject):
     
     
     def fail(self):
+        self.timer.stop()
         self.givingOutWindow.lbl_msg.setText(_(u"Delivery error. Call techsupport, please."))
         label=QPixmap('./Resources/Forms/ScanBrelok/Failure.png')
         self.givingOutWindow.lbl_result.setPixmap(label)

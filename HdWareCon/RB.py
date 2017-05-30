@@ -29,8 +29,6 @@ class RB(QObject):
         self.connect(self.gpioSocket, QtCore.SIGNAL("ScanFinished"), self.scanHandler)
         self.connect(self.gpioSocket, QtCore.SIGNAL("WriteFinished"), self.writeHandler)
 
-        #self.kp=KPProvider()
-
      
     def giveOutItem(self, item):                      #Запускает процедуру выдачи предмета по его id
         print "RB: Начало выдачи предмета %s" %(str(item))

@@ -61,6 +61,8 @@ class WriteBrelok(QObject):
         self.emit(QtCore.SIGNAL("WriteBrelok"))
 
     def writeFail(self):
+        self.timer.stop()
+        self.timer.start(30000)
         self.window.lbl_success.hide()
         self.window.lbl_fail_2.show()       
         self.window.label.show()

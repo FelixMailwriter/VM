@@ -224,16 +224,20 @@ class KPProvider(QObject):
         command[0]=0x0A
         comm=self._generateCommand(0x01, command) 
         self.conn.write(comm)
-        data=self._getDataFromPort()
-        self._reverseSeq()
-        if data[3]=='f0'.decode('hex'):
-            print 'Enabled device'
-            print '---------------'
-            return True
-        else:
-            print 'Enable failed'
-            print '---------------'
-            return False         
+        try:
+            data=self._getDataFromPort()
+            self._reverseSeq()
+            if data[3]=='f0'.decode('hex'):
+                print 'Enabled device'
+                print '---------------'
+                return True
+            else:
+                print 'Enable failed'
+                print '---------------'
+                return False
+        except DeviceErrorException:
+            self.disable()
+            self.emit(QtCore.SIGNAL('ReceiveMoneyTimeout'))         
             
     def _getCurrencyByChannels(self):
         #self.conn.open()

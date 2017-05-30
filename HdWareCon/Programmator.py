@@ -57,12 +57,12 @@ class Programmator(QtCore.QThread):
              
     def scanFinishHandler(self, result):
 
-	if self.scanOKListener.isRunning():
+        if self.scanOKListener.isRunning():
             self.scanOKListener.wait()
-
+    
         self.pinScan.disable()
         time.sleep(1)
-
+    
         if result:
             self.scan(result)
         else:
@@ -85,12 +85,12 @@ class Programmator(QtCore.QThread):
 
 
     def writeFinishHandler(self, result):
-	if self.writeOKListener.isRunning():
+        if self.writeOKListener.isRunning():
             self.writeOKListener.wait()
-
+    
         self.pinWrite.disable()
         time.sleep(1)
-
+    
         if result:
             self.write(result)
         else:

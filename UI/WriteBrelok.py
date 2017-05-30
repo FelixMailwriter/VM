@@ -32,7 +32,8 @@ class WriteBrelok(QObject):
         self.window.lbl_fail_2.setPixmap(label) 
         self.timer=QTimer()
         self.timer.timeout.connect(self._backToTitlePage)
-        self.timer.start(30000)       
+        self.timer.start(60000)        
+       
         
     def _setLabels(self):
         self.window.lbl_msg.setText(_(u'The key is given away'))
@@ -51,6 +52,9 @@ class WriteBrelok(QObject):
         
     def writeHandler(self):
         self.timer.stop()
+        self.timer=QTimer()
+        self.timer.timeout.connect(self._backToTitlePage)
+        self.timer.start(60000)
         self.window.btn_write.setEnabled(False)
         self.window.lbl_success.show()
         self.window.lbl_fail_2.hide()
@@ -62,14 +66,16 @@ class WriteBrelok(QObject):
 
     def writeFail(self):
         self.timer.stop()
-        self.timer.start(30000)
+        self.timer=QTimer()
+        self.timer.timeout.connect(self._backToTitlePage)
+        self.timer.start(60000)
         self.window.lbl_success.hide()
         self.window.lbl_fail_2.show()       
         self.window.label.show()
         self.window.label_2.show()
         self.window.lbl_write.hide()
         self.window.lbl_fail.show()
-        QtCore.QTimer.singleShot(4000, self._setLabels)
+        QtCore.QTimer.singleShot(5000, self._setLabels)
 
     def _backToTitlePage(self):
         self.timer.stop()

@@ -205,6 +205,7 @@ class KPProvider(QObject):
         command[1]=0x07
         comm=self._generateCommand(0x02, command)
         self.conn.write(comm)
+        time.sleep(1)
         data=self._getDataFromPort()
         self._reverseSeq()
         if data[3]=='f0'.decode('hex'):

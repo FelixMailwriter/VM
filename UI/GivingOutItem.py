@@ -19,7 +19,7 @@ class GivingOutItem(QObject):
         
         self.timer=QTimer()                                                     #Таймер возврата на титульную страницу
         self.timer.timeout.connect(self._backToTitlePage)
-        self.timer.start(30000)
+        self.timer.start(60000)
         
         global _
         _= Settings._

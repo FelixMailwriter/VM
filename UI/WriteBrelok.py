@@ -66,9 +66,6 @@ class WriteBrelok(QObject):
 
     def writeFail(self):
         self.timer.stop()
-        self.timer=QTimer()
-        self.timer.timeout.connect(self._backToTitlePage)
-        self.timer.start(60000)
         self.window.lbl_success.hide()
         self.window.lbl_fail_2.show()       
         self.window.label.show()
@@ -76,6 +73,9 @@ class WriteBrelok(QObject):
         self.window.lbl_write.hide()
         self.window.lbl_fail.show()
         QtCore.QTimer.singleShot(5000, self._setLabels)
+        self.timer=QTimer()
+        self.timer.timeout.connect(self._backToTitlePage)
+        self.timer.start(60000)
 
     def _backToTitlePage(self):
         self.timer.stop()

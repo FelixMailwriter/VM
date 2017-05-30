@@ -98,6 +98,7 @@ class KPProvider(QObject):
 
     def _setup(self):
         self.conn.open()
+        time.sleep(2)
         '''
         Устанавливаем версию протокола
         '''
@@ -205,7 +206,7 @@ class KPProvider(QObject):
         command[1]=0x07
         comm=self._generateCommand(0x02, command)
         self.conn.write(comm)
-        time.sleep(1)
+        time.sleep(5)
         data=self._getDataFromPort()
         self._reverseSeq()
         if data[3]=='f0'.decode('hex'):
@@ -300,10 +301,9 @@ class KPProvider(QObject):
                     return data
                 time.sleep(1)                
             except: # serial.SerialException:
-                #time.sleep(2)
-                #i=1
-                raise DeviceErrorException(_(u'Devise not responding'))
-        #return None   
+                pass
+        raise DeviceErrorException(_(u'Devise not responding'))
+          
             
     def _sync(self):
         if (not self.conn.is_open):

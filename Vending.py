@@ -95,13 +95,15 @@ class Vending(QObject):
 
     def givingOutHandler(self, result, magazin, item):
         if result:
+            self.givingOutItem.timer.stop()
             #Запись в БД факта продажи
             self.dbProvider.sellItem(magazin, item, self.payment)
             self.writeBrelokWindow=WriteBrelok()
             self.connect(self.writeBrelokWindow, QtCore.SIGNAL("WriteBrelok"), self.writeBrelok)
             self.connect(self.writeBrelokWindow, QtCore.SIGNAL("SimulateWriteOK"), self.simWrite)
-            self.givingOutItem.givingOutWindow.close()
+            self.connect(self.writeBrelokWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
             self.writeBrelokWindow.window.show() 
+            self.givingOutItem.givingOutWindow.close()
         else:
             #Запись в лог о провале продажи
             logMessages=[]

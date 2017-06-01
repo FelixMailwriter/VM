@@ -61,10 +61,17 @@ class ScanBrelok(QObject):
                 
     
     def _setLabels(self):
+        self.window.lbl_pressBtnScan1.show()
+        self.window.lbl_pressBtnScan2.show()
+        self.window.lbl_scan.hide()
+        self.window.lbl_fail.hide()
+        self.window.btn_scan.setEnabled(True) 
+        
         self.window.lbl_pressBtnScan1.setText(_(u'Press the button \"Scan\"'))
-        self.window.lbl_pressBtnScan2.setText(_(u'and enclose your key to the scanner'))
+        self.window.lbl_pressBtnScan2.setText(_(u'and enclose your key'))
+        self.window.lbl_pressBtnScan3.setText(_(u'to the scanner'))
         self.window.lbl_scan.setText(_(u'Scanning...'))
-        self.window.lbl_fail.setText(_(u'Scanning failed'))
+        self.window.lbl_fail.setText(_(u'Error'))
         self.window.btn_scan.setText(_(u'Scan'))
 
     def _changeLocale(self):
@@ -86,16 +93,18 @@ class ScanBrelok(QObject):
         self.window.btn_scan.setEnabled(False)
         self.window.lbl_pressBtnScan1.hide()
         self.window.lbl_pressBtnScan2.hide()
+        self.window.lbl_pressBtnScan3.hide()
         self.window.lbl_fail.hide()
         self.emit(QtCore.SIGNAL("ScanBrelok"))
          
     
     def scanFail(self):
-        self.window.lbl_pressBtnScan1.show()
-        self.window.lbl_pressBtnScan2.show()
+        #self.window.lbl_pressBtnScan1.show()
+        #self.window.lbl_pressBtnScan2.show()
+        #self.window.lbl_pressBtnScan3.show()
         self.window.lbl_scan.hide()
         self.window.lbl_fail.show()
-        QtCore.QTimer.singleShot(3000, self.refresh)
+        QtCore.QTimer.singleShot(5000, self._setLabels)#self.refresh)
 
     def refresh(self):
         self.window.lbl_pressBtnScan1.show()

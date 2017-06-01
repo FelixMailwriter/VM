@@ -7,6 +7,8 @@ from KP.KPManager import KPManager
 from Printer.PrnDK350 import Printer
 import Common.Settings as Settings
 from PyQt4.QtCore import QTimer
+from Common.Logs import LogEvent
+
 
 class ReceiveCash(QObject):
     '''
@@ -81,8 +83,18 @@ class ReceiveCash(QObject):
         
     def continueOperation(self):
         self.timer.stop()
-        self._printCheck()
-        self.emit(QtCore.SIGNAL("GiveOutItem"), self.item)
+        try:
+            self._printCheck()
+        except Printer.PrinterHardwareException as e:
+            events=[]
+            log=LogEvent()
+            log.sourse='Printer'
+            log.priority='Hight'
+            log.message='Printer is not ready'
+            events.append(log)
+            self.dbProvider.writeLog(events)
+        finally:            
+            self.emit(QtCore.SIGNAL("GiveOutItem"), self.item)
         
     def _printCheck(self):
         check=[]
@@ -101,9 +113,13 @@ class ReceiveCash(QObject):
         else:
             rec=dict(Text=self.item.name, Price=self.payment, TaxCode='A')
             check.append(rec)                     
-             
-        prn=Printer(check, 'Fisk')
-        prn.run()
+        
+            printer=Printer.Printer()
+            logMessages=printer.checkStatus()
+            self.DbConnector.writeLog(logMessages)
+            printer.run(check, 'Fisk')
+   
+
 
     def _backToTitlePage(self):
         self.timer.stop()
@@ -117,7 +133,7 @@ class ReceiveCash(QObject):
         self.item.name='Error in payment for '+self.item.name
         self.item.price=self.payment
         self._printCheck()
-        #self.emit(QtCore.SIGNAL('TimeOutPage'), self.receiveCashWindow)
+
         
 
     

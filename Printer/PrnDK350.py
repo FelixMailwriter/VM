@@ -3,23 +3,125 @@ from PyQt4 import QtCore
 import serial
 from ConfigParser import ConfigParser
 from enum import __repr__
-import gettext
+import binascii
+from Common.Logs import LogEvent
+
 
 class Printer(QtCore.QThread):
-    def __init__(self, items, checkType='NotFisk'):
+    def __init__(self):
         QtCore.QThread.__init__(self)
         self.prn_config=self._getSettings()
         self.devPath=self.prn_config['path']    #Путь к принтеру
-        self.items=items                        #Содержимое чека (предметы или строки текста)
         self.prn=None                           #ссылка на порт принтера
         self.command=None                       #команда принтеру
         self.SEQ=0x20                           #Порядковый номер команды
-        self.checkType=checkType
-
-    def run(self):
+        self.status=[]
         self.prn=self._getConnection(self.devPath)
+
+    def run(self, items, checkType='NotFisk'):
+        self.items=items
+        self.checkType=checkType
         self._printCheck()
+
+
+    def printXReport(self, type='0'): 
+         #Информация о накоплениях за день
+        #Открываем порт
+        self._openPort()         
+        self._sendCommand(0x45, type)
+        self.msleep(100)
+        self._getAnswer()
+        self._closePort()
+        #self.prn.close()
         
+    def printZReport(self):
+        #Открываем порт
+        self._openPort()         
+        self._sendCommand(0x78, 'K,3')
+        self.msleep(100)
+        self._getAnswer()
+        self._closePort()
+        #self.prn.close()
+        
+        
+    def printZReportByNum(self, start, end):
+        self._openPort()         
+        self._sendCommand(0x49, '%d,%d' %(start, end))
+        self._closePort()        
+
+    def checkStatus(self):
+        ready=True
+        errormsg=''
+        logList=[]       
+        statusBytes=self._getStatusBytes()
+
+        if statusBytes[0][2]=='1':
+            log=LogEvent('Warning', 'Printer', u'Часы принтера не установлены')
+            logList.append(log)
+        if statusBytes[1][5]=='1':
+            log=LogEvent('Info', 'Printer', u'Замок бумаги открыт')
+            logList.append(log) 
+            ready=False 
+            errormsg+=u'Замок бумаги открыт. '          
+        if statusBytes[2][1]=='1':
+            log=LogEvent('Warning', 'Printer', u'Мало бумаги')
+            logList.append(log)            
+        elif statusBytes[2][0]=='1':
+            log=LogEvent('Critical', 'Printer', u'Бумага окончилась')
+            logList.append(log)
+            ready=False
+            errormsg+=u'Бумага закончилась. '              
+        if statusBytes[4][4]=='1':
+            log=LogEvent('Critical', 'Printer', u'Фискальная память заполнена')
+            logList.append(log)
+        elif statusBytes[4][3]=='1':
+            log=LogEvent('Warning', 'Printer', u'В фискальной памяти осталось менее 50 записей')
+            logList.append(log)
+        elif statusBytes[2][6]=='1':
+            log=LogEvent('Warning', 'Printer', u'В фискальной памяти осталось менее 2000 байт')
+            logList.append(log)
+        elif statusBytes[2][4]=='1':
+            log=LogEvent('Warning', 'Printer', u'В фискальной памяти осталось менее 3000 байт')
+            logList.append(log)
+        elif statusBytes[2][2]=='1':
+            log=LogEvent('Warning', 'Printer', u'В фискальной памяти осталось менее 4000 байт')
+            logList.append(log)
+        if statusBytes[5][0]=='1':
+            log=LogEvent('Critical', 'Printer', u'Фискальная память в режиме ТОЛЬКО_ЧТЕНИЕ')
+            logList.append(log)
+        
+        if not ready:
+            raise PrinterHardwareException(u"Принтер не готов. "+errormsg)
+        return logList            
+                    
+    def _getStatusBytes(self):
+        status=[]
+        self._openPort()               
+        self._sendCommand(0x4A, '')
+        self.msleep(100)
+        answer=self._getAnswer()
+        beginRead=False
+        if answer is None:
+            self.prn.close()
+            raise PrinterHardwareException(u'Принтер не найден')
+            return
+        for statusByte in answer:
+            statusByte=statusByte.encode('hex')
+            if statusByte=='04':
+                beginRead=True
+                continue
+            if statusByte=='05':
+                self.prn.close()
+                return status 
+            if beginRead:
+                byteStr=self._byte2bits(statusByte)
+                byteStr=byteStr[2:]
+                revertStr=byteStr[::-1]
+                status.append(revertStr)
+                print status
+        self._closePort()
+        return status                
+               
     def _getSettings(self):
         filename='config.ini'
         section='printer'
@@ -31,14 +133,15 @@ class Printer(QtCore.QThread):
             for item in items:
                 prn_config[item[0]]=item[1]
         else:
-            self._showError(_(u'Error'), _(u'Configuration file error. No printer\'s section.'))
+            self._showError(u'Ошибка', u'Ошибка файла конфигурации. Отсутствует секция принтера.')
         return prn_config
 
     def _getConnection(self, devPath):
-        conn = serial.Serial()
-        conn.port = devPath
-        if conn is None:
-            raise PrinterHardwareException('Device not found') 
+        try:
+            conn = serial.Serial()
+            conn.port = devPath
+        except :
+            raise PrinterHardwareException(u'Принтер не найден') 
                 
         conn.baudrate = 115200
         conn.bytesize = serial.EIGHTBITS    #number of bits per bytes
@@ -50,13 +153,24 @@ class Printer(QtCore.QThread):
         conn.dsrdtr = True                  #disable hardware (DSR/DTR) flow control
         return conn
     
+    def _openPort(self):
+        try:
+            self.prn.open()
+        except :
+            raise PrinterHardwareException(u'Принтер не найден')
+        
+    def _closePort(self):
+        if self.prn.isOpen():
+            self.prn.close()
+        
     def _printCheck(self):
         #Открываем порт
-        self.prn.open()
+        self._openPort() 
         if self.checkType=='Fisk':
             self._printFiskCheck()
         elif self.checkType=='NotFisk':
             self._printNotFiskCheck()
+        self._closePort()
     
     def _printFiskCheck(self):
             #Открываем фискальный чек
@@ -74,7 +188,6 @@ class Printer(QtCore.QThread):
             self._sendCommand(0x35, '')
             #Закрываем фискальный чек
             self._sendCommand(0x38, '')
-
     
     def _printNotFiskCheck(self):
         #Открываем не фискальный чек
@@ -124,7 +237,6 @@ class Printer(QtCore.QThread):
         #дописываем байт признака конца пакета
         command[packadgeLength-1]=0x03
         return command
-        
 
     def _getParamsBytes(self, commandParams):
         seqParamSymbols=[]                          #Параметры, разбитые по символам
@@ -144,7 +256,7 @@ class Printer(QtCore.QThread):
                 num=int(chr(asciiCode),16)          #записываем ее ascii-коды прибаляя к нему 0x30
                 bytesParam.append(num+0x30)
             else:
-                bytesParam.append(asciiCode)        #Если просто симовл  записываем его ascii-код
+                bytesParam.append(asciiCode)        #Если просто симовол  записываем его ascii-код
         return bytesParam
 
     def _getBCC(self, command, paramsLength):
@@ -167,29 +279,34 @@ class Printer(QtCore.QThread):
         #получение данных от принтера
         print 'wait for answer...'
         for i in range (1,4):
+            print 'iter %d' %(i)
             l=self.prn.in_waiting
+            print l
             if l>0:
                 data=self.prn.read(l)
                 print 'answer received'
                 print 'data length ' 
                 print len(data)
                 self.showRecevedData(data)
-                print data
                 return data
-            self.msleep(100)
-
+            self.msleep(1000)
+          
     def showRecevedData(self, data):
         #распечатка данных от принтера
         print '---------------'
         print 'Reseived data:'
+        s=''
         for i in range(0, len(data)):
-            print data[i].encode('hex') 
+            s+=data[i].encode('hex') + ' '
+        print s 
         print '---------------'        
             
-    def _checkAnswer(self, answer):
-        pass
+    def _byte2bits(self,hex_string):
+        n = len(hex_string)
+        p= binascii.unhexlify(hex_string.zfill(n + (n & 1)))   
+        a=bin(int(binascii.hexlify(p), 16))
+        return a
         
-
 class PrinterHardwareException(Exception):
     def __init__(self,value):
         self.value=value

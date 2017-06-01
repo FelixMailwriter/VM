@@ -71,7 +71,7 @@ class ScanBrelok(QObject):
         self.window.lbl_pressBtnScan2.setText(_(u'and enclose your key'))
         self.window.lbl_pressBtnScan3.setText(_(u'to the scanner'))
         self.window.lbl_scan.setText(_(u'Scanning...'))
-        self.window.lbl_fail.setText(_(u'Error'))
+        self.window.lbl_fail.setText(_(u'Error!'))
         self.window.btn_scan.setText(_(u'Scan'))
 
     def _changeLocale(self):

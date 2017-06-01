@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-image: url(./Resources/Forms/ScanBrelok/FormBackGround.jpg);</string>
+   <string notr="true">background-image: url(./Resources/Forms/FormBackGround.png);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -48,11 +48,14 @@
            <height>100</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true">background: transparent;</string>
+         </property>
          <property name="text">
           <string/>
          </property>
          <property name="pixmap">
-          <pixmap>../Resources/Forms/logo.png</pixmap>
+          <pixmap>../Resources/Forms/Logo.png</pixmap>
          </property>
         </widget>
        </item>
@@ -679,8 +682,8 @@ border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 10px<
              <brush brushstyle="SolidPattern">
               <color alpha="255">
                <red>255</red>
-               <green>0</green>
-               <blue>0</blue>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
@@ -688,8 +691,8 @@ border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 10px<
              <brush brushstyle="SolidPattern">
               <color alpha="255">
                <red>255</red>
-               <green>0</green>
-               <blue>0</blue>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
@@ -697,8 +700,8 @@ border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 10px<
              <brush brushstyle="SolidPattern">
               <color alpha="255">
                <red>255</red>
-               <green>0</green>
-               <blue>0</blue>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
@@ -708,8 +711,8 @@ border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 10px<
              <brush brushstyle="SolidPattern">
               <color alpha="255">
                <red>255</red>
-               <green>0</green>
-               <blue>0</blue>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
@@ -717,8 +720,8 @@ border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 10px<
              <brush brushstyle="SolidPattern">
               <color alpha="255">
                <red>255</red>
-               <green>0</green>
-               <blue>0</blue>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
@@ -726,8 +729,8 @@ border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 10px<
              <brush brushstyle="SolidPattern">
               <color alpha="255">
                <red>255</red>
-               <green>0</green>
-               <blue>0</blue>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
@@ -737,8 +740,8 @@ border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 10px<
              <brush brushstyle="SolidPattern">
               <color alpha="255">
                <red>255</red>
-               <green>0</green>
-               <blue>0</blue>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
@@ -746,8 +749,8 @@ border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 10px<
              <brush brushstyle="SolidPattern">
               <color alpha="255">
                <red>255</red>
-               <green>0</green>
-               <blue>0</blue>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
@@ -755,8 +758,8 @@ border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 10px<
              <brush brushstyle="SolidPattern">
               <color alpha="255">
                <red>255</red>
-               <green>0</green>
-               <blue>0</blue>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
@@ -772,8 +775,8 @@ border: 2px solid #e34761; border-color: rgb(240, 221, 13); border-radius: 10px<
          </property>
          <property name="styleSheet">
           <string notr="true">background-image: url(:/newPrefix/fon.png);
-color: rgb(255, 0, 0);
-border: 2px solid #e34761; border-color: rgb(255, 0, 0); border-radius: 10px</string>
+color: rgb(255, 255, 255);
+border: 2px solid #e34761; border-color: rgb(255, 255, 255); border-radius: 10px</string>
          </property>
          <property name="text">
           <string>Отмена</string>
@@ -788,27 +791,27 @@ border: 2px solid #e34761; border-color: rgb(255, 0, 0); border-radius: 10px</st
             <colorrole role="WindowText">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>0</red>
-               <green>170</green>
-               <blue>0</blue>
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
             <colorrole role="Text">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>0</red>
-               <green>170</green>
-               <blue>0</blue>
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
             <colorrole role="ButtonText">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>0</red>
-               <green>170</green>
-               <blue>0</blue>
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
@@ -817,27 +820,27 @@ border: 2px solid #e34761; border-color: rgb(255, 0, 0); border-radius: 10px</st
             <colorrole role="WindowText">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>170</red>
-               <green>170</green>
-               <blue>170</blue>
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
             <colorrole role="Text">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>170</red>
-               <green>170</green>
-               <blue>170</blue>
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
             <colorrole role="ButtonText">
              <brush brushstyle="SolidPattern">
               <color alpha="255">
-               <red>170</red>
-               <green>170</green>
-               <blue>170</blue>
+               <red>255</red>
+               <green>255</green>
+               <blue>255</blue>
               </color>
              </brush>
             </colorrole>
@@ -882,7 +885,7 @@ border: 2px solid #e34761; border-color: rgb(255, 0, 0); border-radius: 10px</st
          </property>
          <property name="styleSheet">
           <string notr="true">background-image: url(:/newPrefix/fon.png);
-border: 2px solid #e34761; border-color: rgb(0, 170, 0); border-radius: 10px</string>
+border: 2px solid #e34761; border-color: rgb(255, 255, 255); border-radius: 10px</string>
          </property>
          <property name="text">
           <string>Далее</string>

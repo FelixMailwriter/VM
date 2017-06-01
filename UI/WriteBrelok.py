@@ -24,6 +24,7 @@ class WriteBrelok(QObject):
         self._setLabels()
         self.window.lbl_write.hide()
         self.window.lbl_fail.hide()
+        self.window.lbl_fail2.hide()
         self.connect(self.window.btn_write, QtCore.SIGNAL("clicked()"), self.writeHandler)
         self.connect(self.window.btn_simWriteOk, QtCore.SIGNAL("clicked()"), self.writeOKHandler) #Test
         label=QPixmap('./Resources/Forms/ScanBrelok/Success.png')
@@ -40,14 +41,16 @@ class WriteBrelok(QObject):
         self.window.label.setText(_(u'Press \'Next\''))
         self.window.label_2.setText(_(u'and enclose it to the scanner'))
         self.window.lbl_write.setText(_(u'Writing...'))
-        self.window.lbl_fail.setText(_(u'Writing failed. Try again, please.'))
-        self.window.btn_write.setText(_(u'Next'))
+        self.window.lbl_fail.setText(_(u'Writing failed!'))
+        self.window.lbl_fail2.setText(_(u'Try again, please.'))
+        self.window.btn_write.setText(_(u'Write'))
         self.window.lbl_success.show()
         self.window.lbl_fail_2.hide()        
         self.window.label.show()
         self.window.label_2.show()
         self.window.lbl_write.hide()
         self.window.lbl_fail.hide()
+        self.window.lbl_fail2.hide()
         self.window.btn_write.setEnabled(True)
         
     def writeHandler(self):
@@ -62,6 +65,7 @@ class WriteBrelok(QObject):
         self.window.label_2.hide()
         self.window.lbl_write.show()
         self.window.lbl_fail.hide()
+        self.window.lbl_fail2.hide()
         self.emit(QtCore.SIGNAL("WriteBrelok"))
 
     def writeFail(self):
@@ -72,6 +76,7 @@ class WriteBrelok(QObject):
         self.window.label_2.show()
         self.window.lbl_write.hide()
         self.window.lbl_fail.show()
+        self.window.lbl_fail2.show()
         QtCore.QTimer.singleShot(5000, self._setLabels)
         self.timer=QTimer()
         self.timer.timeout.connect(self._backToTitlePage)

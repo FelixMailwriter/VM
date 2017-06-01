@@ -14,7 +14,7 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-image: url(./Resources/Forms/ScanBrelok/FormBackGround.jpg);</string>
+   <string notr="true">background-image: url(./Resources/Forms/FormBackGround.png);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -22,20 +22,30 @@
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
-        <spacer name="verticalSpacer_3">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item>
         <layout class="QHBoxLayout" name="horizontalLayout">
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QLabel" name="label">
+           <property name="text">
+            <string/>
+           </property>
+           <property name="pixmap">
+            <pixmap>../Resources/Forms/Logo.png</pixmap>
+           </property>
+          </widget>
+         </item>
          <item>
           <widget class="QLabel" name="lbl_result">
            <property name="sizePolicy">
@@ -113,13 +123,6 @@ font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="btn_OutSensSim">
-       <property name="text">
-        <string>Симуляция датчика выдачи</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="btn_continue">
        <property name="font">
         <font>
@@ -130,11 +133,18 @@ font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
        </property>
        <property name="styleSheet">
         <string notr="true">background-image: url(:/newPrefix/fon.png);
-color: rgb(0, 170, 0);
-border: 2px solid #e34761; border-color: rgb(0, 170, 0); border-radius: 10px</string>
+color: rgb(255, 255, 255);
+border: 2px solid #e34761; border-color: rgb(255, 255, 255); border-radius: 10px</string>
        </property>
        <property name="text">
         <string>Далее</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="btn_OutSensSim">
+       <property name="text">
+        <string>Симуляция датчика выдачи</string>
        </property>
       </widget>
      </item>

@@ -21,7 +21,7 @@ class FinishWindow(QObject):
         
         self._setLabels()
         QtCore.QTimer.singleShot(5000, self.finish)
-        label=QPixmap('./Resources/Forms/ScanBrelok/Success.png')
+        label=QPixmap('./Resources/Forms/HandOK.png')
         self.window.lbl_pix.setPixmap(label)
         
     def finish(self):

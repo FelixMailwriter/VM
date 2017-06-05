@@ -27,14 +27,14 @@ class GivingOutItem(QObject):
         #self.connect(self.givingOutWindow.btn_EngSensSim, QtCore.SIGNAL("clicked()"), self.engSensClick) #test remove
         self.connect(self.givingOutWindow.btn_OutSensSim, QtCore.SIGNAL("clicked()"), self.outSensClick)  #test remove
         self.givingOutWindow.lbl_msg.setText(_(u"Wait for delivery..."))
-        label=QPixmap('./Resources/Forms/ScanBrelok/Success.png')
-        self.givingOutWindow.lbl_result.setPixmap(label)
+        #label=QPixmap('./Resources/Forms/ScanBrelok/Success.png')
+        #self.givingOutWindow.lbl_result.setPixmap(label)
     
     
     def fail(self):
         self.timer.stop()
         self.givingOutWindow.lbl_msg.setText(_(u"Delivery error. Call techsupport, please."))
-        label=QPixmap('./Resources/Forms/ScanBrelok/Failure.png')
+        label=QPixmap('./Resources/Forms/HandFail.png')
         self.givingOutWindow.lbl_result.setPixmap(label)
         self.timer=QTimer()
         self.timer.timeout.connect(self._backToTitlePage)

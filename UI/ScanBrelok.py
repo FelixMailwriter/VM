@@ -1,12 +1,10 @@
 # -*- coding:utf-8 -*-
 import os
-import sys
-import locale
 from PyQt4.Qt import QObject, QStringList, QPixmap, QIcon
 from PyQt4 import QtCore, uic
 from PyQt4.QtCore import QTimer
-import gettext
 from UI.CheckPass import CheckPass
+from ConfigParser import ConfigParser
 import Common.Settings as Settings
 
 class ScanBrelok(QObject):
@@ -22,6 +20,8 @@ class ScanBrelok(QObject):
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         
         self.translate=Settings.Translate()
+        self.settings=self._getSettings()
+        self.defaultLanguage=u'Русский'
         
         self.window.lbl_fail.hide()
         self.window.lbl_scan.hide()
@@ -40,7 +40,7 @@ class ScanBrelok(QObject):
         LangList.append(u'Русский')
         LangList.append(u'Română')
         self.window.cmbx_lang.addItems(LangList)
-        name=str(u'English')
+        name=self.defaultLanguage
         index=self.window.cmbx_lang.findText(name)
         self.window.cmbx_lang.setCurrentIndex(index)
         self._setLangIcons() 
@@ -129,6 +129,23 @@ class ScanBrelok(QObject):
     def _enterPass(self):   
         self.windowPass=CheckPass()
         self.windowPass.window.show()
+        
+    def _getSettings(self):
+        filename='config.ini'
+        section='lang'
+        parser=ConfigParser()
+        parser.read(filename)
+        prn_config={}
+        if parser.has_section(section):
+            items=parser.items(section)
+            for item in items:
+                prn_config[item[0]]=item[1]
+        else:
+            self._setDefaultSettings()
+        self.defaultLanguage=prn_config['default_lang']
+        
+    def _setDefaultSettings(self):
+        self.defaultLanguage='English'
         
     #======TEST======
     def scanOKHandler(self):

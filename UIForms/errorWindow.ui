@@ -14,9 +14,22 @@
    <string>Form</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-image: url(./Resources/Forms/FormBackGround.png);</string>
+   <string notr="true">background-image: url(./Resources/Forms/Error.png);</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
    <item>
     <widget class="QLabel" name="label">
      <property name="palette">
@@ -131,6 +144,22 @@ font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
       <set>Qt::AlignCenter</set>
      </property>
     </widget>
+   </item>
+   <item>
+    <spacer name="verticalSpacer_2">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Fixed</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>200</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item>
     <widget class="QPushButton" name="btn_close">

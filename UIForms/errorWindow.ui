@@ -156,7 +156,7 @@ font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
      <property name="sizeHint" stdset="0">
       <size>
        <width>20</width>
-       <height>200</height>
+       <height>150</height>
       </size>
      </property>
     </spacer>

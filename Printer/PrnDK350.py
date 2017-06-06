@@ -297,7 +297,7 @@ class Printer(QtCore.QThread):
         print 'wait for answer...'
         for i in range (1,4):
             print 'iter %d' %(i)
-            l=self.prn.in_waiting
+            l=self.prn.inWaiting()
             print l
             if l>0:
                 data=self.prn.read(l)

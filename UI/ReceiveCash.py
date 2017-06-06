@@ -4,7 +4,7 @@ from PyQt4.Qt import QObject
 from PyQt4 import QtCore, uic
 #from KP.KPProvider import KPProvider
 from KP.KPManager import KPManager
-from Printer.PrnDK350 import Printer
+from Printer.PrnDK350 import Printer, PrinterHardwareException
 import Common.Settings as Settings
 from PyQt4.QtCore import QTimer
 from Common.Logs import LogEvent
@@ -85,7 +85,7 @@ class ReceiveCash(QObject):
         self.timer.stop()
         try:
             self._printCheck()
-        except Printer.PrinterHardwareException as e:
+        except PrinterHardwareException as e:
             events=[]
             log=LogEvent()
             log.sourse='Printer'
@@ -114,9 +114,9 @@ class ReceiveCash(QObject):
             rec=dict(Text=self.item.name, Price=self.payment, TaxCode='A')
             check.append(rec)                     
         
-            printer=Printer.Printer()
+            printer=Printer()
             logMessages=printer.checkStatus()
-            self.DbConnector.writeLog(logMessages)
+            self.dbProvider.writeLog(logMessages)
             printer.run(check, 'Fisk')
    
 

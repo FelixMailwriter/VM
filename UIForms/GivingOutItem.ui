@@ -65,7 +65,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QLabel" name="lbl_picture">
+        <widget class="QLabel" name="lbl_result">
          <property name="styleSheet">
           <string notr="true">background: transparent;</string>
          </property>

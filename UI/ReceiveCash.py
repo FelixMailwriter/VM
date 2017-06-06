@@ -114,13 +114,11 @@ class ReceiveCash(QObject):
             rec=dict(Text=self.item.name, Price=self.payment, TaxCode='A')
             check.append(rec)                     
         
-            printer=Printer()
-            logMessages=printer.checkStatus()
-            self.dbProvider.writeLog(logMessages)
-            printer.run(check, 'Fisk')
+        printer=Printer()
+        logMessages=printer.checkStatus()
+        self.dbProvider.writeLog(logMessages)
+        printer.run(check, 'Fisk')
    
-
-
     def _backToTitlePage(self):
         self.timer.stop()
         self.emit(QtCore.SIGNAL("KPStop"))                            #Останов купюроприемника

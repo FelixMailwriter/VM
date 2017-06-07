@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
+import os
 from PyQt4.Qt import QObject
-from PyQt4 import QtCore
+from PyQt4 import QtCore, uic
 from PyQt4.QtCore import QTimer
 import datetime
 from ConfigParser import ConfigParser
@@ -11,11 +12,13 @@ import Vending
 class VendingManager(QObject):
     def __init__(self):
         QObject.__init__(self)
+        path=os.path.abspath("UIForms//errorWindow.ui")
+        self.window = uic.loadUi(path) 
         self.cashInBox=0
         self.getCashInBoxTimer=QTimer()
         self.getCashInBoxTimerIdle, self.setCashInBoxTimerIdle=self._getTimesCashIncome()
-        #print 'Start income cash after %d' %(self.getCashInBoxTimerIdle) 
-        #print 'Start outcome cash after %d' %(self.setCashInBoxTimerIdle) 
+        print 'Start income cash after %d' %(self.getCashInBoxTimerIdle) 
+        print 'Start outcome cash after %d' %(self.setCashInBoxTimerIdle) 
         self.getCashInBoxTimer.timeout.connect(self._getCashInBox)
         self.getCashInBoxTimer.start(self.getCashInBoxTimerIdle*1000)
         self._start()
@@ -58,28 +61,39 @@ class VendingManager(QObject):
         return timeToStart.total_seconds(), timeGap.total_seconds()
  
     def _getCashInBox(self):
-        #'Stop inbox timer'
+        'Stop inbox timer'
         self.getCashInBoxTimer.stop()
+        self.stopApp()
         printer=Printer()
-        #print 'Remeber cash'
+        print 'Remeber cash'
         self.cashInBox=printer.getDayMoney()
-        #print 'Startin outcome timer on %d' %(self.setCashInBoxTimerIdle)
+        print 'Startin outcome timer on %d' %(self.setCashInBoxTimerIdle)
         self.setCashInBoxTimer=QTimer()
         self.setCashInBoxTimer.timeout.connect(self._setCashInBox)
         #print 'Starting inbox timer on %s' %(self.setCashInBoxTimerIdle)
         self.setCashInBoxTimer.start(self.setCashInBoxTimerIdle*1000)
         
     def _setCashInBox(self):
-        #print 'Stop outbox timer'
+        print 'Stop outbox timer'
         self.setCashInBoxTimer.stop()
         printer=Printer()
-        #print 'Writing cash %s' %(self.cashInBox)
+        print 'Writing cash %s' %(self.cashInBox)
         printer.setDayMoney(self.cashInBox)
         self.getCashInBoxTimerIdle, self.setCashInBoxTimerIdle=self._getTimesCashIncome()
-        #print 'Reset timers'
-        #print 'Startin outcome timer on %d' %(self.getCashInBoxTimerIdle)
+        print 'Reset timers'
+        print 'Startin outcome timer on %d' %(self.getCashInBoxTimerIdle)
         self.getCashInBoxTimer.timeout.connect(self._getCashInBox)
         self.getCashInBoxTimer.start(self.getCashInBoxTimerIdle*1000)
+        self.window.close()
+        print 'starting app'
+        self._start()
     
+    def stopApp(self):
+        print 'stopping app'
+        self.vending.scanBrelokWindow.window.close()
+        self.vending=None
+        self.window.label.setText(_(u'Device is in service. Please, wait.'))
+        self.window.btn_close.setEnabled(False)
+        self.window.show()       
     
     

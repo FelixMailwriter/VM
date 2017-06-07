@@ -2,7 +2,6 @@
 import os
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore, uic
-from PyQt4.QtGui import QPixmap
 from PyQt4.QtCore import QTimer
 import Common.Settings as Settings
 
@@ -27,10 +26,6 @@ class WriteBrelok(QObject):
         self.window.lbl_fail2.hide()
         self.connect(self.window.btn_write, QtCore.SIGNAL("clicked()"), self.writeHandler)
         self.connect(self.window.btn_simWriteOk, QtCore.SIGNAL("clicked()"), self.writeOKHandler) #Test
-        label=QPixmap('./Resources/Forms/ScanBrelok/Success.png')
-        #self.window.lbl_success.setPixmap(label)
-        label=QPixmap('./Resources/Forms/ScanBrelok/Failure.png')
-        #self.window.lbl_fail_2.setPixmap(label) 
         self.timer=QTimer()
         self.timer.timeout.connect(self._backToTitlePage)
         self.timer.start(60000)        

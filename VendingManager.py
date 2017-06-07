@@ -67,6 +67,7 @@ class VendingManager(QObject):
         printer=Printer()
         print 'Remeber cash'
         self.cashInBox=printer.getDayMoney()
+        printer.printXReport('2')
         print 'Startin outcome timer on %d' %(self.setCashInBoxTimerIdle)
         self.setCashInBoxTimer=QTimer()
         self.setCashInBoxTimer.timeout.connect(self._setCashInBox)

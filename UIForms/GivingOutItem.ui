@@ -133,25 +133,6 @@ font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
       </layout>
      </item>
      <item>
-      <widget class="QPushButton" name="btn_continue">
-       <property name="font">
-        <font>
-         <pointsize>20</pointsize>
-         <weight>75</weight>
-         <bold>true</bold>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-image: url(:/newPrefix/fon.png);
-color: rgb(255, 255, 255);
-border: 2px solid #e34761; border-color: rgb(255, 255, 255); border-radius: 10px</string>
-       </property>
-       <property name="text">
-        <string>Далее</string>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QPushButton" name="btn_OutSensSim">
        <property name="text">
         <string>Симуляция датчика выдачи</string>

@@ -101,8 +101,6 @@ class ScanBrelok(QObject):
     
     def scanFail(self):
         self.window.lbl_scan.hide()
-        #self.window.lbl_fail.show()
-        #QtCore.QTimer.singleShot(5000, self._setLabels)#self.refresh)
         self.errWindow=Errors(u'Error', 5000)
         self.errWindow.window.show()
         self._setLabels()

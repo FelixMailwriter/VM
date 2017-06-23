@@ -15,7 +15,7 @@ class GivingOutItem(QObject):
         path=os.path.abspath("UIForms//GivingOutItem.ui")
         self.givingOutWindow = uic.loadUi(path)
         self.givingOutWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self.givingOutWindow.btn_continue.setEnabled(False)
+        #self.givingOutWindow.btn_continue.setEnabled(False)
         
         self.timer=QTimer()                                                     #Таймер возврата на титульную страницу
         self.timer.timeout.connect(self._backToTitlePage)
@@ -27,8 +27,6 @@ class GivingOutItem(QObject):
         #self.connect(self.givingOutWindow.btn_EngSensSim, QtCore.SIGNAL("clicked()"), self.engSensClick) #test remove
         self.connect(self.givingOutWindow.btn_OutSensSim, QtCore.SIGNAL("clicked()"), self.outSensClick)  #test remove
         self.givingOutWindow.lbl_msg.setText(_(u"Wait for delivery..."))
-        #label=QPixmap('./Resources/Forms/ScanBrelok/Success.png')
-        #self.givingOutWindow.lbl_result.setPixmap(label)
     
     
     def fail(self):

@@ -84,7 +84,8 @@ class ReceiveCash(QObject):
     def continueOperation(self):
         self.timer.stop()
         try:
-            self._printCheck()
+            #self._printCheck()
+            t=0
         except PrinterHardwareException as e:
             events=[]
             log=LogEvent()
@@ -122,7 +123,7 @@ class ReceiveCash(QObject):
     def _backToTitlePage(self):
         self.timer.stop()
         self.emit(QtCore.SIGNAL("KPStop"))                            #Останов купюроприемника
-        self._printCheck()
+        #self._printCheck()
         self.emit(QtCore.SIGNAL("TimeOutPage"), self.receiveCashWindow) 
                 
     def _exitPayment(self):
@@ -130,7 +131,7 @@ class ReceiveCash(QObject):
             return
         self.item.name='Error in payment for '+self.item.name
         self.item.price=self.payment
-        self._printCheck()
+        #self._printCheck()
 
         
 

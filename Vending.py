@@ -95,7 +95,7 @@ class Vending(QObject):
 
     def givingOutHandler(self, result, magazin, item):
         if result:
-            self.givingOutItem.timer.stop()
+           # self.givingOutItem.timer.stop()
             #Запись в БД факта продажи
             self.dbProvider.sellItem(magazin, item, self.payment)
             self.writeBrelokWindow=WriteBrelok()

@@ -27,6 +27,9 @@ class ChoosingItemWindow(QObject):
         self.window = uic.loadUi("UIForms//ChoosingItem.ui")
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         
+        desktop=QtGui.QApplication.desktop()
+        self.window.move(desktop.availableGeometry().center()-self.window.rect().center())
+        
         self.window.btn_Cancel.clicked.connect(self._backToTitlePage)
         
         self.ItemButtonDict=self.getItemButtonDict()                            # Кнопки и надписи формы и назначенные им предметы

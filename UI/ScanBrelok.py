@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import os
 from PyQt4.Qt import QObject, QStringList, QPixmap, QIcon
-from PyQt4 import QtCore, uic
+from PyQt4 import QtCore, uic, QtGui
 from PyQt4.QtCore import QTimer
 from UI.CheckPass import CheckPass
 from ConfigParser import ConfigParser
@@ -19,6 +19,10 @@ class ScanBrelok(QObject):
         path=os.path.abspath("UIForms//ScanBrelok.ui")
         self.window = uic.loadUi(path)
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        
+        desktop=QtGui.QApplication.desktop()
+        self.window.move(desktop.availableGeometry().center()-self.window.rect().center())
+        
         
         self.translate=Settings.Translate()
         self.settings=self._getSettings()
@@ -62,6 +66,7 @@ class ScanBrelok(QObject):
                 
     
     def _setLabels(self):
+        self.window.show()
         self.window.lbl_pressBtnScan1.show()
         self.window.lbl_pressBtnScan2.show()
         self.window.lbl_scan.hide()
@@ -101,15 +106,16 @@ class ScanBrelok(QObject):
     
     def scanFail(self):
         self.window.lbl_scan.hide()
-        self.errWindow=Errors(u'Error', 5000)
+        self.errWindow=Errors(u'Error')
+        self.connect(self.errWindow, QtCore.SIGNAL('ErrorWindowClosing'), self._setLabels)
         self.errWindow.window.show()
-        self._setLabels()
+        self.window.hide()
+        
 
     def refresh(self):
         self.window.lbl_pressBtnScan1.show()
         self.window.lbl_pressBtnScan2.show()
         self.window.lbl_scan.hide()
-        #self.window.lbl_fail.hide()
         self.window.btn_scan.setEnabled(True) 
         
     def _closeApp(self):

@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import os
 from PyQt4.Qt import QObject
-from PyQt4 import QtCore, uic
+from PyQt4 import QtCore, uic, QtGui
 from PyQt4.QtGui import QPixmap
 import Common.Settings as Settings
 
@@ -15,6 +15,9 @@ class FinishWindow(QObject):
         path=os.path.abspath("UIForms//FinishWindow.ui")
         self.window = uic.loadUi(path)
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
+        
+        desktop=QtGui.QApplication.desktop()
+        self.window.move(desktop.availableGeometry().center()-self.window.rect().center())
         
         global _
         _= Settings._

@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 import os
 from PyQt4.Qt import QObject
-from PyQt4 import QtCore, uic
+from PyQt4 import QtCore, uic, QtGui
 #from KP.KPProvider import KPProvider
 from KP.KPManager import KPManager
 from Printer.PrnDK350 import Printer, PrinterHardwareException
@@ -26,6 +26,9 @@ class ReceiveCash(QObject):
         self.timer=QTimer()                                                     #Таймер возврата на титульную страницу
         self.timer.timeout.connect(self._backToTitlePage)
         self.timer.start(60000)
+        
+        desktop=QtGui.QApplication.desktop()
+        self.receiveCashWindow.move(desktop.availableGeometry().center()-self.receiveCashWindow.rect().center())
         
         global _
         _= Settings._

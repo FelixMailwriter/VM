@@ -20,12 +20,12 @@ class Programmator(QtCore.QThread):
         self.pinScanOK=Pin(socketProgrammator["ProgrammatorScanOK"], "IN")
         self.pinWrite=Pin(socketProgrammator["ProgrammatorWrire"], "OUT")
         self.pinWriteOK=Pin(socketProgrammator["ProgrammatorWriteOK"], "IN")
-        self.scanOKListener=SensorListener(self.pinScanOK, "ScanFinished", 0, 3000, 100)
+        self.scanOKListener=SensorListener(self.pinScanOK, "ScanFinished", 0, 20000, 100)
         self.connect(self.scanOKListener, QtCore.SIGNAL("ScanFinished"), self.scanFinishHandler)
-        self.writeOKListener=SensorListener(self.pinWriteOK, "WriteFinished", 0, 3000, 100)
+        self.writeOKListener=SensorListener(self.pinWriteOK, "WriteFinished", 0, 20000, 100)
         self.connect(self.writeOKListener, QtCore.SIGNAL("WriteFinished"), self.writeFinishHandler)
-        self.QTQ_SCAN_TRYING=5
-        self.QTY_WRITE_TRYING=5
+        self.QTQ_SCAN_TRYING=1
+        self.QTY_WRITE_TRYING=1
         self.scanTrying=self.QTQ_SCAN_TRYING
         self.writeTrying=self.QTY_WRITE_TRYING
         print 'Инициализация программатора выполнена'

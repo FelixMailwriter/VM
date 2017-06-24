@@ -58,7 +58,6 @@ class Vending(QObject):
         self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.paymentStart)
         self.connect(self.choosingItemWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
         self.scanBrelokWindow.window.close()
-        #self.choosingItemWindow.window.show()
 
     def paymentStart(self, item):
         self.itemId=item
@@ -95,7 +94,6 @@ class Vending(QObject):
 
     def givingOutHandler(self, result, magazin, item):
         if result:
-           # self.givingOutItem.timer.stop()
             #Запись в БД факта продажи
             self.dbProvider.sellItem(magazin, item, self.payment)
             self.writeBrelokWindow=WriteBrelok()

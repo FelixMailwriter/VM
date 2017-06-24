@@ -40,7 +40,6 @@ class ReceiveCash(QObject):
         self.connect(self.receiveCashWindow.btnCancel, QtCore.SIGNAL("clicked()"), self.cancelOperation)
         self.connect(self.receiveCashWindow.btnContinue, QtCore.SIGNAL("clicked()"), self.continueOperation)
         self.connect(self.kpManager, QtCore.SIGNAL("Note stacked"), self.increasePayment)
-        #self.connect(self.kpManager, QtCore.SIGNAL('ReceiveMoneyTimeout'), self._exitPayment)
         self._setLabels()
                          
         if (self.payment>=self.item.price):

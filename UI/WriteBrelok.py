@@ -61,7 +61,6 @@ class WriteBrelok(QObject):
         self.connect(self.errWindow, QtCore.SIGNAL('ErrorWindowClosing'), self._setLabels)
         self.errWindow.window.show()
         self.window.hide()
-        #self._setLabels()
 
     def _backToTitlePage(self):
         self.timer.stop()

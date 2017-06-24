@@ -28,7 +28,6 @@ class ScanBrelok(QObject):
         self.settings=self._getSettings()
         self.defaultLanguage=u'Русский'
         
-        #self.window.lbl_fail.hide()
         self.window.lbl_scan.hide()
         self.connect(self.window.btn_scan, QtCore.SIGNAL("clicked()"), self.scanHandler)
         self.connect(self.window.btn_ScanOK, QtCore.SIGNAL("clicked()"), self.scanOKHandler) #Test
@@ -63,21 +62,18 @@ class ScanBrelok(QObject):
             img.load(path)
             icon=QIcon(img)
             self.window.cmbx_lang.setItemIcon(i,icon) 
-                
-    
+   
     def _setLabels(self):
         self.window.show()
         self.window.lbl_pressBtnScan1.show()
         self.window.lbl_pressBtnScan2.show()
         self.window.lbl_scan.hide()
-        #self.window.lbl_fail.hide()
         self.window.btn_scan.setEnabled(True) 
         
         self.window.lbl_pressBtnScan1.setText(_(u'Press the button \"Scan\"'))
         self.window.lbl_pressBtnScan2.setText(_(u'and enclose your key'))
         self.window.lbl_pressBtnScan3.setText(_(u'to the scanner'))
         self.window.lbl_scan.setText(_(u'Scanning...'))
-        #self.window.lbl_fail.setText(_(u'Error!'))
         self.window.btn_scan.setText(_(u'Scan'))
 
     def _changeLocale(self):
@@ -100,9 +96,7 @@ class ScanBrelok(QObject):
         self.window.lbl_pressBtnScan1.hide()
         self.window.lbl_pressBtnScan2.hide()
         self.window.lbl_pressBtnScan3.hide()
-        #self.window.lbl_fail.hide()
         self.emit(QtCore.SIGNAL("ScanBrelok"))
-         
     
     def scanFail(self):
         self.window.lbl_scan.hide()
@@ -110,7 +104,6 @@ class ScanBrelok(QObject):
         self.connect(self.errWindow, QtCore.SIGNAL('ErrorWindowClosing'), self._setLabels)
         self.errWindow.window.show()
         self.window.hide()
-        
 
     def refresh(self):
         self.window.lbl_pressBtnScan1.show()

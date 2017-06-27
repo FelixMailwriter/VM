@@ -2,7 +2,7 @@
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore
 from HdWareCon.GPIO_Socket import GPIO_Socket
-from KP.KPProvider import KPProvider
+
 import time
 #from HdWareCon.FilePrinter import Printer
 

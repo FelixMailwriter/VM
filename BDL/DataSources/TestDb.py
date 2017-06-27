@@ -10,8 +10,8 @@ class TestDb(DB):
     БД для тестов
     '''    
     def __init__(self):
-        self.QtyMagazines=6
         DB.__init__(self)
+        self.QtyMagazines=6
         self.Items={}
        
     def getGPIOPinSettigs(self):

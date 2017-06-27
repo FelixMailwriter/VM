@@ -10,6 +10,8 @@ from UI.ReceiveCash import ReceiveCash
 from UI.GivingOutItem import GivingOutItem
 from Common.Logs import LogEvent
 import BDL.BDCon as BDCon
+from KP.KPManager import KPConnector
+import Common.Settings as Settings
 from Errors import Errors
 
 class Vending(QObject):
@@ -20,26 +22,45 @@ class Vending(QObject):
     def __init__(self, payment):
         QObject.__init__(self)
         
+        global _
+        _= Settings._
+        
         self.DbType='SQLDB'
-        self.dbProvider=self._getDbProvider(self.DbType)                #Подключение к выбранной БД
+        self.dbProvider=self._getDbProvider(self.DbType)  #Подключение к выбранной БД
             
-        self.rb=RB.RB(self.dbProvider)                                  # Экземпляр Raspberry
+        self.rb=RB.RB(self.dbProvider)                    # Экземпляр Raspberry
                                                                              
         self.connect(self.rb, QtCore.SIGNAL("ScanFinished"), self.scanFinishHandler)
         self.connect(self.rb, QtCore.SIGNAL("WriteFinished"), self.writeFinishHandler)
+        
+        kpmodel='NV-9'                                     #Модель купюроприемника
+        self._getKPInstance(kpmodel)                       #Инициализация купюроприемника и получение ссылки на него
         self.item=None  
-        self.payment=payment                                               # Сумма, введенная пользователем
+        
+        self.payment=payment                               # Сумма, введенная пользователем
 
     def _getDbProvider(self, dbType):
         try:
             dbConnector= BDCon.BDCon(dbType)#('TestDB')
-            dbProvider=dbConnector.dbContext                                #Экземпляр подключенной базы данных  
+            dbProvider=dbConnector.dbContext               #Экземпляр подключенной базы данных  
             return dbProvider
         except:
-            self.message=Errors(_(u'Database connection error'))
-            self.message.window.setWindowTitle(_(u'Error'))
-            self.message.window.show()
+            errormsg=Errors(_(u'Database connection error'), 10000)
+            self.connect(errormsg, QtCore.SIGNAL('ErrorWindowClosing'), self.endApp)
             return
+        
+    def _getKPInstance(self, kpmodel):
+        self.kpConnector=KPConnector()
+        self.connect(self.kpConnector, QtCore.SIGNAL('KPSetup is OK'), self._setKPInstance)
+        self.connect(self.kpConnector, QtCore.SIGNAL('KPSetup is failed'), self._setKPInstance)
+        try:
+            self.kpConnector.getKPInstance(kpmodel)
+        except:
+            errormsg=Errors(_(u'Device is not working. Code:001'), 10000)
+            self.connect(errormsg, QtCore.SIGNAL('ErrorWindowClosing'), self.endApp)
+    
+    def _setKPInstance(self, kpInstance):
+        self.kpInstance=kpInstance
     
     def start(self):
         self.scanBrelokWindow=ScanBrelok()
@@ -56,17 +77,17 @@ class Vending(QObject):
     def selektItem(self):
         self.choosingItemWindow = ChoosingItemWindow(self.payment, self.dbProvider)     # окно выбора предмета
         self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.paymentStart)
-        self.connect(self.choosingItemWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
+        self.connect(self.choosingItemWindow, QtCore.SIGNAL("TimeOutPage"), self.endApp)
         self.scanBrelokWindow.window.close()
 
     def paymentStart(self, item):
         self.itemId=item
-        self.receiveCashWindow=ReceiveCash(self.payment, item, self.dbProvider)
+        self.receiveCashWindow=ReceiveCash(self.payment, item, self.dbProvider, self.kpInstance)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentCancelled"), self.paymentCancelled)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("GiveOutItem"), self.giveOutItem)
-        self.connect(self.receiveCashWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
+        self.connect(self.receiveCashWindow, QtCore.SIGNAL("TimeOutPage"), self.self.endApp)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentChange"), self._changePayment)
-        self.connect(self.receiveCashWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
+        self.connect(self.receiveCashWindow, QtCore.SIGNAL("TimeOutPage"), self.self.endApp)
         self.receiveCashWindow.receiveCashWindow.show()
         
     def _changePayment(self, payment):
@@ -76,7 +97,7 @@ class Vending(QObject):
         self.payment=payment
         self.choosingItemWindow = ChoosingItemWindow(self.payment, self.dbProvider)
         self.connect(self.choosingItemWindow, QtCore.SIGNAL("ItemSelected"), self.paymentStart)
-        self.connect(self.choosingItemWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
+        self.connect(self.choosingItemWindow, QtCore.SIGNAL("TimeOutPage"), self.self.endApp)
         self.choosingItemWindow.window.show()             
 
     def giveOutItem(self, item):
@@ -88,7 +109,7 @@ class Vending(QObject):
         self.connect(self.givingOutItem, QtCore.SIGNAL("EngSendClick"), self.engSensClick)
         self.connect(self.givingOutItem, QtCore.SIGNAL("OutSensorClick"), self.outSensClick)
         ###-------------------
-        self.connect(self.givingOutItem, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
+        self.connect(self.givingOutItem, QtCore.SIGNAL("TimeOutPage"), self.self.endApp)
         self.givingOutItem.givingOutWindow.show()        
         self.rb.giveOutItem(item)
 
@@ -99,7 +120,7 @@ class Vending(QObject):
             self.writeBrelokWindow=WriteBrelok()
             self.connect(self.writeBrelokWindow, QtCore.SIGNAL("WriteBrelok"), self.writeBrelok)
             self.connect(self.writeBrelokWindow, QtCore.SIGNAL("SimulateWriteOK"), self.simWrite)
-            self.connect(self.writeBrelokWindow, QtCore.SIGNAL("TimeOutPage"), self._timeOutWindowHandler)
+            self.connect(self.writeBrelokWindow, QtCore.SIGNAL("TimeOutPage"), self.self.endApp)
             self.writeBrelokWindow.window.show() 
             self.givingOutItem.givingOutWindow.close()
         else:
@@ -121,15 +142,20 @@ class Vending(QObject):
             self.finishWindow.window.show()
         else:
             self.writeBrelokWindow.writeFail() 
-    
+    '''
     def _timeOutWindowHandler(self, window):
-        window.close()
+        if window is not None:
+            window.close()
         self.emit(QtCore.SIGNAL('Restart'))
     
     def endApp(self):
         self.emit(QtCore.SIGNAL('End working'))
         print 'Программа закончила работу'    
-        
+    '''
+    def endApp(self):
+        self.emit(QtCore.SIGNAL('End working'))
+        print 'Программа закончила работу'        
+                
     #========== TEST =================
 
     def engSensClick(self):

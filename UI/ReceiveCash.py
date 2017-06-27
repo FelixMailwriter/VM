@@ -2,8 +2,8 @@
 import os
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore, uic, QtGui
-#from KP.KPProvider import KPProvider
-from KP.KPManager import KPManager
+#from KP.KPNV9 import KPProvider
+from KP.KPManager import KPMoneyGetter
 from Printer.PrnDK350 import Printer, PrinterHardwareException
 import Common.Settings as Settings
 from PyQt4.QtCore import QTimer
@@ -14,15 +14,18 @@ class ReceiveCash(QObject):
     '''
     Оплата предмета и выдача чека.
     '''
-    def __init__(self, payment, item, dbProvider):
+    def __init__(self, payment, item, dbProvider, kpInstance):
         QObject.__init__(self)
-        self.kpManager=KPManager(self)
+
         self.payment=payment
         self.item=item
         self.dbProvider=dbProvider
         path=os.path.abspath("UIForms//ReceiveCash.ui")      
         self.receiveCashWindow = uic.loadUi(path)
         
+        self.kpMoneyGetter=KPMoneyGetter(self, kpInstance)
+        self.connect(self.kpMoneyGetter, QtCore.SIGNAL('Money received'), self._increasePayment) 
+               
         self.timer=QTimer()                                                     #Таймер возврата на титульную страницу
         self.timer.timeout.connect(self._backToTitlePage)
         self.timer.start(60000)
@@ -39,7 +42,6 @@ class ReceiveCash(QObject):
         self.connect(self.receiveCashWindow.btnPay, QtCore.SIGNAL("clicked()"), self.enableKP)
         self.connect(self.receiveCashWindow.btnCancel, QtCore.SIGNAL("clicked()"), self.cancelOperation)
         self.connect(self.receiveCashWindow.btnContinue, QtCore.SIGNAL("clicked()"), self.continueOperation)
-        self.connect(self.kpManager, QtCore.SIGNAL("Note stacked"), self.increasePayment)
         self._setLabels()
                          
         if (self.payment>=self.item.price):
@@ -62,9 +64,9 @@ class ReceiveCash(QObject):
         
     def enableKP(self):
         self.receiveCashWindow.btnPay.setEnabled(False)
-        self.kpManager.start()
+        self.kpMoneyGetter.start()
             
-    def increasePayment(self, summa):
+    def _increasePayment(self, summa):
         self.timer.start(60000)
         self.payment+=summa
         self.dbProvider.writeBanknote(summa)

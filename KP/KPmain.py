@@ -4,10 +4,10 @@ import serial
 import crcmod
 import time
 from crc import CRC
-from KPProvider import KPProvider
+from KP import KPNV9
 
 if __name__ == '__main__':
-    kp=KPProvider()
+    kp=KPNV9()
 
     kp.receiveNote()
 

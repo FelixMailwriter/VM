@@ -7,12 +7,14 @@ from KP.crc import CRC
 from PyQt4 import QtCore
 from PyQt4.Qt import QObject
 import gettext 
+from KP.KPCommon import KPInstance
 
-class KPProvider(QObject):
-
+class KPNV9(KPInstance):#QObject):
 
     def __init__(self):
-        QObject.__init__(self)
+        #QObject.__init__(self)
+        KPInstance.__init__(self)
+        
         self.conn=self._getConnection()
         self.crc=CRC()
         self.seq=0x00
@@ -22,81 +24,8 @@ class KPProvider(QObject):
         self.beActive=True
         self.busy=False
         self.timer = None
-        self.trycount=1
-
-                
-    def disable(self):
-        print 'send disable'
-        self.beActive=False
-        for i in range (0,6):
-            if self.busy:
-                time.sleep(1)
-                continue 
-            command=bytearray(1)
-            command[0]=0x09
-            comm=self._generateCommand(0x01, command)
-            if self.conn.isOpen():
-                self.conn.write(comm)
-                self._reverseSeq 
-               
-    def receiveNote(self):
-        '''
-        настройка купюроприемника
-        '''  
-        self._setup()
-        '''
-        Прием купюры
-        '''
-        self.beActive=True
-        self.busy=True
-
-        self.trycount=1
-        noteReceived=False
-        while (not noteReceived and self.trycount<30 and self.beActive):
-            data=self._poll()
-            packLength=len(data)
-            for i in range (0, packLength):
-                if data[i]=='f0'.decode('hex'):
-                    for p in range (i+1, packLength):
-                        if data[p]=='ef'.decode('hex'):
-                            channel=int(data[p+1].encode('hex'),16)
-                            if not channel==0: 
-                                noteReceived=True
-                                self._stackingNote(channel)
-                                self.trycount=0 
-                                noteReceived=False                       
-            time.sleep(1)
-            self.trycount+=1
-        if self.trycount>=30:
-            self.busy=False
-            self.disable()
-            self.emit(QtCore.SIGNAL('ReceiveMoneyTimeout'))
         
-    def _stackingNote(self, resChannel):
-        print 'Купюра принята по каналу {}'.format(resChannel)
-        self.busy=True
-        self._poll()        
-        for i in range (0,4):
-            if self.beActive:
-                data=self._poll()
-                if (data[3]=='f0'.decode('hex') and data[4]=='cc'.decode('hex')):
-                    time.sleep(1)
-                elif (data[3]=='f0'.decode('hex') and data[4]=='ee'.decode('hex')):
-                    channel=int(data[5].encode('hex'),16)
-                    if channel==resChannel:
-                        noteValue=self._getNoteValue(channel)
-                        print 'Принято {} лей'.format(noteValue)
-                        self.emit(QtCore.SIGNAL("Note stacked"), noteValue)
-                    else:
-                        raise DeviceErrorException(_(u"Error in recognition of note"))
-            else: 
-                self.busy=False
-                break
-   
-    def _getNoteValue(self, channel):
-        return self.currencyChannels[channel-1]
-
-    def _setup(self):
+    def setup(self):
         self.conn.open()
         time.sleep(2)
         '''
@@ -129,15 +58,30 @@ class KPProvider(QObject):
             raise DeviceErrorException(_(u"Error in setting channels of notes receiving"))
             return False
         
-        '''
-        Включаем купюроприемник
-        '''
-        if not self._enable():
-            raise DeviceErrorException(_(u"Engage procedure error"))
-            return False
-        
-        return True 
-    
+        return True
+
+    def enable(self):
+        print '---------------'
+        print 'Enable KP'
+        self.beActive=True
+        command=bytearray(1)
+        command[0]=0x0A
+        comm=self._generateCommand(0x01, command) 
+        self.conn.write(comm)
+        try:
+            data=self._getDataFromPort()
+            self._reverseSeq()
+            if data[3]=='f0'.decode('hex'):
+                print 'Enabled device'
+                print '---------------'
+                return True
+            else:
+                print 'Enable failed'
+                print '---------------'
+                return False
+        except DeviceErrorException:
+            self.disable()
+            
         '''
         Синхронизация
         '''
@@ -149,8 +93,107 @@ class KPProvider(QObject):
             time.sleep(1)
         if not syncOK:
             raise DeviceErrorException(_(u"Device synchronization failed"))
-            return False       
-    
+            return False 
+        
+        '''
+        Прием купюры
+        '''
+        self._receiveNote() 
+               
+    def _receiveNote(self):
+        '''
+        Прием купюры
+        '''
+        self.beActive=True
+        self.busy=True
+
+        noteReceived=False
+        while (not noteReceived and self.beActive):
+            data=self._poll()
+            packLength=len(data)
+            for i in range (0, packLength):
+                if data[i]=='f0'.decode('hex'):
+                    for p in range (i+1, packLength):
+                        if data[p]=='ef'.decode('hex'):
+                            channel=int(data[p+1].encode('hex'),16)
+                            if not channel==0: 
+                                noteReceived=True
+                                self._stackingNote(channel)
+                                noteReceived=False                       
+            time.sleep(1)
+
+        
+    def _stackingNote(self, resChannel):
+        print 'Купюра принята по каналу {}'.format(resChannel)
+        self.busy=True
+        self._poll()        
+        for i in range (0,4):
+            if self.beActive:
+                data=self._poll()
+                if (data[3]=='f0'.decode('hex') and data[4]=='cc'.decode('hex')):
+                    time.sleep(1)
+                elif (data[3]=='f0'.decode('hex') and data[4]=='ee'.decode('hex')):
+                    channel=int(data[5].encode('hex'),16)
+                    if channel==resChannel:
+                        noteValue=self._getNoteValue(channel)
+                        print 'Принято {} лей'.format(noteValue)
+                        self.emit(QtCore.SIGNAL("Note stacked"), noteValue)
+                    else:
+                        raise DeviceErrorException(_(u"Error in recognition of note"))
+            else: 
+                self.busy=False
+                break
+   
+    def _getNoteValue(self, channel):
+        return self.currencyChannels[channel-1]
+
+
+        
+    def _setProtocolVersion(self):
+        print '---------------'
+        print 'set protocol version sending'
+        command=bytearray(2)
+        command[0]=0x06
+        command[1]=0x07
+        comm=self._generateCommand(0x02, command)
+        self.conn.write(comm)
+        time.sleep(5)
+        data=self._getDataFromPort()
+        self._reverseSeq()
+        if data[3]=='f0'.decode('hex'):
+            print 'set protocol version sent'
+            print '---------------'
+            return True
+        else:
+            print 'set protocol version not sent'
+            print '---------------' 
+            return False        
+
+    def _getCurrencyByChannels(self):
+        print '---------------'
+        print 'Get currency by channels'
+        command=bytearray(1)
+        command[0]=0x05
+        comm=self._generateCommand(0x01, command) 
+        self.conn.write(comm)
+        data=self._getDataFromPort()
+        self._reverseSeq()
+        if data[3]=='f0'.decode('hex'):
+            print 'Receiving currency sucsessful'
+            print '---------------'
+            time.sleep(1)
+            #Получаем список номиналов купюр по каналам
+            channelsQTY=int(data[15].encode('hex'))
+            endpos=len(data)-2
+            startpos=endpos-4*channelsQTY
+            for i in range(startpos, endpos,4):
+                self.currencyChannels.append(int(data[i].encode('hex'),16))
+            return True
+        else:
+            print 'Receiving currency failed'
+            print '---------------'
+            return False     
+
     def _poll(self):
         print '---------------'
         print 'send poll'
@@ -162,13 +205,6 @@ class KPProvider(QObject):
         self._reverseSeq()
         return data
 
-    def showRecevedData(self, data):
-        print '---------------'
-        print 'Reseived data:'
-        for i in range(0, len(data)):
-            print data[i].encode('hex') 
-        print '---------------'   
-    
     def _setInhibits(self):#, channels):
 
         '''
@@ -196,76 +232,38 @@ class KPProvider(QObject):
         else:
             print 'Inhibits command not sent'
             print '---------------' 
-            return False         
+            return False 
         
-    def _setProtocolVersion(self):
-        print '---------------'
-        print 'set protocol version sending'
-        command=bytearray(2)
-        command[0]=0x06
-        command[1]=0x07
-        comm=self._generateCommand(0x02, command)
-        self.conn.write(comm)
-        time.sleep(5)
-        data=self._getDataFromPort()
-        self._reverseSeq()
-        if data[3]=='f0'.decode('hex'):
-            print 'set protocol version sent'
-            print '---------------'
-            return True
-        else:
-            print 'set protocol version not sent'
-            print '---------------' 
-            return False                 
-    
-    def _enable(self):
-        print '---------------'
-        print 'Enable'
-        self.beActive=True
-        command=bytearray(1)
-        command[0]=0x0A
-        comm=self._generateCommand(0x01, command) 
-        self.conn.write(comm)
-        try:
-            data=self._getDataFromPort()
-            self._reverseSeq()
-            if data[3]=='f0'.decode('hex'):
-                print 'Enabled device'
-                print '---------------'
-                return True
-            else:
-                print 'Enable failed'
-                print '---------------'
-                return False
-        except DeviceErrorException:
-            self.disable()
-            self.emit(QtCore.SIGNAL('ReceiveMoneyTimeout'))         
+    def _sync(self):
+        if (not self.conn.is_open):
+            self.conn.open()
             
-    def _getCurrencyByChannels(self):
-        #self.conn.open()
-        print '---------------'
-        print 'Get currency by channels'
+
+         
+        self.seq=0x00 
+        print '---------------'     
+        print 'send sync'
         command=bytearray(1)
-        command[0]=0x05
-        comm=self._generateCommand(0x01, command) 
+        command[0]=0x11
+        comm=self._generateCommand(0x01, command)
         self.conn.write(comm)
+        time.sleep(1)
         data=self._getDataFromPort()
-        self._reverseSeq()
         if data[3]=='f0'.decode('hex'):
-            print 'Receiving currency sucsessful'
+            print 'Synk OK'
             print '---------------'
-            time.sleep(1)
-            #Получаем список номиналов купюр по каналам
-            channelsQTY=int(data[15].encode('hex'))
-            endpos=len(data)-2
-            startpos=endpos-4*channelsQTY
-            for i in range(startpos, endpos,4):
-                self.currencyChannels.append(int(data[i].encode('hex'),16))
             return True
         else:
-            print 'Receiving currency failed'
+            print 'Synk Failed'
             print '---------------'
-            return False        
+            return False
+                    
+    def showRecevedData(self, data):
+        print '---------------'
+        print 'Reseived data:'
+        for i in range(0, len(data)):
+            print data[i].encode('hex') 
+        print '---------------'   
                
     def _getConnection(self):
         for tryConnect in range (1, 11):
@@ -287,7 +285,7 @@ class KPProvider(QObject):
             time.sleep(2)
         raise PortNotFoundException(_(u'Note receiver\'s port is not found')) 
     
-    def _getDataFromPort(self, length=6):
+    def _getDataFromPort(self):
         print 'wait for answer...'
         for i in range (1,4):
             try:
@@ -302,30 +300,8 @@ class KPProvider(QObject):
                 time.sleep(1)                
             except: # serial.SerialException:
                 pass
-        raise DeviceErrorException(_(u'Devise not responding'))
-          
-            
-    def _sync(self):
-        if (not self.conn.is_open):
-            self.conn.open() 
-        self.seq=0x00 
-        print '---------------'     
-        print 'send sync'
-        command=bytearray(1)
-        command[0]=0x11
-        comm=self._generateCommand(0x01, command)
-        self.conn.write(comm)
-        time.sleep(1)
-        data=self._getDataFromPort()
-        if data[3]=='f0'.decode('hex'):
-            print 'Synk OK'
-            print '---------------'
-            return True
-        else:
-            print 'Synk Failed'
-            print '---------------'
-            return False
-    
+        raise DeviceErrorException(_(u'Devise not responding'))    
+
     def _generateCommand(self, commandlength, command):
         packetLength=len(command)+5
         cmd=bytearray(packetLength)
@@ -345,12 +321,20 @@ class KPProvider(QObject):
             return
         if self.seq==0x80:
             self.seq=0x00
-       
-         
-
-
-
-
+  
+    def disable(self):
+        print 'send disable'
+        self.beActive=False
+        for i in range (0,6):
+            if self.busy:
+                time.sleep(1)
+                continue 
+            command=bytearray(1)
+            command[0]=0x09
+            comm=self._generateCommand(0x01, command)
+            if self.conn.isOpen():
+                self.conn.write(comm)
+                self._reverseSeq      
             
 class PortNotFoundException(Exception):
     def __init__(self,value):

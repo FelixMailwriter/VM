@@ -44,7 +44,9 @@ class KPMoneyGetter(QtCore.QThread):
         self.kpInstance.enable()
     
     def _moneyReceived(self, money):
+        print 'KPManager received signal value note'
         self.emit(QtCore.SIGNAL('Money received'), money)
+        print 'KPManager seds signal value note'
             
         
         

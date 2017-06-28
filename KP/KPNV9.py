@@ -9,11 +9,11 @@ from PyQt4.Qt import QObject
 import gettext 
 from KP.KPCommon import KPInstance
 
-class KPNV9(KPInstance):#QObject):
+class KPNV9(QObject):
 
     def __init__(self):
-        #QObject.__init__(self)
-        KPInstance.__init__(self)
+        QObject.__init__(self)
+        #KPInstance.__init__(self)
         
         self.conn=self._getConnection()
         self.crc=CRC()
@@ -74,14 +74,15 @@ class KPNV9(KPInstance):#QObject):
             if data[3]=='f0'.decode('hex'):
                 print 'Enabled device'
                 print '---------------'
-                return True
+                self._receiveNote() 
             else:
                 print 'Enable failed'
                 print '---------------'
                 return False
         except DeviceErrorException:
             self.disable()
-            
+                
+    def _receiveNote(self):
         '''
         Синхронизация
         '''
@@ -93,14 +94,7 @@ class KPNV9(KPInstance):#QObject):
             time.sleep(1)
         if not syncOK:
             raise DeviceErrorException(_(u"Device synchronization failed"))
-            return False 
-        
-        '''
-        Прием купюры
-        '''
-        self._receiveNote() 
-               
-    def _receiveNote(self):
+            return False        
         '''
         Прием купюры
         '''
@@ -121,7 +115,6 @@ class KPNV9(KPInstance):#QObject):
                                 self._stackingNote(channel)
                                 noteReceived=False                       
             time.sleep(1)
-
         
     def _stackingNote(self, resChannel):
         print 'Купюра принята по каналу {}'.format(resChannel)
@@ -138,6 +131,7 @@ class KPNV9(KPInstance):#QObject):
                         noteValue=self._getNoteValue(channel)
                         print 'Принято {} лей'.format(noteValue)
                         self.emit(QtCore.SIGNAL("Note stacked"), noteValue)
+                        print 'KP seds signal value note'
                     else:
                         raise DeviceErrorException(_(u"Error in recognition of note"))
             else: 
@@ -146,9 +140,7 @@ class KPNV9(KPInstance):#QObject):
    
     def _getNoteValue(self, channel):
         return self.currencyChannels[channel-1]
-
-
-        
+     
     def _setProtocolVersion(self):
         print '---------------'
         print 'set protocol version sending'
@@ -237,9 +229,7 @@ class KPNV9(KPInstance):#QObject):
     def _sync(self):
         if (not self.conn.is_open):
             self.conn.open()
-            
 
-         
         self.seq=0x00 
         print '---------------'     
         print 'send sync'
@@ -325,7 +315,7 @@ class KPNV9(KPInstance):#QObject):
     def disable(self):
         print 'send disable'
         self.beActive=False
-        for i in range (0,6):
+        for i in range (0,10):
             if self.busy:
                 time.sleep(1)
                 continue 

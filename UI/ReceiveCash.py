@@ -67,6 +67,7 @@ class ReceiveCash(QObject):
         self.kpMoneyGetter.start()
             
     def _increasePayment(self, summa):
+        print 'Reseive window got signal note value'
         self.timer.start(60000)
         self.payment+=summa
         self.dbProvider.writeBanknote(summa)
@@ -74,7 +75,9 @@ class ReceiveCash(QObject):
         self.receiveCashWindow.lbl_summa.setText("%s" %(self.payment))
         if (self.payment>=self.item.price):
             self.receiveCashWindow.btnContinue.setEnabled(True)
+            print 'Reseive window send signal KPStop'
             self.emit(QtCore.SIGNAL("KPStop"))                        #Останов купюроприемника
+            print 'Receive window continue working'
         else:
             self.receiveCashWindow.btnContinue.setEnabled(False)
 

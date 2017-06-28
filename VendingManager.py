@@ -7,10 +7,15 @@ import datetime
 from ConfigParser import ConfigParser
 from Printer.PrnDK350 import Printer
 import Vending
+import Common.Settings as Settings
 
 
 class VendingManager(QObject):
     def __init__(self):
+        self.defaultLocale='ru_RU'
+        self.translate=Settings.Translate()
+        self.translate.setLang(self.defaultLocale)
+        
         QObject.__init__(self)
         path=os.path.abspath("UIForms//errorWindow.ui")
         self.window = uic.loadUi(path) 

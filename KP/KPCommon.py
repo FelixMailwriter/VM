@@ -2,7 +2,7 @@
 from abc import abstractmethod, ABCMeta
 from PyQt4.Qt import QObject
 
-class KPInstance(object):
+class KPInstance():
     #абстрактный класс моделей купюроприемников
     
     __metaclass__ = ABCMeta

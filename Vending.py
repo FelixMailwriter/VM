@@ -10,7 +10,7 @@ from UI.ReceiveCash import ReceiveCash
 from UI.GivingOutItem import GivingOutItem
 from Common.Logs import LogEvent
 import BDL.BDCon as BDCon
-from KP.KPManager import KPConnector
+from KP.KPManager import KPHandler
 import Common.Settings as Settings
 from Errors import Errors
 
@@ -35,7 +35,7 @@ class Vending(QObject):
         self.connect(self.rb, QtCore.SIGNAL("WriteFinished"), self.writeFinishHandler)
         
         kpmodel='NV-9'                                     #Модель купюроприемника
-        self._getKPInstance(kpmodel)                       #Инициализация купюроприемника и получение ссылки на него
+        self._getKPHandler(kpmodel)                       #Инициализация купюроприемника и получение ссылки на него
         self.item=None  
         
         self.payment=payment                               # Сумма, введенная пользователем
@@ -52,12 +52,12 @@ class Vending(QObject):
             self.connect(self.errormsg, QtCore.SIGNAL('ErrorWindowClosing'), self.endApp)
             return
         
-    def _getKPInstance(self, kpmodel):
-        self.kpConnector=KPConnector()
-        self.connect(self.kpConnector, QtCore.SIGNAL('KPSetup is OK'), self._setKPInstance)
-        self.connect(self.kpConnector, QtCore.SIGNAL('KPSetup is failed'), self._setKPInstance)
+    def _getKPHandler(self, kpmodel):
+        self.KPHandler=KPHandler(kpmodel)
+        self.connect(self.KPHandler, QtCore.SIGNAL('KPSetup is OK'), self._setKPInstance)
+        self.connect(self.KPHandler, QtCore.SIGNAL('KPSetup is failed'), self._setKPInstance)
         try:
-            self.kpConnector.getKPInstance(kpmodel)
+            self.KPHandler.execCommand('init')
         except Exception as e:
             print e
             message=_(u"Device is not working. Code:001")
@@ -88,7 +88,7 @@ class Vending(QObject):
 
     def paymentStart(self, item):
         self.itemId=item
-        self.receiveCashWindow=ReceiveCash(self.payment, item, self.dbProvider, self.kpInstance)
+        self.receiveCashWindow=ReceiveCash(self.payment, item, self.dbProvider, self.KPHandler)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentCancelled"), self.paymentCancelled)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("GiveOutItem"), self.giveOutItem)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("TimeOutPage"), self.endApp)

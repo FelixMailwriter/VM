@@ -131,7 +131,6 @@ class KPNV9(QObject):
                         noteValue=self._getNoteValue(channel)
                         print 'Принято {} лей'.format(noteValue)
                         self.emit(QtCore.SIGNAL("Note stacked"), noteValue)
-                        print 'KP seds signal value note'
                     else:
                         raise DeviceErrorException(_(u"Error in recognition of note"))
             else: 

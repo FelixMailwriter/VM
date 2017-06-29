@@ -2,8 +2,9 @@
 import os
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore, uic, QtGui
+import time
 #from KP.KPNV9 import KPProvider
-from KP.KPManager import KPMoneyGetter
+from KP.KPManager import KPHandler
 from Printer.PrnDK350 import Printer, PrinterHardwareException
 import Common.Settings as Settings
 from PyQt4.QtCore import QTimer
@@ -14,7 +15,7 @@ class ReceiveCash(QObject):
     '''
     Оплата предмета и выдача чека.
     '''
-    def __init__(self, payment, item, dbProvider, kpInstance):
+    def __init__(self, payment, item, dbProvider, kpHandler):
         QObject.__init__(self)
 
         self.payment=payment
@@ -23,8 +24,8 @@ class ReceiveCash(QObject):
         path=os.path.abspath("UIForms//ReceiveCash.ui")      
         self.receiveCashWindow = uic.loadUi(path)
         
-        self.kpMoneyGetter=KPMoneyGetter(self, kpInstance)
-        self.connect(self.kpMoneyGetter, QtCore.SIGNAL('Money received'), self._increasePayment) 
+        self.kpHandler=kpHandler
+        self.connect(self.kpHandler, QtCore.SIGNAL('Money received'), self._increasePayment) 
                
         self.timer=QTimer()                                                     #Таймер возврата на титульную страницу
         self.timer.timeout.connect(self._backToTitlePage)
@@ -64,10 +65,15 @@ class ReceiveCash(QObject):
         
     def enableKP(self):
         self.receiveCashWindow.btnPay.setEnabled(False)
-        self.kpMoneyGetter.start()
+        for i in range(5):
+            if self.kpHandler.isInitialised:
+                self.kpHandler.execCommand('getMoney')
+                return
+            time.sleep(1)
+        self._backToTitlePage()
+
             
     def _increasePayment(self, summa):
-        print 'Reseive window got signal note value'
         self.timer.start(60000)
         self.payment+=summa
         self.dbProvider.writeBanknote(summa)
@@ -75,9 +81,7 @@ class ReceiveCash(QObject):
         self.receiveCashWindow.lbl_summa.setText("%s" %(self.payment))
         if (self.payment>=self.item.price):
             self.receiveCashWindow.btnContinue.setEnabled(True)
-            print 'Reseive window send signal KPStop'
-            self.emit(QtCore.SIGNAL("KPStop"))                        #Останов купюроприемника
-            print 'Receive window continue working'
+            self._stopKP()                                      #Останов купюроприемника
         else:
             self.receiveCashWindow.btnContinue.setEnabled(False)
 
@@ -86,7 +90,12 @@ class ReceiveCash(QObject):
         self.emit(QtCore.SIGNAL("PaymentCancelled"), self.payment)
         
         self.receiveCashWindow.close()
-        self.emit(QtCore.SIGNAL("KPStop"))                            #Останов купюроприемника
+        self._stopKP()                                          #Останов купюроприемника
+                         
+        
+    def _stopKP(self):
+        self.kpHandler.execCommand('stop')
+        
         
     def continueOperation(self):
         self.timer.stop()

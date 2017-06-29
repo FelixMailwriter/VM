@@ -3,16 +3,55 @@ from PyQt4 import QtCore
 from KPNV9 import KPNV9
 from KP.KPCommon import KPInstance
 
-class KPConnector(QtCore.QThread):
-    #потоковый класс, реализующий процесс подключения и настройки параметров купюроприемника
-    def __init__(self):
+class KPHandler(QtCore.QThread):
+    def __init__(self, model):
         QtCore.QThread.__init__(self)
         
-        self.kpmodel=None
+        self.kpmodel=model
         self.kpInstance=None
+        self.command=None
+        self.isInitialised=False
+
+    def execCommand(self, command):
+        print 'Command %s' %(command)
+        self.command=command 
+        self.start()
+               
+    def run(self):
+        print 'Command2 %s' %(self.command)
+        if self.command=='init':
+            self._initial()
+            
+        elif self.command=='getMoney':
+            if self.kpInstance is not None:
+                self.kpInstance.enable()
+            else:
+                self.initial()
+                self.kpInstance.enable()
+                
+        elif self.command=='stop':
+            print self.kpInstance
+            if self.kpInstance is not None:
+                print 'command disable received!!!'
+                self.kpInstance.disable()
         
-    def getKPInstance(self, kpmodel):
-        self.kpmodel=kpmodel
+    def _initial(self):
+        if self.kpInstance is None:
+            try:
+                self._getKPInstance()
+            except:
+                self.emit(QtCore.SIGNAL('KPSetup is failed'))
+                 
+        resultSetup=self.kpInstance.setup()
+        if not resultSetup:
+            self.emit(QtCore.SIGNAL('KPSetup is failed'))
+            return
+        self.connect(self.kpInstance, QtCore.SIGNAL('Note stacked'), self._moneyReceived)
+        self.isInitialised=True
+        self.emit(QtCore.SIGNAL('KPSetup is OK'), self.kpInstance)   
+              
+    def _getKPInstance(self):
+
         if self.kpmodel=='NV-9':
             self.kpInstance=KPNV9()
             
@@ -20,33 +59,14 @@ class KPConnector(QtCore.QThread):
             self.start()
         else:    
             raise Exception ('KP is not found')
-        
-    def run(self):
-        print 'kp initialising start'
-        resultSetup=self.kpInstance.setup()
-        if not resultSetup:
-            self.emit(QtCore.SIGNAL('KPSetup is failed'))
-            return
-        self.emit(QtCore.SIGNAL('KPSetup is OK'), self.kpInstance)
-        
-    
-    
-class KPMoneyGetter(QtCore.QThread):
-    #потоковый класс, реализующий процесс получения денег купюроприемником
-    def __init__(self, master, kpInstance):
-        QtCore.QThread.__init__(self)
-        
-        self.kpInstance=kpInstance
-        self.connect(self.kpInstance, QtCore.SIGNAL('Note stacked'), self._moneyReceived)
-        self.connect(master, QtCore.SIGNAL('KPStop'), self.kpInstance.disable)
-        
-    def run(self):
-        self.kpInstance.enable()
-    
+
     def _moneyReceived(self, money):
-        print 'KPManager received signal value note'
         self.emit(QtCore.SIGNAL('Money received'), money)
-        print 'KPManager seds signal value note'
+
+        
+        
+   
+
             
         
         

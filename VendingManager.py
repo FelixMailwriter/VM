@@ -31,8 +31,9 @@ class VendingManager(QObject):
     def _start(self):
         #self.vending=None
         self.vending=Vending.Vending(0)
-        self._connectionSignals()
-        self.vending.start()
+        if self.vending is not None:
+            self._connectionSignals()
+            self.vending.start()
             
     def _connectionSignals(self):
         self.connect(self.vending, QtCore.SIGNAL('Restart'), self._start)

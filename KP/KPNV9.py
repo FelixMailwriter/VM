@@ -61,6 +61,7 @@ class KPNV9(QObject):
         return True
 
     def enable(self):
+        self._sync() ########
         print '---------------'
         print 'Enable KP'
         self.beActive=True
@@ -113,8 +114,10 @@ class KPNV9(QObject):
                             if not channel==0: 
                                 noteReceived=True
                                 self._stackingNote(channel)
-                                noteReceived=False                       
+                                noteReceived=False
             time.sleep(1)
+        print 'out of procedure money receive'
+        self.busy=False
         
     def _stackingNote(self, resChannel):
         print 'Купюра принята по каналу {}'.format(resChannel)
@@ -131,12 +134,16 @@ class KPNV9(QObject):
                         noteValue=self._getNoteValue(channel)
                         print 'Принято {} лей'.format(noteValue)
                         self.emit(QtCore.SIGNAL("Note stacked"), noteValue)
+                        time.sleep(2) #########
+                        self.busy=False  ##########
+                        break  ############
                     else:
                         raise DeviceErrorException(_(u"Error in recognition of note"))
             else: 
                 self.busy=False
+                print 'stacking set busy false'
                 break
-   
+
     def _getNoteValue(self, channel):
         return self.currencyChannels[channel-1]
      
@@ -316,6 +323,7 @@ class KPNV9(QObject):
         self.beActive=False
         for i in range (0,10):
             if self.busy:
+                print 'KP is busy'
                 time.sleep(1)
                 continue 
             command=bytearray(1)

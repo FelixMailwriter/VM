@@ -3,12 +3,11 @@ import os
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore, uic, QtGui
 import time
-#from KP.KPNV9 import KPProvider
-from KP.KPManager import KPHandler
 from Printer.PrnDK350 import Printer, PrinterHardwareException
 import Common.Settings as Settings
 from PyQt4.QtCore import QTimer
 from Common.Logs import LogEvent
+from KP.KPManager import KPHandler, KPStopper
 
 
 class ReceiveCash(QObject):
@@ -24,8 +23,8 @@ class ReceiveCash(QObject):
         path=os.path.abspath("UIForms//ReceiveCash.ui")      
         self.receiveCashWindow = uic.loadUi(path)
         
-        self.kpHandler=kpHandler
-        self.connect(self.kpHandler, QtCore.SIGNAL('Money received'), self._increasePayment) 
+        self.kpHandlerGetMoney=kpHandler
+        self.connect(self.kpHandlerGetMoney, QtCore.SIGNAL('Money received'), self._increasePayment) 
                
         self.timer=QTimer()                                                     #Таймер возврата на титульную страницу
         self.timer.timeout.connect(self._backToTitlePage)
@@ -65,9 +64,9 @@ class ReceiveCash(QObject):
         
     def enableKP(self):
         self.receiveCashWindow.btnPay.setEnabled(False)
-        for i in range(5):
-            if self.kpHandler.isInitialised:
-                self.kpHandler.execCommand('getMoney')
+        for i in range(10):
+            if self.kpHandlerGetMoney.isInitialised:
+                self.kpHandlerGetMoney.execCommand('getMoney')
                 return
             time.sleep(1)
         self._backToTitlePage()
@@ -84,18 +83,15 @@ class ReceiveCash(QObject):
             self._stopKP()                                      #Останов купюроприемника
         else:
             self.receiveCashWindow.btnContinue.setEnabled(False)
-
-              
+            
     def cancelOperation(self):
         self.emit(QtCore.SIGNAL("PaymentCancelled"), self.payment)
-        
-        self.receiveCashWindow.close()
         self._stopKP()                                          #Останов купюроприемника
-                         
+        self.receiveCashWindow.close()                 
         
     def _stopKP(self):
-        self.kpHandler.execCommand('stop')
-        
+        self.kpHandlerStop=KPStopper(self.kpHandlerGetMoney)
+        self.kpHandlerStop.start()
         
     def continueOperation(self):
         self.timer.stop()
@@ -142,12 +138,7 @@ class ReceiveCash(QObject):
         #self._printCheck()
         self.emit(QtCore.SIGNAL("TimeOutPage"), self.receiveCashWindow) 
                 
-    def _exitPayment(self):
-        if self.payment==0:
-            return
-        self.item.name='Error in payment for '+self.item.name
-        self.item.price=self.payment
-        #self._printCheck()
+
 
         
 

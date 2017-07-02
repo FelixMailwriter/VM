@@ -11,7 +11,8 @@ from UI.ReceiveCash import ReceiveCash
 from UI.GivingOutItem import GivingOutItem
 from Common.Logs import LogEvent
 import BDL.BDCon as BDCon
-from KP.KPManager import KPInitilaser #KPHandler
+#from KP.KPManager import KPInitilaser, KPNotFoundFoundException
+import KP.KPManager as KP
 import Common.Settings as Settings
 from Errors import Errors
 
@@ -35,7 +36,7 @@ class Vending(QObject):
         self.connect(self.rb, QtCore.SIGNAL("ScanFinished"), self.scanFinishHandler)
         self.connect(self.rb, QtCore.SIGNAL("WriteFinished"), self.writeFinishHandler)
 
-        self._initKP('NV-9')                               #Инициализация купюроприемника
+        self._initKP('NV-90')                               #Инициализация купюроприемника
 
         self.payment=payment                               # Сумма, введенная пользователем
 
@@ -53,15 +54,16 @@ class Vending(QObject):
         
     def _initKP(self, kpmodel):
         try:
-            self.kpInitilaser=KPInitilaser(kpmodel)                           #Инициализация купюроприемника
+            self.kpInitilaser=KP.KPInitilaser(kpmodel)                           #Инициализация купюроприемника
             self.kpInitilaser.start()
             self.kpInstance=self.kpInitilaser.getKPInstance()                  #Ссылка на купюроприемник
-        except Exception as e:
-            message=_(str(e))
+        except KP.KPErrorException as e:
+            message=_(u"Device doesn't work temporary ")
             self.errormsg=Errors(message, 10000)
             self.errormsg.window.show()
-            self.connect(self.errormsg, QtCore.SIGNAL('ErrorWindowClosing'), self.endApp) 
-            raise Exception('Banknotereceiver error')          
+            print e.value
+            self.connect(self.errormsg, QtCore.SIGNAL('ErrorWindowClosing'), self.endApp)
+            return             
         self.connect(self.kpInitilaser, QtCore.SIGNAL('Init finished'), self._setKPInstance)
     
     def _setKPInstance(self, kpInstance):

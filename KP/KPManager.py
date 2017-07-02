@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 from PyQt4 import QtCore
+from enum import __repr__
 from KPNV9 import KPNV9
 
 class KPInitilaser(QtCore.QThread):
@@ -23,7 +24,7 @@ class KPInitilaser(QtCore.QThread):
             kpInstance=KPNV9()
         
         if kpInstance==None:
-            raise Exception ('BanknoteReceiver type error')
+            raise KPErrorException ('BanknoteReceiver type error')
         
         return kpInstance
 
@@ -64,7 +65,11 @@ class KPStopper(QtCore.QThread):
             self.sleep(1)
 
    
-        
+class KPErrorException(Exception):
+    def __init__(self,value):
+        self.value=value
+    def __str__(self):
+        return __repr__(self.value)       
 
 
    

@@ -29,7 +29,10 @@ class VendingManager(QObject):
         self._start()
         
     def _start(self):
-        self.vending=Vending.Vending(0)
+        try:
+            self.vending=Vending.Vending(0)
+        except:
+            
         if self.vending is not None:
             self._connectionSignals()
             self.vending.start()

@@ -29,7 +29,6 @@ class VendingManager(QObject):
         self._start()
         
     def _start(self):
-        #self.vending=None
         self.vending=Vending.Vending(0)
         if self.vending is not None:
             self._connectionSignals()
@@ -77,7 +76,6 @@ class VendingManager(QObject):
         print 'Startin outcome timer on %d' %(self.setCashInBoxTimerIdle)
         self.setCashInBoxTimer=QTimer()
         self.setCashInBoxTimer.timeout.connect(self._setCashInBox)
-        #print 'Starting inbox timer on %s' %(self.setCashInBoxTimerIdle)
         self.setCashInBoxTimer.start(self.setCashInBoxTimerIdle*1000)
         
     def _setCashInBox(self):

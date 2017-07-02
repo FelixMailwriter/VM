@@ -61,7 +61,7 @@ class KPNV9(QObject):
         return True
 
     def enable(self):
-        self._sync() ########
+        self._sync()
         print '---------------'
         print 'Enable KP'
         self.beActive=True
@@ -116,7 +116,6 @@ class KPNV9(QObject):
                                 self._stackingNote(channel)
                                 noteReceived=False
             time.sleep(1)
-        print 'out of procedure money receive'
         self.busy=False
         
     def _stackingNote(self, resChannel):
@@ -155,21 +154,13 @@ class KPNV9(QObject):
         command[1]=0x07
         comm=self._generateCommand(0x02, command)
         self.conn.write(comm)
-        time.sleep(5)
+        time.sleep(1)
         data=self._getDataFromPort()
         self._reverseSeq()
-        if data[3]=='f0'.decode('hex'):
-            print 'set protocol version sent'
-            print '---------------'
-            return True
-        else:
-            print 'set protocol version not sent'
-            print '---------------' 
-            return False        
+        return data[3]=='f0'.decode('hex')
+       
 
     def _getCurrencyByChannels(self):
-        print '---------------'
-        print 'Get currency by channels'
         command=bytearray(1)
         command[0]=0x05
         comm=self._generateCommand(0x01, command) 
@@ -177,8 +168,6 @@ class KPNV9(QObject):
         data=self._getDataFromPort()
         self._reverseSeq()
         if data[3]=='f0'.decode('hex'):
-            print 'Receiving currency sucsessful'
-            print '---------------'
             time.sleep(1)
             #Получаем список номиналов купюр по каналам
             channelsQTY=int(data[15].encode('hex'))
@@ -188,8 +177,7 @@ class KPNV9(QObject):
                 self.currencyChannels.append(int(data[i].encode('hex'),16))
             return True
         else:
-            print 'Receiving currency failed'
-            print '---------------'
+            print '!!! Receiving currency failed'
             return False     
 
     def _poll(self):
@@ -253,14 +241,7 @@ class KPNV9(QObject):
             print 'Synk Failed'
             print '---------------'
             return False
-                    
-    def showRecevedData(self, data):
-        print '---------------'
-        print 'Reseived data:'
-        for i in range(0, len(data)):
-            print data[i].encode('hex') 
-        print '---------------'   
-               
+                         
     def _getConnection(self):
         for tryConnect in range (1, 11):
             print 'Попытка инициализации купюроприемника: %d' %(tryConnect)
@@ -278,11 +259,10 @@ class KPNV9(QObject):
                     return conn
                 except serial.serialutil.SerialException :
                     pass
-            time.sleep(2)
+            time.sleep(1)
         raise PortNotFoundException(_(u'Note receiver\'s port is not found')) 
     
     def _getDataFromPort(self):
-        print 'wait for answer...'
         for i in range (1,4):
             try:
                 l=self.conn.inWaiting()
@@ -296,7 +276,14 @@ class KPNV9(QObject):
                 time.sleep(1)                
             except: # serial.SerialException:
                 pass
-        raise DeviceErrorException(_(u'Devise not responding'))    
+        raise DeviceErrorException(_(u'Devise not responding')) 
+    
+    def showRecevedData(self, data):
+        print '---------------'
+        print 'Reseived data:'
+        for i in range(0, len(data)):
+            print data[i].encode('hex') 
+        print '---------------'      
 
     def _generateCommand(self, commandlength, command):
         packetLength=len(command)+5

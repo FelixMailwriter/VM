@@ -58,6 +58,7 @@ class KPHandler(QtCore.QThread):
         self.emit(QtCore.SIGNAL('Money received'), money)
 
 
+
 class KPStopper(QtCore.QThread):
     def __init__(self, kpThread):
         QtCore.QThread.__init__(self) 

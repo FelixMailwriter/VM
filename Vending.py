@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore
+import time
 import HdWareCon.RB as RB
 from UI.ScanBrelok import ScanBrelok
 from UI.WriteBrelok import WriteBrelok
@@ -10,7 +11,7 @@ from UI.ReceiveCash import ReceiveCash
 from UI.GivingOutItem import GivingOutItem
 from Common.Logs import LogEvent
 import BDL.BDCon as BDCon
-from KP.KPManager import KPHandler
+from KP.KPManager import KPInitilaser #KPHandler
 import Common.Settings as Settings
 from Errors import Errors
 
@@ -52,19 +53,16 @@ class Vending(QObject):
         
     def _initKP(self, kpmodel):
         try:
-            self.KPHandler=KPHandler(kpmodel)                  #Получение ссылки на хэндлер купюроприемника
+            self.kpInitilaser=KPInitilaser(kpmodel)                           #Инициализация купюроприемника
+            self.kpInitilaser.start()
+            self.kpInstance=self.kpInitilaser.getKPInstance()                  #Ссылка на купюроприемник
         except Exception as e:
             message=_(str(e))
             self.errormsg=Errors(message, 10000)
             self.errormsg.window.show()
             self.connect(self.errormsg, QtCore.SIGNAL('ErrorWindowClosing'), self.endApp) 
             raise Exception('Banknotereceiver error')          
-        self.connect(self.KPHandler, QtCore.SIGNAL('Init finished'), self._setKPInstance)
-        try:
-            self.KPHandler.execCommand('init')
-        except Exception as e:
-            print e
-
+        self.connect(self.kpInitilaser, QtCore.SIGNAL('Init finished'), self._setKPInstance)
     
     def _setKPInstance(self, kpInstance):
         if kpInstance is None:
@@ -93,11 +91,13 @@ class Vending(QObject):
         self.scanBrelokWindow.window.close()
 
     def paymentStart(self, item):
+        while self.kpInitilaser.isRunning():
+            time.sleep(1)
         if self.payment>=item.price:
             self.giveOutItem(item)
             return
         self.itemId=item
-        self.receiveCashWindow=ReceiveCash(self.payment, item, self.dbProvider, self.KPHandler)
+        self.receiveCashWindow=ReceiveCash(self.payment, item, self.dbProvider, self.kpInstance)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentCancelled"), self.paymentCancelled)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("GiveOutItem"), self.giveOutItem)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("TimeOutPage"), self.endApp)

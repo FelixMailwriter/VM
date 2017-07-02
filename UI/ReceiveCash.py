@@ -7,14 +7,14 @@ from Printer.PrnDK350 import Printer, PrinterHardwareException
 import Common.Settings as Settings
 from PyQt4.QtCore import QTimer
 from Common.Logs import LogEvent
-from KP.KPManager import KPHandler, KPStopper
+from KP.KPManager import KPMoneyGetter, KPStopper
 
 
 class ReceiveCash(QObject):
     '''
     Оплата предмета и выдача чека.
     '''
-    def __init__(self, payment, item, dbProvider, kpHandler):
+    def __init__(self, payment, item, dbProvider, kpInstance):
         QObject.__init__(self)
 
         self.payment=payment
@@ -23,8 +23,8 @@ class ReceiveCash(QObject):
         path=os.path.abspath("UIForms//ReceiveCash.ui")      
         self.receiveCashWindow = uic.loadUi(path)
         
-        self.kpHandlerGetMoney=kpHandler
-        self.connect(self.kpHandlerGetMoney, QtCore.SIGNAL('Money received'), self._increasePayment) 
+        self.moneyGetter=KPMoneyGetter(kpInstance)
+        self.connect(self.moneyGetter, QtCore.SIGNAL('Money received'), self._increasePayment) 
                
         self.timer=QTimer()                                                     #Таймер возврата на титульную страницу
         self.timer.timeout.connect(self._backToTitlePage)
@@ -45,7 +45,7 @@ class ReceiveCash(QObject):
         if (self.payment>=self.item.price):
             self.continueOperation()
         else:
-            self.enableKP()
+            self.moneyGetter.start()
                
     def _setLabels(self):
         self.receiveCashWindow.lbl1.setText(_(u'Incomming cash'))
@@ -60,14 +60,7 @@ class ReceiveCash(QObject):
             paymentText="%s" %(int(self.payment))
         self.receiveCashWindow.lbl_summa.setText(paymentText)       
         
-    def enableKP(self):
-        for i in range(10):
-            if self.kpHandlerGetMoney.isInitialised:
-                self.kpHandlerGetMoney.execCommand('getMoney')
-                return
-            time.sleep(1)
-        self._backToTitlePage()
-            
+
     def _increasePayment(self, summa):
         self.timer.start(60000)
         self.payment+=summa
@@ -84,7 +77,7 @@ class ReceiveCash(QObject):
         self.receiveCashWindow.close()                 
         
     def _stopKP(self):
-        self.kpHandlerStop=KPStopper(self.kpHandlerGetMoney)
+        self.kpHandlerStop=KPStopper(self.moneyGetter)
         self.kpHandlerStop.start()
         
     def continueOperation(self):

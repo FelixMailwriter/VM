@@ -269,8 +269,6 @@ class KPNV9(QObject):
                 if l>0:
                     data=self.conn.read(l)
                     print 'answer received'
-                    print 'data length ' 
-                    print len(data)
                     self.showRecevedData(data)
                     return data
                 time.sleep(1)                

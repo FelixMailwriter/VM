@@ -93,6 +93,9 @@ class Vending(QObject):
         self.scanBrelokWindow.window.close()
 
     def paymentStart(self, item):
+        if self.payment>=item.price:
+            self.giveOutItem(item)
+            return
         self.itemId=item
         self.receiveCashWindow=ReceiveCash(self.payment, item, self.dbProvider, self.KPHandler)
         self.connect(self.receiveCashWindow, QtCore.SIGNAL("PaymentCancelled"), self.paymentCancelled)
@@ -113,8 +116,6 @@ class Vending(QObject):
         self.choosingItemWindow.window.show()             
 
     def giveOutItem(self, item):
-        print 'vending: giveoutitem'
-        self.receiveCashWindow.receiveCashWindow.close()
         self.givingOutItem=GivingOutItem()
         self.connect(self.rb, QtCore.SIGNAL("OutingEnd"), self.givingOutHandler)
         

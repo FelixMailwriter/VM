@@ -102,7 +102,9 @@ class ReceiveCash(QObject):
             events.append(log)
             self.dbProvider.writeLog(events)
         finally: 
-            print 'give out item'           
+            print 'give out item' 
+            
+            self.receiveCashWindow.close()          
             self.emit(QtCore.SIGNAL("GiveOutItem"), self.item)
         
     def _printCheck(self):

@@ -14,12 +14,10 @@ class KPHandler(QtCore.QThread):
         self.isInitialised=False
         
     def execCommand(self, command):
-        print 'Command %s' %(command)
         self.command=command 
         self.start()
                
     def run(self):
-        print 'Command2 %s' %(self.command)
         if self.command=='init':
             self._initial()
             

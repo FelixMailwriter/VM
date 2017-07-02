@@ -84,8 +84,7 @@ class ReceiveCash(QObject):
         print 'continue operation'
         self.timer.stop()
         try:
-            #self._printCheck()
-            t=0
+            self._printCheck()
         except PrinterHardwareException as e:
             events=[]
             log=LogEvent()
@@ -129,7 +128,7 @@ class ReceiveCash(QObject):
         while self.kpHandlerStop.isRunning():
             time.sleep(1)
                          
-        #self._printCheck()
+        self._printCheck()
         self.emit(QtCore.SIGNAL("TimeOutPage"), self.receiveCashWindow) 
                 
 

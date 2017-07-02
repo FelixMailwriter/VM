@@ -11,16 +11,11 @@ from UI.ReceiveCash import ReceiveCash
 from UI.GivingOutItem import GivingOutItem
 from Common.Logs import LogEvent
 import BDL.BDCon as BDCon
-#from KP.KPManager import KPInitilaser, KPNotFoundFoundException
 import KP.KPManager as KP
 import Common.Settings as Settings
-from Errors import Errors
 
 
 class Vending(QObject):
-    '''
-    Класс приложения
-    '''
     
     def __init__(self, payment):
         QObject.__init__(self)
@@ -36,7 +31,7 @@ class Vending(QObject):
         self.connect(self.rb, QtCore.SIGNAL("ScanFinished"), self.scanFinishHandler)
         self.connect(self.rb, QtCore.SIGNAL("WriteFinished"), self.writeFinishHandler)
 
-        self._initKP('NV-90')                               #Инициализация купюроприемника
+        self._initKP('NV-9')                               #Инициализация купюроприемника
 
         self.payment=payment                               # Сумма, введенная пользователем
 
@@ -47,10 +42,9 @@ class Vending(QObject):
             return dbProvider
         except:
             message=_(u"Database connection error")
-            self.errormsg=Errors(message, 10000)
-            self.errormsg.window.show()
-            self.connect(self.errormsg, QtCore.SIGNAL('ErrorWindowClosing'), self.endApp)
-            return
+            print message
+            raise Exception(message)
+            return              
         
     def _initKP(self, kpmodel):
         try:
@@ -58,20 +52,17 @@ class Vending(QObject):
             self.kpInitilaser.start()
             self.kpInstance=self.kpInitilaser.getKPInstance()                  #Ссылка на купюроприемник
         except KP.KPErrorException as e:
-            message=_(u"Device doesn't work temporary ")
-            self.errormsg=Errors(message, 10000)
-            self.errormsg.window.show()
             print e.value
-            self.connect(self.errormsg, QtCore.SIGNAL('ErrorWindowClosing'), self.endApp)
+            raise Exception(_(u'Hardware error'))
             return             
         self.connect(self.kpInitilaser, QtCore.SIGNAL('Init finished'), self._setKPInstance)
     
     def _setKPInstance(self, kpInstance):
         if kpInstance is None:
             message=_(u"Notereceiver initialization error. Code:001")
-            self.errormsg=Errors(message, 10000)
-            self.errormsg.window.show()
-            self.connect(self.errormsg, QtCore.SIGNAL('ErrorWindowClosing'), self.endApp)            
+            print message
+            raise Exception(message)
+            return              
         self.kpInstance=kpInstance
     
     def start(self):

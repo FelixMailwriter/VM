@@ -7,13 +7,11 @@ from KP.crc import CRC
 from PyQt4 import QtCore
 from PyQt4.Qt import QObject
 import gettext 
-from KP.KPCommon import KPInstance
 
 class KPNV9(QObject):
 
     def __init__(self):
         QObject.__init__(self)
-        #KPInstance.__init__(self)
         
         self.conn=self._getConnection()
         self.crc=CRC()
@@ -133,14 +131,13 @@ class KPNV9(QObject):
                         noteValue=self._getNoteValue(channel)
                         print 'Принято {} лей'.format(noteValue)
                         self.emit(QtCore.SIGNAL("Note stacked"), noteValue)
-                        time.sleep(2) #########
-                        self.busy=False  ##########
-                        break  ############
+                        time.sleep(2) 
+                        self.busy=False 
+                        break  
                     else:
                         raise DeviceErrorException(_(u"Error in recognition of note"))
             else: 
                 self.busy=False
-                print 'stacking set busy false'
                 break
 
     def _getNoteValue(self, channel):
@@ -181,8 +178,6 @@ class KPNV9(QObject):
             return False     
 
     def _poll(self):
-        print '---------------'
-        print 'send poll'
         command=bytearray(1)
         command[0]=0x07
         comm=self._generateCommand(0x01, command)
@@ -213,11 +208,9 @@ class KPNV9(QObject):
         self._reverseSeq()
         if data[3]=='f0'.decode('hex'):
             print 'Inhibits command sent'
-            print '---------------'
             return True
         else:
             print 'Inhibits command not sent'
-            print '---------------' 
             return False 
         
     def _sync(self):
@@ -235,11 +228,9 @@ class KPNV9(QObject):
         data=self._getDataFromPort()
         if data[3]=='f0'.decode('hex'):
             print 'Synk OK'
-            print '---------------'
             return True
         else:
             print 'Synk Failed'
-            print '---------------'
             return False
                          
     def _getConnection(self):
@@ -272,7 +263,7 @@ class KPNV9(QObject):
                     self.showRecevedData(data)
                     return data
                 time.sleep(1)                
-            except: # serial.SerialException:
+            except: 
                 pass
         raise DeviceErrorException(_(u'Devise not responding')) 
     

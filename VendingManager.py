@@ -8,7 +8,7 @@ from ConfigParser import ConfigParser
 from Printer.PrnDK350 import Printer
 import Vending
 import Common.Settings as Settings
-
+from Errors import Errors
 
 class VendingManager(QObject):
     def __init__(self):
@@ -31,7 +31,12 @@ class VendingManager(QObject):
     def _start(self):
         try:
             self.vending=Vending.Vending(0)
-        except:
+        except Exception as e:
+            message=_(u"Device doesn't work")
+            self.errormsg=Errors(message, 60000)
+            self.errormsg.window.show()
+            self.connect(self.errormsg, QtCore.SIGNAL('ErrorWindowClosing'), self._start)
+            return
             
         if self.vending is not None:
             self._connectionSignals()

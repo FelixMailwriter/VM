@@ -113,6 +113,7 @@ class Vending(QObject):
         self.choosingItemWindow.window.show()             
 
     def giveOutItem(self, item):
+        print 'vending: giveoutitem'
         self.receiveCashWindow.receiveCashWindow.close()
         self.givingOutItem=GivingOutItem()
         self.connect(self.rb, QtCore.SIGNAL("OutingEnd"), self.givingOutHandler)

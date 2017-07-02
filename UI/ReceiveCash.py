@@ -37,22 +37,20 @@ class ReceiveCash(QObject):
         _= Settings._
         
         self.receiveCashWindow.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-        self.receiveCashWindow.btnContinue.setEnabled(self.item.price<self.payment)
         self.receiveCashWindow.lbl_summa.setText("%s" %(self.payment))
-        self.connect(self.receiveCashWindow.btnPay, QtCore.SIGNAL("clicked()"), self.enableKP)
         self.connect(self.receiveCashWindow.btnCancel, QtCore.SIGNAL("clicked()"), self.cancelOperation)
-        self.connect(self.receiveCashWindow.btnContinue, QtCore.SIGNAL("clicked()"), self.continueOperation)
+
         self._setLabels()
-                         
+            
         if (self.payment>=self.item.price):
-            self.receiveCashWindow.btnContinue.setEnabled(True)
+            self.continueOperation()
+        else:
+            self.enableKP()
                
     def _setLabels(self):
         self.receiveCashWindow.lbl1.setText(_(u'Incomming cash'))
-        self.receiveCashWindow.btnPay.setText(_(u'Pay'))
         self.receiveCashWindow.lbl_msgNoPayOut.setText(_(u'Mashine does not give any odd money'))
         self.receiveCashWindow.btnCancel.setText(_(u'Cancel'))
-        self.receiveCashWindow.btnContinue.setText(_(u'Next'))
         
         self.receiveCashWindow.labelItem.setPixmap(self.item.icon)
         self.receiveCashWindow.labelPrice.setText("%s" %(int(self.item.price)))
@@ -63,14 +61,12 @@ class ReceiveCash(QObject):
         self.receiveCashWindow.lbl_summa.setText(paymentText)       
         
     def enableKP(self):
-        self.receiveCashWindow.btnPay.setEnabled(False)
         for i in range(10):
             if self.kpHandlerGetMoney.isInitialised:
                 self.kpHandlerGetMoney.execCommand('getMoney')
                 return
             time.sleep(1)
         self._backToTitlePage()
-
             
     def _increasePayment(self, summa):
         self.timer.start(60000)
@@ -79,10 +75,8 @@ class ReceiveCash(QObject):
         self.emit(QtCore.SIGNAL('PaymentChange'), self.payment)
         self.receiveCashWindow.lbl_summa.setText("%s" %(self.payment))
         if (self.payment>=self.item.price):
-            self.receiveCashWindow.btnContinue.setEnabled(True)
             self._stopKP()                                      #Останов купюроприемника
-        else:
-            self.receiveCashWindow.btnContinue.setEnabled(False)
+            self.continueOperation()
             
     def cancelOperation(self):
         self.emit(QtCore.SIGNAL("PaymentCancelled"), self.payment)
@@ -94,6 +88,7 @@ class ReceiveCash(QObject):
         self.kpHandlerStop.start()
         
     def continueOperation(self):
+        print 'continue operation'
         self.timer.stop()
         try:
             #self._printCheck()
@@ -106,7 +101,8 @@ class ReceiveCash(QObject):
             log.message='Printer is not ready'
             events.append(log)
             self.dbProvider.writeLog(events)
-        finally:            
+        finally: 
+            print 'give out item'           
             self.emit(QtCore.SIGNAL("GiveOutItem"), self.item)
         
     def _printCheck(self):
@@ -134,7 +130,10 @@ class ReceiveCash(QObject):
    
     def _backToTitlePage(self):
         self.timer.stop()
-        self.emit(QtCore.SIGNAL("KPStop"))                            #Останов купюроприемника
+        self._stopKP()                                      #Останов купюроприемника
+        while self.kpHandlerStop.isRunning():
+            time.sleep(1)
+                         
         #self._printCheck()
         self.emit(QtCore.SIGNAL("TimeOutPage"), self.receiveCashWindow) 
                 

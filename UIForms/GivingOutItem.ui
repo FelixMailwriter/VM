@@ -139,6 +139,13 @@ font: 28pt &quot;Noto Sans CJK KR&quot;;</string>
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="btn_writeOK">
+       <property name="text">
+        <string>Симуляция сигнала &quot;Брелок записан&quot;</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>

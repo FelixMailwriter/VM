@@ -33,6 +33,6 @@ class FinishWindow(QObject):
         
     def _setLabels(self):
         
-        self.window.label.setText(_(u"The key was written successfully"))
+        self.window.label.setText(_(u"The key is ready"))
         self.window.label_2.setText(_(u"Thanks for purchase"))
         

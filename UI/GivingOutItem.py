@@ -22,6 +22,7 @@ class GivingOutItem(QObject):
         _= Settings._
         
         self.connect(self.givingOutWindow.btn_OutSensSim, QtCore.SIGNAL("clicked()"), self.outSensClick)  #test remove
+        self.givingOutWindow.btn_writeOK.clicked.connect(self.writeOKHandler)
         self.givingOutWindow.lbl_msg.setText(_(u"Wait for delivery..."))
     
     
@@ -39,3 +40,8 @@ class GivingOutItem(QObject):
     
     def outSensClick(self):
         self.emit(QtCore.SIGNAL("OutSensorClick"))
+        
+#=====TEST=====
+    
+    def writeOKHandler(self):
+        self.emit(QtCore.SIGNAL("SimulateWriteOK"))

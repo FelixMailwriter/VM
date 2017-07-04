@@ -13,6 +13,7 @@ from Common.Logs import LogEvent
 import BDL.BDCon as BDCon
 import KP.KPManager as KP
 import Common.Settings as Settings
+from Errors import Errors
 
 
 class Vending(QObject):
@@ -114,7 +115,8 @@ class Vending(QObject):
         
         #Убрать после тестов
         self.connect(self.givingOutItem, QtCore.SIGNAL("EngSendClick"), self.engSensClick)
-        self.connect(self.givingOutItem, QtCore.SIGNAL("OutSensorClick"), self.outSensClick)
+        self.connect(self.givingOutItem, QtCore.SIGNAL("OutSensorClick"), self.outSensClick)#############################
+        self.connect(self.givingOutItem, QtCore.SIGNAL("SimulateWriteOK"), self.simWrite)#############################
         ###-------------------
         self.connect(self.givingOutItem, QtCore.SIGNAL("TimeOutPage"), self.endApp)
         self.givingOutItem.givingOutWindow.show()        
@@ -124,12 +126,12 @@ class Vending(QObject):
         if result:
             #Запись в БД факта продажи
             self.dbProvider.sellItem(magazin, item, self.payment)
-            self.writeBrelokWindow=WriteBrelok()
-            self.connect(self.writeBrelokWindow, QtCore.SIGNAL("WriteBrelok"), self.writeBrelok)
-            self.connect(self.writeBrelokWindow, QtCore.SIGNAL("SimulateWriteOK"), self.simWrite)
-            self.connect(self.writeBrelokWindow, QtCore.SIGNAL("TimeOutPage"), self.endApp)
-            self.writeBrelokWindow.window.show() 
-            self.givingOutItem.givingOutWindow.close()
+            #self.writeBrelokWindow=WriteBrelok()
+            #self.connect(self.writeBrelokWindow, QtCore.SIGNAL("WriteBrelok"), self.writeBrelok)
+            #self.connect(self.writeBrelokWindow, QtCore.SIGNAL("SimulateWriteOK"), self.simWrite)
+            #self.connect(self.writeBrelokWindow, QtCore.SIGNAL("TimeOutPage"), self.endApp)
+            #self.writeBrelokWindow.window.show() 
+            self.rb.writeBrelok()
         else:
             #Запись в лог о провале продажи
             logMessages=[]
@@ -137,18 +139,18 @@ class Vending(QObject):
             logMessages.append(logEvent)
             self.dbProvider.writeLog(logMessages)
             self.givingOutItem.fail()
-          
-    def writeBrelok(self):
-        self.rb.writeBrelok()
-            
+                    
     def writeFinishHandler(self, result):
+        self.givingOutItem.givingOutWindow.close()
         if result:
             self.finishWindow=FinishWindow()
             self.connect(self.finishWindow, QtCore.SIGNAL("FinishProc"), self.endApp)
-            self.writeBrelokWindow.window.close()
+            #self.writeBrelokWindow.window.close()
             self.finishWindow.window.show()
         else:
-            self.writeBrelokWindow.writeFail() 
+            #self.writeBrelokWindow.writeFail()
+            message=_(u'Key writing is failed. Call the techsupport.') 
+            errormsg=Errors(message)
     '''
     def _timeOutWindowHandler(self, window):
         if window is not None:

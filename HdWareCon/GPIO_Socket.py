@@ -33,8 +33,8 @@ class GPIO_Socket(QObject):
         magList={}
         for MagNumber in magazinItemsMap:
             MagItem=magazinItemsMap[MagNumber]
-            magazin=(Magazin(MagNumber, magazinesPinSettings[(MagNumber,"EngPw")], magazinesPinSettings[(MagNumber,"EngSensor")], 
-                    magazinesPinSettings[(MagNumber,"EmptySensor")],MagItem))
+            magazin=(Magazin(MagNumber, magazinesPinSettings[(MagNumber,"EngPw")], 
+                    magazinesPinSettings[(MagNumber,"EngSensor")], MagItem))
             print 'Добавлен %s'  %(magazin)
             magList[MagNumber]= magazin
         return magList

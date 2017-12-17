@@ -6,6 +6,7 @@ encoding//BDL/DataSources/TestDb.py=utf-8
 encoding//Common/Logs.py=utf-8
 encoding//Common/Settings.py=utf-8
 encoding//HdWareCon/GPIO_Socket.py=utf-8
+encoding//HdWareCon/Magazin.py=utf-8
 encoding//HdWareCon/Programmator_del.py=utf-8
 encoding//HdWareCon/RB.py=utf-8
 encoding//HdWareCon/SensorListener.py=utf-8

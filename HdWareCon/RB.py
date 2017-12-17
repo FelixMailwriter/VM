@@ -1,7 +1,8 @@
 # -*- coding:utf-8 -*-
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore
-from HdWareCon.GPIO_Socket import GPIO_Socket
+#from HdWareCon.GPIO_Socket import GPIO_Socket
+from GPIO_Socket import GPIO_Socket
 
 import time
 #from HdWareCon.FilePrinter import Printer

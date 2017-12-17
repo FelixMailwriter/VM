@@ -69,7 +69,7 @@ class Vending(QObject):
         self.scanBrelokWindow=ScanBrelok()
         self.connect(self.scanBrelokWindow, QtCore.SIGNAL("ScanBrelok"), self.rb.scanBrelok)
         self.connect(self.scanBrelokWindow, QtCore.SIGNAL("SimulateScanOK"), self.simScan)################### del
-        self.connect(self.programmator.QtCore.SIGNAL("ScanOK"), self.simScan)
+        #self.connect(self.rb.gpioSocket.programmator.QtCore.SIGNAL("ScanOK"), self.simScan)
         self.scanBrelokWindow.window.show()
         
     def scanFinishHandler(self, result):

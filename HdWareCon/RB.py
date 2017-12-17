@@ -54,6 +54,6 @@ class RB(QObject):
     def writeHandler(self, result):
         self.emit(QtCore.SIGNAL("WriteFinished"), result)     
   
-   
-    
+    def getProgrammator(self):
+        return self.gpioSocket.programmator
     

@@ -4,7 +4,6 @@ from PyQt4 import QtCore
 import time
 import HdWareCon.RB as RB
 from UI.ScanBrelok import ScanBrelok
-from UI.WriteBrelok import WriteBrelok
 from UI.FinishWindow import FinishWindow
 from UI.ChoosingItem import ChoosingItemWindow
 from UI.ReceiveCash import ReceiveCash
@@ -31,9 +30,9 @@ class Vending(QObject):
                                                                              
         self.connect(self.rb, QtCore.SIGNAL("ScanFinished"), self.scanFinishHandler)
         self.connect(self.rb, QtCore.SIGNAL("WriteFinished"), self.writeFinishHandler)
-
-        self._initKP('NV-9')                               #Инициализация купюроприемника
-
+        ######
+        #self._initKP('NV-9')                               #Инициализация купюроприемника
+        
         self.payment=payment                               # Сумма, введенная пользователем
 
     def _getDbProvider(self, dbType):
@@ -69,7 +68,8 @@ class Vending(QObject):
     def start(self):
         self.scanBrelokWindow=ScanBrelok()
         self.connect(self.scanBrelokWindow, QtCore.SIGNAL("ScanBrelok"), self.rb.scanBrelok)
-        self.connect(self.scanBrelokWindow, QtCore.SIGNAL("SimulateScanOK"), self.simScan)
+        self.connect(self.scanBrelokWindow, QtCore.SIGNAL("SimulateScanOK"), self.simScan)################### del
+        self.connect(self.programmator.QtCore.SIGNAL("ScanOK"), self.simScan)
         self.scanBrelokWindow.window.show()
         
     def scanFinishHandler(self, result):
@@ -151,16 +151,7 @@ class Vending(QObject):
             #self.writeBrelokWindow.writeFail()
             message=_(u'Key writing is failed. Call the techsupport.') 
             errormsg=Errors(message)
-    '''
-    def _timeOutWindowHandler(self, window):
-        if window is not None:
-            window.close()
-        self.emit(QtCore.SIGNAL('Restart'))
-    
-    def endApp(self):
-        self.emit(QtCore.SIGNAL('End working'))
-        print 'Программа закончила работу'    
-    '''
+
     def endApp(self):
         self.emit(QtCore.SIGNAL('End working'))
         print 'Программа закончила работу'        
@@ -177,7 +168,8 @@ class Vending(QObject):
         self.rb.gpioSocket.getOutSensor.setSignal(1)
     
     def simScan(self):
-        self.rb.gpioSocket.programmator.pinScanOK.setSignal(1)
+        currSig=self.rb.gpioSocket.programmator.pinScanOK.getSignal()
+        self.rb.gpioSocket.programmator.pinScanOK.setSignal(not currSig)
         
     def simWrite(self):
         self.rb.gpioSocket.programmator.pinWriteOK.setSignal(1)

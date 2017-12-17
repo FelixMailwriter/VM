@@ -3,7 +3,8 @@
 #GPIO.setmode(BCM)
 from PyQt4 import QtCore
 from PyQt4.Qt import QObject
-from HdWareCon.Programmator import Programmator
+#from HdWareCon import Programmator_del.Programmator
+from Programmator.Vizit import PgVizit 
 from HdWareCon.Pin import Pin
 from HdWareCon.Magazin import Magazin 
 from HdWareCon.SensorListener import SensorListener
@@ -18,7 +19,7 @@ class GPIO_Socket(QObject):
         QObject.__init__(self)
         #GPIO.cleanup()
         #GPIO.setmode(GPIO.BCM)
-        self.programmator=self.getProgrammator(programmatorPinSettings)                #Экземпляр программатора
+        self.programmator=PgVizit(programmatorPinSettings)                          #Экземпляр программатора
         self.connect(self.programmator, QtCore.SIGNAL("ScanFinished"), self.scanHandler)
         self.connect(self.programmator, QtCore.SIGNAL("WriteFinished"), self.writeHandler)
         #Создаем коллекцию магазинов с инфой о пинах и загруженных предметах
@@ -42,10 +43,6 @@ class GPIO_Socket(QObject):
         pin= Pin(PinGetOutSensor, 'IN')
         print 'Датчик выдачи установлен %s' %(pin)
         return pin
-
-    def getProgrammator(self, programmatorPinSettings):
-        programmator=Programmator(programmatorPinSettings)
-        return programmator             #
 
     def giveOutItem(self, item):
         print "GPIO_Socket: Начало выдачи предмета %s" %(str(item))

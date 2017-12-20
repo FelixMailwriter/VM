@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 #import RPi.GPIO as GPIO
-#GPIO.setmode(BCM)
+
 class Pin(object):
     '''
     Класс определяет PIN в разъеме GPIO платы Raspberry
@@ -13,12 +13,11 @@ class Pin(object):
         self.state=state
         self.direction=direction
         #Конфигурируем пин на вход или на выход
+        #GPIO.setmode(GPIO.BCM)
         #if self.direction=='IN': 
-        #    GPIO.setup(self.num, GPIO.IN)
         #    GPIO.setup(self.num, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)  
         #elif self.direction=='OUT':
         #    GPIO.setup(self.num, GPIO.OUT)
-        #    GPIO.setup(self.num, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
         print u'Pin %s сконфигурирован на %s' %(self.num, self.direction)
     
     def enable(self):

@@ -30,6 +30,7 @@ class PgVizit(QtCore.QThread):
         self.QTY_WRITE_TRYING=1
         self.scanTrying=self.QTQ_SCAN_TRYING
         self.writeTrying=self.QTY_WRITE_TRYING
+        self.reset()
         print 'Инициализация программатора выполнена'
         
     def reset(self):
@@ -55,6 +56,7 @@ class PgVizit(QtCore.QThread):
             #self.msleep(500)
         else:
             self.scanTrying=self.QTQ_SCAN_TRYING
+            self.pinScan.enable()
             self.emit(QtCore.SIGNAL("ScanFinished"), False)
 
              

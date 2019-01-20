@@ -24,7 +24,7 @@ class Vending(QObject):
         global _
         _= Settings._
         
-        self.DbType='SQLDB'
+        self.DbType='TestDB' #SQLDB'
         self.dbProvider=self._getDbProvider(self.DbType)  #Подключение к выбранной БД
             
         self.rb=RB.RB(self.dbProvider)                    # Экземпляр Raspberry
@@ -60,7 +60,7 @@ class Vending(QObject):
     
     def _setKPInstance(self, kpInstance):
         if kpInstance is None:
-            message=_(u"Notereceiver initialization error. Code:001")
+            message =_(u"Notereceiver initialization error. Code:001")
             print message
             raise Exception(message)
             return              

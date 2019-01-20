@@ -79,6 +79,13 @@ class TestDb(DB):
     def _getItemImgPath(self, shortPath):
         path=os.path.abspath(shortPath)
         return path 
-        
     
+        
+    def getIdItemsinMagazinsMap(self, magQty=6):
+        # itemMap=self._fillMagEmptyItems(magQty)
+        itemMap = {}
+        itemMap[1] = 1
+        itemMap[2] = 1
+        itemMap[3] = 2
+        return itemMap
     

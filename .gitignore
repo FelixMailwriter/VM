@@ -10,3 +10,5 @@ TAGS
 pyodbc.egg-info
 pyodbc.conf
 /venv*
+.idea/
+.settings/

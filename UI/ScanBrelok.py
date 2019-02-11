@@ -6,7 +6,7 @@ from PyQt4.QtCore import QTimer
 from UI.CheckPass import CheckPass
 from ConfigParser import ConfigParser
 import Common.Settings as Settings
-from Errors import Errors
+from Common.ErrorScreen import Errors
 
 class ScanBrelok(QObject):
     '''

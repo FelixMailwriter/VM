@@ -4,7 +4,7 @@ import sys
 from PyQt4 import QtCore, uic
 from PyQt4.Qt import QObject
 from ConfigParser import ConfigParser
-from Errors import Errors
+from Common.ErrorScreen import Errors
 
 class CheckPass(QObject):
     def __init__(self):

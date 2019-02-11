@@ -4,7 +4,7 @@ from PyQt4 import QtCore, QtGui, uic
 from PyQt4.QtCore import QTimer
 from PyQt4.QtGui import QIcon
 from Common.Item import Item
-from Errors import Errors
+from Common.ErrorScreen import Errors
 import Common.Settings as Settings
 
 

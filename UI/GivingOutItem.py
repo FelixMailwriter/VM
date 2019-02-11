@@ -3,7 +3,7 @@ import os
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore, uic, QtGui
 import Common.Settings as Settings
-from Errors import Errors
+from Common.ErrorScreen import Errors
 
 class GivingOutItem(QObject):
     '''

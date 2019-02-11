@@ -4,7 +4,7 @@ from PyQt4.Qt import QObject
 from PyQt4 import QtCore, uic, QtGui
 from PyQt4.QtCore import QTimer
 import Common.Settings as Settings
-from Errors import Errors
+from Common.ErrorScreen import Errors
 
 class WriteBrelok(QObject):
     '''

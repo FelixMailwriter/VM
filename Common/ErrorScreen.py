@@ -4,19 +4,19 @@ from PyQt4 import QtCore, uic, QtGui
 from PyQt4.Qt import QObject
 import Common.Settings as Settings
 
-class Errors(QObject):
+class ErrorScreen(QObject):
 
     def __init__(self, message, closeIdle=5000):
         QObject.__init__(self)
-        path=os.path.abspath("UIForms/errorWindow.ui")
-        self.window=uic.loadUi(path)
+        path = os.path.abspath("UIForms/errorWindow.ui")
+        self.window = uic.loadUi(path)
         self.window.setWindowFlags(QtCore.Qt.FramelessWindowHint)
         
-        desktop=QtGui.QApplication.desktop()
+        desktop = QtGui.QApplication.desktop()
         self.window.move(desktop.availableGeometry().center()-self.window.rect().center())
         
         global _
-        _= Settings._
+        _ = Settings._
         
         self.window.btn_close.clicked.connect(self._closeWindow)
         self.window.label.setText(message)

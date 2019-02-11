@@ -7,6 +7,9 @@ from HdWareCon.Programmator import Programmator
 from HdWareCon.Pin import Pin
 from HdWareCon.Magazin import Magazin 
 from HdWareCon.SensorListener import SensorListener
+from Programmator import Programmator
+import Programmator.Test
+
 
 
 class GPIO_Socket(QObject):
@@ -14,17 +17,20 @@ class GPIO_Socket(QObject):
     Класс описывает разъем GPIO устройства Raspbery Pi3
     '''
 
-    def __init__(self, programmatorPinSettings, magazinesPinSettings, magazinItemsMap, PinGetOutSensor):
+    def __init__(self, programmatorPinSettings, magazinesPinSettings,
+                 magazinItemsMap, PinGetOutSensor, PinDropOff):
         QObject.__init__(self)
         #GPIO.cleanup()
         #GPIO.setmode(GPIO.BCM)
-        self.programmator=self.getProgrammator(programmatorPinSettings)                #Экземпляр программатора
+        self.programmator = self.getProgrammator(programmatorPinSettings)  #Экземпляр программатора
         self.connect(self.programmator, QtCore.SIGNAL("ScanFinished"), self.scanHandler)
         self.connect(self.programmator, QtCore.SIGNAL("WriteFinished"), self.writeHandler)
+
         #Создаем коллекцию магазинов с инфой о пинах и загруженных предметах
         self.magazines=self.getMagazinesList(magazinesPinSettings, magazinItemsMap)    
-        self.getOutSensor= self.getGetOutSensor(PinGetOutSensor)                    #PIN датчика выдачи
-        self.activeMagazin=None                                                     # Активный магазин                                                 
+        self.getOutSensor = self.getGetOutSensor(PinGetOutSensor)   # Pin датчика выдачи
+        self.pinDropOff = PinDropOff                                 # Pin заслонки сброса
+        self.activeMagazin = None                                     # Активный магазин
         
    
     def getMagazinesList(self, magazinesPinSettings, magazinItemsMap):
@@ -44,7 +50,11 @@ class GPIO_Socket(QObject):
         return pin
 
     def getProgrammator(self, programmatorPinSettings):
-        programmator=Programmator(programmatorPinSettings)
+        try:
+            programmator=Programmator(programmatorPinSettings)
+        except Programmator.ProgrammatorHardwareException as e:
+            pass
+
         return programmator             #
 
     def giveOutItem(self, item):

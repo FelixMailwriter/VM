@@ -5,28 +5,31 @@ import mysql.connector as DbConnector
 from mysql.connector import Error
 import base64
 from ConfigParser import ConfigParser
-from Errors import Errors
 from DB import DB
 from datetime import datetime
-import gettext
+import Common.Settings as Settings
+
 
 class MySQLDB(DB):
 
+    global _
+    _ = Settings._
 
     def __init__(self):
         DB.__init__(self)
     
     def getConnection(self):
-        conn=None
-        dbconfig=self._getDBConfig(filename='config.ini', section='mysql') 
+        conn = None
+        dbconfig = self._getDBConfig(filename='config.ini', section='mysql')
         try:
-            conn=DbConnector.connect(**dbconfig)        
+            conn = DbConnector.connect(**dbconfig)
         except Error as e:
             self._showError(_(u'Error'), _(u'Database connection failed'))
-            print (e)
+            print(e)
             
         return conn
-                    
+
+
     def _getDBConfig(self, **param):
         filename=param['filename']
         section=param['section']
@@ -40,7 +43,8 @@ class MySQLDB(DB):
         else:
             self._showError(_(u'Error'), _(u'There is errors in the configuration file. No section.'))
         return config
-    
+
+
     def getDataFromDb(self, query, type='all'):
         conn = cur = None
         try:
@@ -58,7 +62,8 @@ class MySQLDB(DB):
         finally:
             if cur is not None: cur.close()
             if conn is not None: conn.close()  
-            
+
+
     def insertDataToDB(self, query):
         conn = cur = None
         try:
@@ -76,7 +81,6 @@ class MySQLDB(DB):
             if conn is not None: conn.close() 
 
 
-        
     def deleteDataFromTable(self, query):
         conn = cur = None
         try:
@@ -91,7 +95,8 @@ class MySQLDB(DB):
             if cur is not None: cur.close()
             if conn is not None: conn.close()
         return True  
-    
+
+
     def getIdItemsinMagazinsMap(self, magQty=6):
         query='Select idMagazins, ItemId from Magazins Where ItemQTY>0'
         result=self.getDataFromDb(query)
@@ -104,6 +109,7 @@ class MySQLDB(DB):
             itemMap[magId]=itemId
         return itemMap
 
+
     def getItemsForSale(self):
         query='Select M.ItemId, I.ItemName, I.ItemPrice, I.ItemIcon, sum(M.ItemQTY) as summa from Magazins as M'+\
                 ' left join Items as I'+\
@@ -113,7 +119,8 @@ class MySQLDB(DB):
                 ' having summa>0'
         itemsList=self.getDataFromDb(query)
         return itemsList
-    
+
+
     def getItemPictureById(self, itemId):
         query='Select ItemIcon from Items Where idItem=%d' %(itemId)
         result=self.getDataFromDb(query, 'one')
@@ -123,17 +130,19 @@ class MySQLDB(DB):
             picBytes = base64.b64decode(pic)
             qpixmap.loadFromData(picBytes)
         return qpixmap
-    
+
+
     def writeLog(self, logMessages):#eventType, source, event):
         for logMessage in logMessages:
-            priority=logMessage.priority
-            source=logMessage.sourse
-            event=logMessage.message
-            query='Insert into Log (EventType, Source, EventDate, Event)'+\
+            priority = logMessage.priority
+            source = logMessage.sourse
+            event = logMessage.message
+            query = 'Insert into Log (EventType, Source, EventDate, Event)' + \
                 ' values (\'%s\', \'%s\', \'%s\', \'%s\')' \
                 %(priority, source, str(datetime.now()), event)
             self.insertDataToDB(query) 
-    
+
+
     def sellItem(self, magazin, item, payment):
         #Уменьшение количества предметов в магазине
         # Получаем текущее количество предметов в магазине
@@ -151,7 +160,8 @@ class MySQLDB(DB):
         query='Insert into Sales (saleDate, saledItemId, price, payment)'+\
                 ' VALUES (\'%s\', %d, %d, %d)' %(datetime.now(), item.id, item.price, payment)
         self.insertDataToDB(query)
-     
+
+
     def writeBanknote(self, nominal):
         query='Insert into ReceivedNotes (DateReceiving, NoteValue) values (\'%s\', %d)' %(str(datetime.now()), nominal)
         result=self.insertDataToDB(query)

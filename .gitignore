@@ -11,4 +11,8 @@ pyodbc.egg-info
 pyodbc.conf
 /venv*
 .idea/
+.idea
 .settings/
+.dbeaver-data-sources.xml
+.project
+.pydevproject

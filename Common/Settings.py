@@ -5,7 +5,7 @@ import locale
 import gettext 
 
 
-_=None
+_ = None
 
 class Translate(object):
     
@@ -13,13 +13,13 @@ class Translate(object):
         pass
     
     def lang_init(self, loc=''):
-        if loc=='':
+        if loc == '':
             _locale, _encoding = locale.getdefaultlocale()  # Default system values
         else:
-            _locale=loc
+            _locale = loc
             
         path = os.path.abspath(sys.argv[0])
-        d=gettext.textdomain()
+        d = gettext.textdomain()
         gettext.install(d, unicode=True, codeset='utf-8')
         path = os.path.join(os.path.dirname(path),'locale')
         lang = gettext.translation(d, path, [_locale])
@@ -28,7 +28,7 @@ class Translate(object):
     
     def setLang(self, loc):
         global _
-        _=self.lang_init(loc)
+        _ = self.lang_init(loc)
         
         
 

@@ -6,12 +6,11 @@ from SensorListener import SensorListener
 from PyQt4.Qt import QObject
 
 
-#
 class Programmator(QObject):
 
-    def __init__(self, ):  # keytype):
+    def __init__(self, pins):  # keytype):
         QObject.__init__(self)
-        pins = self._getPins()
+        #pins = self._getPins()
         self.TRY_COUNT_INIT = 3  # Quantity of initialisation tries
         self.TRY_COUNT_READ_KEY = 5  # Quantity of reading tries
         self.TRY_COUNT_MODE_SWITCH = 5  # Quantity of mode switch tries (read -> write and write -> read)
@@ -39,6 +38,7 @@ class Programmator(QObject):
         self.readKey()
 
         self.prepareForWritingKey()
+
 
     def init(self):
         # checking if the device works properly
@@ -71,6 +71,7 @@ class Programmator(QObject):
         self.green_work = False
         self.yellow_work = False
         print '==== Prg init finished ===='
+
 
     def readKey(self):
         trycount = 0
@@ -139,14 +140,17 @@ class Programmator(QObject):
             return False
         self.green_shoots = 0
 
+
     def _reboot(self):
         self._buttonClick(self.pinPower, 1)
         self.__init__()
+
 
     def _buttonClick(self, pin, holdtime=0.5):
         pin.disable()
         time.sleep(holdtime)
         pin.enable()
+
 
     def _getPins(self):
         pins = {}
@@ -156,11 +160,14 @@ class Programmator(QObject):
         pins['Power'] = 0
         return pins
 
+
     def _set_green(self, value):
         self.green_work = value
 
+
     def _set_yellow(self, value):
         self.yellow_work = value
+
 
     def _set_green_shoots(self, value):
         self.green_shoots = value
@@ -174,3 +181,4 @@ class ProgrammatorHardwareException(Exception):
 
         # Now for your custom code...
         self.errors = errors
+

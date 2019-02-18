@@ -2,6 +2,7 @@
 from HdWareCon.Pin import Pin
 from PyQt4 import QtCore
 from PyQt4.Qt import QObject
+import logging
 
 class MagEng(QObject):
     '''
@@ -12,11 +13,12 @@ class MagEng(QObject):
     def __init__(self, numEngPin, numSensorPin):
         QObject.__init__(self)
         print 'Инициализация мотора'
-        self.engPin=Pin(numEngPin, 'OUT') 
-        self.sensorPin=Pin(numSensorPin, 'IN') 
-        self.startMotorDelay=500
-        self.sensorDelay=2000
-        self.timeOut=6000
+
+        self.engPin = Pin(numEngPin, 'OUT')
+        self.sensorPin = Pin(numSensorPin, 'IN')
+        self.startMotorDelay = 500
+        self.sensorDelay = 2000
+        self.timeOut = 6000
         print 'Инициализация мотора выполнена'
         
     def reset(self):

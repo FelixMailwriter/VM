@@ -3,13 +3,13 @@
 #GPIO.setmode(BCM)
 from PyQt4 import QtCore
 from PyQt4.Qt import QObject
-from HdWareCon.Programmator import Programmator
 from HdWareCon.Pin import Pin
-from HdWareCon.Magazin import Magazin 
+from HdWareCon.Magazin import Magazin
+from TrashValve import TrashValve
 from HdWareCon.SensorListener import SensorListener
-from Programmator import Programmator
-import Programmator.Test
-
+from Programmator.Programmator import Programmator
+import Common.Error as Error
+import Common.Settings as Settings
 
 
 class GPIO_Socket(QObject):
@@ -18,44 +18,60 @@ class GPIO_Socket(QObject):
     '''
 
     def __init__(self, programmatorPinSettings, magazinesPinSettings,
-                 magazinItemsMap, PinGetOutSensor, PinDropOff):
+                 magazinItemsMap, PinGetOutSensor, PinTrashValve):
         QObject.__init__(self)
         #GPIO.cleanup()
         #GPIO.setmode(GPIO.BCM)
-        self.programmator = self.getProgrammator(programmatorPinSettings)  #Экземпляр программатора
-        self.connect(self.programmator, QtCore.SIGNAL("ScanFinished"), self.scanHandler)
-        self.connect(self.programmator, QtCore.SIGNAL("WriteFinished"), self.writeHandler)
+        global _
+        _ = Settings._
 
-        #Создаем коллекцию магазинов с инфой о пинах и загруженных предметах
-        self.magazines=self.getMagazinesList(magazinesPinSettings, magazinItemsMap)    
-        self.getOutSensor = self.getGetOutSensor(PinGetOutSensor)   # Pin датчика выдачи
-        self.pinDropOff = PinDropOff                                 # Pin заслонки сброса
-        self.activeMagazin = None                                     # Активный магазин
+        self.prgRestartsCounter = 0
+
+        self.programmatorPinSettings = programmatorPinSettings
+
+        self.programmator = self._getProgrammator(programmatorPinSettings)  #Экземпляр программатора
+
+        self.programmator.init()
+
+        self.trashValve = self._getTrashValve(PinTrashValve) # Заслонка сброса
         
+        #Создаем коллекцию магазинов с инфой о пинах и загруженных предметах
+        self.magazines = self._getMagazinesList(magazinesPinSettings, magazinItemsMap)
+        self.getOutSensor = self._getGetOutSensor(PinGetOutSensor)   # Pin датчика выдачи
+        self.activeMagazin = None                                   # Активный магазин
+
+
    
-    def getMagazinesList(self, magazinesPinSettings, magazinItemsMap):
+    def _getMagazinesList(self, magazinesPinSettings, magazinItemsMap):
         #создаем экземпляр магазина и заносим его в список
-        magList={}
+        magList = {}
         for MagNumber in magazinItemsMap:
-            MagItem=magazinItemsMap[MagNumber]
-            magazin=(Magazin(MagNumber, magazinesPinSettings[(MagNumber,"EngPw")], magazinesPinSettings[(MagNumber,"EngSensor")], 
+            MagItem = magazinItemsMap[MagNumber]
+            magazin = (Magazin(MagNumber, magazinesPinSettings[(MagNumber,"EngPw")], magazinesPinSettings[(MagNumber,"EngSensor")],
                     magazinesPinSettings[(MagNumber,"EmptySensor")],MagItem))
-            print 'Добавлен %s'  %(magazin)
-            magList[MagNumber]= magazin
+            print 'Добавлен %s'%(magazin)
+            magList[MagNumber] = magazin
         return magList
-    
-    def getGetOutSensor(self, PinGetOutSensor):
+
+
+    def _getGetOutSensor(self, PinGetOutSensor):
         pin= Pin(PinGetOutSensor, 'IN')
         print 'Датчик выдачи установлен %s' %(pin)
         return pin
 
-    def getProgrammator(self, programmatorPinSettings):
-        try:
-            programmator=Programmator(programmatorPinSettings)
-        except Programmator.ProgrammatorHardwareException as e:
-            pass
 
-        return programmator             #
+    def _getProgrammator(self, programmatorPinSettings):
+        programmator = Programmator(programmatorPinSettings)
+        self.connect(self.programmator, QtCore.SIGNAL("HardwareFailed"), self._hardwareFaledHandler)
+        self.connect(self.programmator, QtCore.SIGNAL("ScanFinished"), self.scanHandler)
+        self.connect(self.programmator, QtCore.SIGNAL("WriteFinished"), self.writeHandler)
+        self.connect(self.programmator, QtCore.SIGNAL("DemandRestart"), self._prgRestart)
+        return programmator
+
+
+    def _getTrashValve(self, PinTrashValve):
+        trashValve = TrashValve(PinTrashValve)
+
 
     def giveOutItem(self, item):
         print "GPIO_Socket: Начало выдачи предмета %s" %(str(item))
@@ -70,6 +86,7 @@ class GPIO_Socket(QObject):
                 self.giveOutSensorListener.start()
                 break
 
+
     def itemOutHandler(self, result):
         if result:
             print 'GPIO_Socket: предмет выдан'
@@ -79,15 +96,35 @@ class GPIO_Socket(QObject):
         self.giveOutSensorListener.wait(100)
         self.emit(QtCore.SIGNAL("OutingEnd"), result, self.activeMagazin, self.outingItem)
         self.activeMagazin=None
-        
+
+
     def scanBrelok(self):
         self.programmator.typeOperation='Scan'
         self.programmator.start()
-        
+
+
     def writeBrelok(self):
         self.programmator.typeOperation='Write'
         self.programmator.start()
-    
+
+
+    def _hardwareFaledHandler(self, err):
+        self.emit(QtCore.SIGNAL("HardwareFailed"), err)
+
+
+    def _prgRestart(self, err):
+        if self.prgRestartsCounter >= 3:
+            err_level = Error.ErrorLevel.CRITICAL
+            err_source = Error.ErrorSource.PROGRAMMATOR
+            msg = _(u"Programmator failed")
+            err = Error.Error(err_level, err_source, msg)
+            self.emit(QtCore.SIGNAL("HardwareFailed"), err)
+        else:
+            self.prgRestartsCounter += 1
+            self.emit(QtCore.SIGNAL("HardwareFailed"), err)
+            self.programmator.init()
+
+
     def scanHandler(self, result):
         self.emit(QtCore.SIGNAL("ScanFinished"), result)
     

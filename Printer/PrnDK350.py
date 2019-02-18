@@ -104,7 +104,7 @@ class Printer(QtCore.QThread):
         if answer is None:
             self.prn.close()
             raise PrinterHardwareException(u'Принтер не найден')
-            return
+
         for statusByte in answer:
             statusByte=statusByte.encode('hex')
             if statusByte=='04':

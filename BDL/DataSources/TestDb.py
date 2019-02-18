@@ -90,3 +90,4 @@ class TestDb(DB):
         return itemMap
     
     def writeLog(self, logMessages):
+        pass

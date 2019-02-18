@@ -24,8 +24,8 @@ class Programmator(QtCore.QThread):
         self.connect(self.scanOKListener, QtCore.SIGNAL("ScanFinished"), self.scanFinishHandler)
         self.writeOKListener=SensorListener(self.pinWriteOK, "WriteFinished", 0, 20000, 100)
         self.connect(self.writeOKListener, QtCore.SIGNAL("WriteFinished"), self.writeFinishHandler)
-        self.QTQ_SCAN_TRYING=1
-        self.QTY_WRITE_TRYING=1
+        self.QTQ_SCAN_TRYING = 1
+        self.QTY_WRITE_TRYING = 1
         self.scanTrying=self.QTQ_SCAN_TRYING
         self.writeTrying=self.QTY_WRITE_TRYING
         print 'Инициализация программатора выполнена'
@@ -36,9 +36,9 @@ class Programmator(QtCore.QThread):
         self.pinWrite.disable()
         
     def run(self):
-        if self.typeOperation=='Scan':
+        if self.typeOperation == 'Scan':
             self.scan(False)
-        if self.typeOperation=='Write':
+        if self.typeOperation == 'Write':
             self.write(False)
         
     def scan(self, result=False):
@@ -94,7 +94,7 @@ class Programmator(QtCore.QThread):
         if result:
             self.write(result)
         else:
-            self.writeTrying-=1            
+            self.writeTrying -= 1
             self.write(result)   
     
       

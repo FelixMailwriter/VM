@@ -41,8 +41,8 @@ class Magazin():
     def __str__(self):
         return 'Магазин№%s EngPwPin= %s  EngSensorPin= %s  EmptySensorPin= %d Item= %s'\
             %(self.num, self.magEng.engPin, self.magEng.sensorPin, self.emptySensor, str(self.itemId))
-     
-     
-        
+
+
+
         
         

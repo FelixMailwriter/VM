@@ -8,6 +8,7 @@ from ConfigParser import ConfigParser
 from Printer.PrnDK350 import Printer
 import Vending
 import Common.Settings as Settings
+import Common.Error as Error
 from Common.ErrorScreen import Errors
 
 
@@ -86,9 +87,7 @@ class VendingManager(QObject):
     def _connectionSignals(self):
         self.connect(self.vending, QtCore.SIGNAL('Restart'), self._start)
         self.connect(self.vending, QtCore.SIGNAL('End working'), self._start)
-        self.connect(self.vending, QtCore.SIGNAL("InitFailed"), self._initHandler)
-
-
+        self.connect(self.vending, QtCore.SIGNAL("HardwareFailed"), self._hardwareErrorHandler)
 
 
     def _getCashInBox(self):
@@ -128,3 +127,9 @@ class VendingManager(QObject):
         self.window.label.setText(_(u'Device is in service. Please, wait.'))
         self.window.btn_close.setEnabled(False)
         self.window.show()
+
+    def _hardwareErrorHandler(self, err):
+        if err.errorlevel == Error.ErrorLevel.CRITICAL:
+            pass # stop processing
+        else:
+            pass #write log

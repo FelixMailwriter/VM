@@ -2,7 +2,6 @@
 
 import time
 from BDL.DataSources import MySQLDB, TestDb
-# import HdWareCon.RB as RB
 from HdWareCon.GPIO_Socket import GPIO_Socket
 from PyQt4.Qt import QObject
 from PyQt4 import QtCore
@@ -30,6 +29,8 @@ class Vending(QObject):
 
         self.payment = payment  # Сумма, введенная пользователем
 
+        self.writetryes = 0
+
 
     def reset(self):
 
@@ -40,37 +41,39 @@ class Vending(QObject):
             err_level = Error.ErrorLevel.CRITICAL
             err_source = Error.ErrorSource.DATABASE
             msg = _(u"Database connection error")
-            err = Error(err_level, err_source, msg)
-            self.emit(QtCore.SIGNAL("InitFailed"), err)
+            err = Error.Error(err_level, err_source, msg)
+            self.emit(QtCore.SIGNAL("HardwareFailed"), err)
 
 
         # ----- GPIO Socket  initialization -----
         programmatorPinSettings, \
         magazinesPinSettings, \
         PinGetOutSensor, \
-        PinDropOff = self.dbProvider.getGPIOPinSettigs()
+        PinTrashValve = self.dbProvider.getGPIOPinSettigs()
+
         if len(programmatorPinSettings) == 0 or \
             len (magazinesPinSettings) == 0 or \
             PinGetOutSensor == '' or \
-            PinDropOff == '':
+            PinTrashValve == '':
             self.emit(QtCore.SIGNAL("Reset"), False)
         try:
             self.gpio = GPIO_Socket(programmatorPinSettings,
                                     magazinesPinSettings,
                                     self.magazinItemsMap,
                                     PinGetOutSensor,
-                                    PinDropOff
+                                    PinTrashValve
                                     )
         except:
             err_level = Error.ErrorLevel.CRITICAL
             err_source = Error.ErrorSource.SOFTWARE
             msg = _(u"GPIO init error")
-            err = Error(err_level, err_source, msg)
-            self.emit(QtCore.SIGNAL("InitFailed"), err)
+            err = Error.Error(err_level, err_source, msg)
+            self._hardwareFailedHandler(err)
 
         self.connect(self.gpio, QtCore.SIGNAL("ScanFinished"), self._scanFinishHandler)
         self.connect(self.gpio, QtCore.SIGNAL("WriteFinished"), self._writeFinishHandler)
-        self.connect(self.gpio, QtCore.SIGNAL("InitResult"), self._initHandler)
+        self.connect(self.gpio, QtCore.SIGNAL("HardwareFailed"), self._hardwareFailedHandler)
+
 
         # Banknote receiver initialization -----
         try:
@@ -96,10 +99,9 @@ class Vending(QObject):
         return dbContext
 
 
-    def _initHandler(self, error):
-        if error.errorlevel == Error.ErrorLevel.OK:
-            return
-        self.emit(QtCore.SIGNAL("InitFailed"), error)
+    def _hardwareFailedHandler(self, err):
+        # TODO: write error to log
+        self.emit(QtCore.SIGNAL("HardwareFailed"), err)
 
 
     def _initKP(self, kpmodel):
@@ -110,7 +112,6 @@ class Vending(QObject):
         except KP.KPErrorException as e:
             print e.value
             raise Exception(_(u'Hardware error'))
-            return
         self.connect(self.kpInitilaser, QtCore.SIGNAL('Init finished'), self._setKPInstance)
 
 
@@ -119,7 +120,6 @@ class Vending(QObject):
             message = _(u"Notereceiver initialization error. Code:001")
             print message
             raise Exception(message)
-            return
         self.kpInstance = kpInstance
 
 
@@ -128,9 +128,6 @@ class Vending(QObject):
         self.connect(self.scanBrelokWindow, QtCore.SIGNAL("ScanBrelok"), self.gpio.scanBrelok)
         self.connect(self.scanBrelokWindow, QtCore.SIGNAL("SimulateScanOK"), self.simScan)
         self.scanBrelokWindow.window.show()
-
-
-
 
 
     def selektItem(self):
@@ -218,7 +215,16 @@ class Vending(QObject):
             self.finishWindow.window.show()
         else:
             # self.writeBrelokWindow.writeFail()
-            message = _(u'Key writing is failed. Call the techsupport.')
+            if self.writetryes > 3:
+                err_level = Error.ErrorLevel.IMPORTANT
+                err_source = Error.ErrorSource.PROGRAMMATOR
+                msg = _(u"Writing failed. Call the techsupport")
+                err = Error.Error(err_level, err_source, msg)
+                self._hardwareFailedHandler(self, err)
+            else:
+                self.writetryes += 1
+
+
             errormsg = Errors(message)
 
 

@@ -41,15 +41,16 @@ class DB(object):
         magazinesPinSettings[(5, "EngSensor")] = 8
         magazinesPinSettings[(5, "EmptySensor")] = 25
 
-        magazinesPinSettings[(6,"EngPw")] = 24
-        magazinesPinSettings[(6, "EngSensor")] = 23
-        magazinesPinSettings[(6, "EmptySensor")] = 18
-
         PinGetOutSensor = 15
 
-        PinDropOff = 14
+        PinTrashValve = {}
+        PinTrashValve["EngPw"] = 14
+        PinTrashValve["Open"] = 23
+        PinTrashValve["Close"] = 24
 
-        return programmatorPinSettings, magazinesPinSettings, PinGetOutSensor, PinDropOff
+        #magazinesPinSettings[(6, "EmptySensor")] = 18
+
+        return programmatorPinSettings, magazinesPinSettings, PinGetOutSensor, PinTrashValve
     
     @abstractmethod
     def getItemsMap(self):

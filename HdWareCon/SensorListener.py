@@ -16,8 +16,8 @@ class SensorListener(QtCore.QThread):
         print "Слушам датчик %s" %(self.sensorPin)
         threshold=0
         self.msleep(self.delayStart)
-        while threshold<self.listenDuration:
-            if self.sensorPin.getSignal():
+        while threshold < self.listenDuration:
+            if not self.sensorPin.getSignal():
                 self.emit(QtCore.SIGNAL("%s" %(self.eventName)), True)
                 print 'Срабатывание датчика %s. Выход из потока прослушивания' %(self.sensorPin)
                 return
